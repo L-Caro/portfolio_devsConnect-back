@@ -1,0 +1,4 @@
+%syntax-version=1.0.0
+%project=devsconnect
+
+init 2023-06-06T11:24:49Z Pierre Mangeot <pierre.mangeot@gmail.com> # mise en place des tables
