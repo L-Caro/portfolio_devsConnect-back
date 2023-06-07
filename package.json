@@ -1,0 +1,17 @@
+{
+  "name": "DevsConnect-API",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:O-clock-Starship/projet-03-DevsConnect-back.git",
+  "author": "Elyette-Gandji <elyette.gandji@gmail.com> Pierre-Mangeot <pierre.mangeot@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "debug": "^4.3.4",
+    "eslint": "^8.42.0",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.1.4"
+  }
+}
