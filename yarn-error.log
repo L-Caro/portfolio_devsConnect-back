@@ -1,0 +1,43 @@
+Arguments: 
+  /usr/local/bin/node /home/student/.npm-packages/bin/yarn add becryptjs
+
+PATH: 
+  /home/student/.npm-packages/bin:/home/student/.npm-packages/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  15.12.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/becryptjs: Not found
+      at Request.params.callback [as _callback] (/home/student/.npm-packages/lib/node_modules/yarn/lib/cli.js:66145:18)
+      at Request.self.callback (/home/student/.npm-packages/lib/node_modules/yarn/lib/cli.js:140890:22)
+      at Request.emit (node:events:369:20)
+      at Request.<anonymous> (/home/student/.npm-packages/lib/node_modules/yarn/lib/cli.js:141862:10)
+      at Request.emit (node:events:369:20)
+      at IncomingMessage.<anonymous> (/home/student/.npm-packages/lib/node_modules/yarn/lib/cli.js:141784:12)
+      at Object.onceWrapper (node:events:475:28)
+      at IncomingMessage.emit (node:events:381:22)
+      at endReadableNT (node:internal/streams/readable:1307:12)
+      at processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+npm manifest: 
+  {
+    "name": "DevsConnect-API",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "git@github.com:O-clock-Starship/projet-03-DevsConnect-back.git",
+    "author": "Elyette-Gandji <elyette.gandji@gmail.com>",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

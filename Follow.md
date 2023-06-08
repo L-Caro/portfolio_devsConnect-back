@@ -6,7 +6,14 @@ Mise en place SQITCH : paramétrer le fichier sqitch.conf
 Mettre en place le revert et le verify pour toutes les tables
 Mise en place de quelques données manuellement
 
-## Deuxième étape
+## Deuxième étape : mercredi 7 juin
+### Architecture : 
+    - index.js
+    - app
+      - routers
+      - controllers
+    - data
+
 Mise en place d'un routeur simple : récupérer les users et les projets
 Mise en place de SWAGGER
 Ajout de toutes les routes GET
@@ -21,3 +28,7 @@ Mettre en place les données FAKER
 Mise en place JWT
 Création VUES
 Ajout fonctionnalités après mise au point avec front
+
+Ajout de l'handlerController
+ajout de l'errorHandler
+ajout du logger
