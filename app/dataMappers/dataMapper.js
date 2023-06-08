@@ -4,7 +4,7 @@ const dataMapper = {
 
   // methode listee en arrow pour tester different coding style avec requetes sql pour tous les projets
   findAllProjects: async () => {
-    const results = await client.query("SELECT * FROM project");
+    const results = await client.query('SELECT * FROM "project"');
     return results.rows; 
   },
 
@@ -20,7 +20,7 @@ const dataMapper = {
 
   //methode avec requete pour recuperer tous les tags
   async findAllTags (){
-    const results = await client.query("SELECT * FROM tag");
+    const results = await client.query('SELECT * FROM "tag"');
     return results.rows; 
   },
 
