@@ -18,6 +18,15 @@ const dataMapper = {
     return results.rows[0]; 
   },
 
+  async removeOneProject (id){
+    const preparedQuery = {
+      text: `DELETE FROM "project" WHERE "id" = $1`,
+      values: [id],
+    };
+    const results = await client.query(preparedQuery);
+    return results.rows[0];
+  },
+
   findAllUsers: async () => {
     const results = await client.query('SELECT * FROM "user"');
     return results.rows; 
@@ -30,6 +39,15 @@ const dataMapper = {
     };
     const results = await client.query(preparedQuery);
     return results.rows[0]; 
+  },
+
+  async removeOneUser (id){
+    const preparedQuery = {
+      text: `DELETE FROM "user" WHERE "id" = $1`,
+      values: [id],
+    };
+    const results = await client.query(preparedQuery);
+    return results.rows[0];
   },
 
   //methode avec requete pour recuperer tous les tags

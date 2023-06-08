@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3000
 
-GET {{baseUrl}}/api/user/3
 
-GET {{baseUrl}}/api/users
 
+
+DELETE {{baseUrl}}/api/user/4

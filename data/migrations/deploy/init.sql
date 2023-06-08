@@ -24,7 +24,7 @@ CREATE TABLE "project" (
     "title" VARCHAR(64) NOT NULL,
     "description" TEXT NOT NULL,
     "availability" BOOLEAN NOT NULL DEFAULT FALSE,
-    "user_id" INT NOT NULL REFERENCES "user"  ("id"),
+    "user_id" INT NOT NULL REFERENCES "user" ("id"),
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ
 );
@@ -38,24 +38,24 @@ CREATE TABLE "tag" (
 
 CREATE TABLE "project_has_tag" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "project_id" INT NOT NULL REFERENCES "project" ("id"),
-    "tag_id" INT NOT NULL REFERENCES "tag" ("id"),
+    "project_id" INT NOT NULL REFERENCES "project" ("id") ON DELETE CASCADE,
+    "tag_id" INT NOT NULL REFERENCES "tag" ("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "user_has_tag" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "user_id" INT NOT NULL REFERENCES "user" ("id"),
-    "tag_id" INT NOT NULL REFERENCES "tag" ("id"),
+    "user_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
+    "tag_id" INT NOT NULL REFERENCES "tag" ("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "project_has_user" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "project_id" INT NOT NULL REFERENCES "project" ("id"),
-    "user_id" INT NOT NULL REFERENCES "user" ("id"),
+    "project_id" INT NOT NULL REFERENCES "project" ("id") ON DELETE CASCADE,
+    "user_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
     "is_active" BOOLEAN NOT NULL DEFAULT FALSE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ

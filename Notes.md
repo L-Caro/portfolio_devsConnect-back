@@ -1,3 +1,11 @@
+FOREIGN KEY (ClientID)
+        REFERENCES Clients (ClientID)
+        ON DELETE CASCADE
+
+A foreign key with cascade delete means that if a record in the parent table is deleted, then the corresponding records in the child table will automatically be deleted. This is called a cascade delete in SQL Server.
+
+DELETE CASCADE: When we create a foreign key using this option, it deletes the referencing rows in the child table when the referenced row is deleted in the parent table which has a primary key.
+
 # Pug
 
 app.set('view engine', 'pug'); is used while setting the view engine. This will set the view template type.
