@@ -10,6 +10,12 @@ const userController = {
       const userId = req.params.id;
       const user = await dataMapper.findOneUser(userId);
       res.json({status: 'success', data : user})
+    },
+
+    async deleteOneUser(req, res) {
+      const userId = req.params.id;
+      const user = await dataMapper.removeOneUser(userId);
+      res.json({status: 'success', data: user })
     }
 
 };
