@@ -1,3 +1,6 @@
+const cardId = req.params.id;
+      const card = await Card.findByPk(cardId
+
 # Pug
 
 app.set('view engine', 'pug'); is used while setting the view engine. This will set the view template type.
