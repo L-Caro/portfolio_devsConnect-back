@@ -3,9 +3,4 @@
 
 
 
-PUT {{baseUrl}}/api/project/3
-Content-Type: application/json
-
-{
-    "description": "ceci est un test"
-}
+GET {{baseUrl}}/api/projects

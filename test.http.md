@@ -2,11 +2,11 @@
 
 GET {{baseUrl}}/api/projects
 
-GET {{baseUrl}}/api/project/3
+GET {{baseUrl}}/api/projects/3
 
 GET {{baseUrl}}/api/users
 
-GET {{baseUrl}}/api/user/3
+GET {{baseUrl}}/api/users/3
 
 POST {{baseUrl}}/api/users
 Content-Type: application/json
@@ -31,7 +31,7 @@ Content-Type: application/json
     "user_id": "3"
 }
 
-PUT {{baseUrl}}/api/user/3
+PUT {{baseUrl}}/api/users/3
 Content-Type: application/json
 
 {
