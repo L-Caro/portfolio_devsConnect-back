@@ -1,15 +1,14 @@
 const express = require('express');
+const projectController = require('../controllers/projectController');
 const router = express.Router();
 
-const projectController = require('../controllers/projectController');
+router.get('/', projectController.getAllProjects);
+router.get('/:id', projectController.getOneProject);
 
-router.get('/api/projects', projectController.getAllProjects);
-router.get('/api/projects/:id', projectController.getOneProject);
+router.post('/', projectController.addOneProject);
 
-router.post('/api/projects', projectController.addOneProject);
+router.delete('/:id', projectController.deleteOneProject);
 
-router.delete('/api/projects/:id', projectController.deleteOneProject);
-
-router.put('/api/projects/:id', projectController.editOneProject);
+router.put('/:id', projectController.editOneProject);
 
 module.exports = router;

@@ -1,9 +1,8 @@
 const express = require('express');
+const tagController = require('../controllers/tagController');
 const router = express.Router();
 
-const tagController = require('../controllers/tagController');
-
-router.get('/api/tags', tagController.getAllTags);
-router.get('/api/tags/:id', tagController.getOneTag); 
+router.get('/', tagController.getAllTags);
+router.get('/:id', tagController.getOneTag); 
 
 module.exports = router;

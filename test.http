@@ -1,6 +1,10 @@
 @baseUrl = http://localhost:3000
 
 
+PUT {{baseUrl}}/api/users/3
+Content-Type: application/json
 
-
-GET {{baseUrl}}/api/projects
+{
+    "description": "ceci n est pas une pipe",
+    "availability": false
+}

@@ -1,9 +1,9 @@
-const { Router } = require('express');
+const express = require('express');
 
 const projectRouter = require('./projectRouter');
 const userRouter = require('./userRouter');
 const tagRouter = require('./tagRouter');
-const router = Router();
+const router = express.Router();
 
 router.use('/api/projects', projectRouter);
 router.use('/api/users', userRouter);
