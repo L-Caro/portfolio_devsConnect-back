@@ -1,11 +1,10 @@
 @baseUrl = http://localhost:3000
 
 
-
-
-PUT {{baseUrl}}/api/project/3
+PUT {{baseUrl}}/api/users/3
 Content-Type: application/json
 
 {
-    "description": "ceci est un test"
+    "description": "ceci n est pas une pipe",
+    "availability": false
 }
