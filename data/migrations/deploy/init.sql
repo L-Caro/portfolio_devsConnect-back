@@ -9,8 +9,8 @@ CREATE TABLE "user" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "name" VARCHAR(64) NOT NULL,
     "firstname" VARCHAR(64) NOT NULL, 
-    "email" VARCHAR(64) NOT NULL,
-    "pseudo" VARCHAR(64) NOT NULL,
+    "email" VARCHAR(64) NOT NULL UNIQUE,
+    "pseudo" VARCHAR(64) NOT NULL UNIQUE,
     "password" VARCHAR(64) NOT NULL,
     "description" TEXT NOT NULL,
     "availability" BOOLEAN NOT NULL DEFAULT FALSE,
@@ -21,7 +21,7 @@ CREATE TABLE "user" (
 
 CREATE TABLE "project" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "title" VARCHAR(64) NOT NULL,
+    "title" VARCHAR(64) NOT NULL UNIQUE,
     "description" TEXT NOT NULL,
     "availability" BOOLEAN NOT NULL DEFAULT FALSE,
     "user_id" INT NOT NULL REFERENCES "user" ("id"),
@@ -31,7 +31,7 @@ CREATE TABLE "project" (
 
 CREATE TABLE "tag" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" VARCHAR(64) NOT NULL,
+    "name" VARCHAR(64) NOT NULL UNIQUE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ
 );
