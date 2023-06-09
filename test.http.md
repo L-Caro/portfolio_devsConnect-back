@@ -30,3 +30,13 @@ Content-Type: application/json
     "availability": "true",
     "user_id": "3"
 }
+
+PUT {{baseUrl}}/api/user/3
+Content-Type: application/json
+
+{
+    "description": "ceci est un test",
+    "availability": false
+}
+
+

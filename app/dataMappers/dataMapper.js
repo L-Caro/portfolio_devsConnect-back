@@ -38,6 +38,16 @@ const dataMapper = {
     return results.rows[0];
   },
 
+  async updateOneProject (projectId, updatedFields) {
+    const {title, description, availability, user_id} = updatedFields;
+    const preparedQuery= {
+       text: `UPDATE "project" SET title = COALESCE($1, title), description = COALESCE($2, description), availability = COALESCE($3, availability), user_id = COALESCE($4, user_id) WHERE id=$5 RETURNING *`,
+       values: [title, description, availability, user_id, projectId]
+    }
+    const results = await client.query(preparedQuery);
+    return results.rows[0];
+  },
+
 /// --- USER
 
   findAllUsers: async () => {
@@ -67,6 +77,16 @@ const dataMapper = {
     const preparedQuery= {
        text: `INSERT INTO "user" (name, firstname, email, pseudo, password, description, availability) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
        values: [name, firstname, email, pseudo, password, description, availability]
+    }
+    const results = await client.query(preparedQuery);
+    return results.rows[0];
+  },
+
+  async updateOneUser (userId, updatedFields) {
+    const {name, firstname, email, pseudo, password, description, availability} = updatedFields;
+    const preparedQuery= {
+       text: `UPDATE "user" SET name = COALESCE($1, name), firstname = COALESCE($2, firstname), email = COALESCE($3, email), pseudo = COALESCE($4, pseudo), password = COALESCE($5, password), description = COALESCE($6, description), availability = COALESCE($7, availability) WHERE id=$8 RETURNING *`,
+       values: [name, firstname, email, pseudo, password, description, availability, userId]
     }
     const results = await client.query(preparedQuery);
     return results.rows[0];

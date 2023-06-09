@@ -8,6 +8,7 @@ const tagController = require('../controllers/tagController');
 router.get('/api/projects', projectController.getAllProjects); 
 router.get('/api/project/:id', projectController.getOneProject); 
 router.post('/api/projects', projectController.addOneProject)
+router.put('/api/project/:id', projectController.editOneProject);
 router.delete('/api/project/:id', projectController.deleteOneProject); 
 
 router.get('/api/tags', tagController.getAllTags); 
@@ -16,6 +17,7 @@ router.get('/api/tag/:id', tagController.getOneTag);
 router.get('/api/users', userController.getAllUsers); 
 router.get('/api/user/:id', userController.getOneUser); 
 router.post('/api/users', userController.addOneUser)
+router.put('/api/user/:id', userController.editOneUser);
 router.delete('/api/user/:id', userController.deleteOneUser); 
 
 module.exports = router;

@@ -22,8 +22,14 @@ const userController = {
       const { name, firstname, email, pseudo, password, description, availability } = req.body;
       const user = await dataMapper.createOneUser(name, firstname, email, pseudo, password, description, availability);
       res.json({status: 'success', data: user })
-    }
+    },
 
+    async editOneUser(req, res) {
+      const userId = req.params.id;
+      const { name, firstname, email, pseudo, password, description, availability } = req.body;
+      const user = await dataMapper.updateOneUser(userId, {name, firstname, email, pseudo, password, description, availability});
+      res.json({status: 'success', data: user })
+    }
 };
 
 module.exports = userController;

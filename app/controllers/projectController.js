@@ -25,8 +25,14 @@ const projectController = {
       const { title, description, availability, user_id } = req.body;
       const project = await dataMapper.createOneProject(title, description, availability, user_id);
       res.json({status: 'success', data: project })
-    }
+    },
 
+    async editOneProject(req, res) {
+      const projectId = req.params.id;
+      const { title, description, availability, user_id } = req.body;
+      const project = await dataMapper.updateOneProject(projectId, {title, description, availability, user_id});
+      res.json({status: 'success', data: project })
+    }
 };
 
 module.exports = projectController;
