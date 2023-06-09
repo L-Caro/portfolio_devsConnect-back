@@ -19,6 +19,12 @@ const projectController = {
       const projectId = req.params.id;
       const project = await dataMapper.removeOneProject(projectId);
       res.json({status: 'success', data: project })
+    },
+
+    async addOneProject(req, res) {
+      const { title, description, availability, user_id } = req.body;
+      const project = await dataMapper.createOneProject(title, description, availability, user_id);
+      res.json({status: 'success', data: project })
     }
 
 };

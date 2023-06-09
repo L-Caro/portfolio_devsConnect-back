@@ -16,6 +16,12 @@ const userController = {
       const userId = req.params.id;
       const user = await dataMapper.removeOneUser(userId);
       res.json({status: 'success', data: user })
+    },
+
+    async addOneUser(req, res) {
+      const { name, firstname, email, pseudo, password, description, availability } = req.body;
+      const user = await dataMapper.createOneUser(name, firstname, email, pseudo, password, description, availability);
+      res.json({status: 'success', data: user })
     }
 
 };

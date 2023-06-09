@@ -3,4 +3,12 @@
 
 
 
-DELETE {{baseUrl}}/api/user/4
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+
+{
+    "title": "test1",
+    "description": "Description1",
+    "availability": "true",
+    "user_id": "2"
+}
