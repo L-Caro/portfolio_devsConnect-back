@@ -3,12 +3,9 @@
 
 
 
-POST {{baseUrl}}/api/projects
+PUT {{baseUrl}}/api/project/3
 Content-Type: application/json
 
 {
-    "title": "test1",
-    "description": "Description1",
-    "availability": "true",
-    "user_id": "2"
+    "description": "ceci est un test"
 }

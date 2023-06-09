@@ -1,27 +1,4 @@
-FOREIGN KEY (ClientID)
-        REFERENCES Clients (ClientID)
-        ON DELETE CASCADE
-
-A foreign key with cascade delete means that if a record in the parent table is deleted, then the corresponding records in the child table will automatically be deleted. This is called a cascade delete in SQL Server.
-
-DELETE CASCADE: When we create a foreign key using this option, it deletes the referencing rows in the child table when the referenced row is deleted in the parent table which has a primary key.
-
-# Pug
-
-app.set('view engine', 'pug'); is used while setting the view engine. This will set the view template type.
-Pug est un moteur de templates implémenté en JavaScript qui permet de générer dynamiquement du HTML
-<https://pugjs.org/api/getting-started.html?ref=blog.ippon.fr>
-
-# Architecture
-
-`index.js` à la racine : fichier d'init de l'API
-dossier app :
-    - `index.js` à la racine : config de base du dossier app --> dispatche dans les différents éléments
-    - routers : `index.js` regroupe la config de tous les routers pour dispatcher à chaque router
-    - controllers : `projectController` --> récupérer tous les projets
-    - dataMappers : `database.js` --> client (pool)
-
-## Fausse route POST du front
+## Fausse route authentification du front
 
 ```js
 async postUsers(req, res) {
@@ -52,3 +29,21 @@ async postUsers(req, res) {
   },
 ```
 
+## ON DELETE CASCADE
+
+FOREIGN KEY (ClientID)
+        REFERENCES Clients (ClientID)
+        ON DELETE CASCADE
+
+A foreign key with cascade delete means that if a record in the parent table is deleted, then the corresponding records in the child table will automatically be deleted. This is called a cascade delete in SQL Server.
+
+DELETE CASCADE: When we create a foreign key using this option, it deletes the referencing rows in the child table when the referenced row is deleted in the parent table which has a primary key.
+
+## Architecture
+
+`index.js` à la racine : fichier d'init de l'API
+dossier app :
+    - `index.js` à la racine : config de base du dossier app --> dispatche dans les différents éléments
+    - routers : `index.js` regroupe la config de tous les routers pour dispatcher à chaque router
+    - controllers : `projectController` --> récupérer tous les projets
+    - dataMappers : `database.js` --> client (pool)
