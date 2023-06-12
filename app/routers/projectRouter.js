@@ -3,6 +3,19 @@ const projectController = require('../controllers/projectController');
 const controllerHandler = require('../helpers/controllerHandler');
 const router = express.Router();
 
+
+router.get('/:id', controllerHandler(projectController.getOneProject));
+router.get('/', controllerHandler(projectController.getAllProjects));
+
+
+router.post('/', controllerHandler(projectController.addOneProject));
+
+router.put('/:id', controllerHandler(projectController.editOneProject));
+
+router.delete('/:id', controllerHandler(projectController.deleteOneProject));
+
+module.exports = router;
+
 /**
   * @swagger
   * components:
@@ -70,14 +83,28 @@ const router = express.Router();
  *                 $ref: '#/components/schemas/Project'
  */
 
-router.get('/:id', controllerHandler(projectController.getOneProject));
-router.get('/', controllerHandler(projectController.getAllProjects));
-
-
-router.post('/', controllerHandler(projectController.addOneProject));
-
-router.put('/:id', controllerHandler(projectController.editOneProject));
-
-router.delete('/:id', controllerHandler(projectController.deleteOneProject));
-
-module.exports = router;
+/**
+ * @swagger
+ * /api/projects/{id}:
+ *  get:
+ *     summary: Get the project by id
+ *     tags: [Projects]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The project id
+ *     responses:
+ *       200:
+ *         description: The project description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Project'
+ *       404:
+ *         description: The project was not found
+ */
