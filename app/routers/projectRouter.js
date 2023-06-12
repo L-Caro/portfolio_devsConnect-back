@@ -1,5 +1,6 @@
 const express = require('express');
 const projectController = require('../controllers/projectController');
+const controllerHandler = require('../helpers/controllerHandler');
 const router = express.Router();
 
 /**
@@ -69,13 +70,14 @@ const router = express.Router();
  *                 $ref: '#/components/schemas/Project'
  */
 
-router.get('/', projectController.getAllProjects);
-router.get('/:id', projectController.getOneProject);
+router.get('/:id', controllerHandler(projectController.getOneProject));
+router.get('/', controllerHandler(projectController.getAllProjects));
 
-router.post('/', projectController.addOneProject);
 
-router.delete('/:id', projectController.deleteOneProject);
+router.post('/', controllerHandler(projectController.addOneProject));
 
-router.put('/:id', projectController.editOneProject);
+router.put('/:id', controllerHandler(projectController.editOneProject));
+
+router.delete('/:id', controllerHandler(projectController.deleteOneProject));
 
 module.exports = router;
