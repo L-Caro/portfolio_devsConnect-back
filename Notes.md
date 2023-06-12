@@ -1,3 +1,50 @@
+## Jointures tous les projets
+
+- les tag
+- les membres
+
+Recupere tous les champs de project, crée un tableau format json d'objets, crée un objet avec le format 'titre champs', valeur ; inner join tout basé sur les id puis regroupe par id de projet
+Afficher tous les projets groupés par id, avec leurs tags et les participants
+
+SELECT "project"."title", "project"."id",
+json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name")) AS "tags",
+json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name")) AS "users"
+FROM "project"
+INNER JOIN "project_has_tag" ON "project"."id" = "project_has_tag"."project_id"
+INNER JOIN "tag" ON "project_has_tag"."tag_id" = "tag"."id"
+INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
+INNER JOIN "user" ON "project_has_user"."user_id" = "user"."id"
+GROUP BY "project"."id";
+
+SELECT project.id, project.title,
+json_agg(json_build_object('tag_id', tag.id, 'tag_name', tag.name)) AS tags
+FROM project
+INNER JOIN project_has_tag ON project.id = project_has_tag.project_id
+INNER JOIN tag ON project_has_tag.tag_id = tag.id
+GROUP BY project.id, project.title;
+
+https://www.postgresql.org/docs/9.5/functions-json.html
+
+*Afficher le nom de la plantation et le libellé des rangées concrnées (une ligne par rangée)*
+*Grouper par plantation et ne présenter qu'une ligne par plantation avec ``ARRAY_AGG``*
+
+```SQL
+SELECT DISTINCT 
+    "field"."name", 
+    ARRAY_AGG ("row"."label" ORDER BY "species"."common_name" ASC)
+FROM "species"
+    JOIN "variety"
+        ON "variety"."species_id" = "species"."id"
+     JOIN "row"
+        ON "row"."variety_id" = "variety"."id"
+    JOIN "field"
+        ON "row"."field_id" = "field"."id"
+WHERE "variety"."bitterness" = 5
+GROUP BY 
+    "field"."name";
+```
+
+
 ## Fausse route authentification du front
 
 ```js
