@@ -10,5 +10,8 @@
   "main": "index.js",
   "repository": "git@github.com:O-clock-Starship/projet-03-DevsConnect-back.git",
   "author": "Elyette-Gandji <elyette.gandji@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "bunyan": "^1.8.15"
+  }
 }
