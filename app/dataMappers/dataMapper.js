@@ -189,7 +189,7 @@ const dataMapper = {
   async updateOneUser (userId, updatedFields) {
     const {name, firstname, email, pseudo, password, description, availability} = updatedFields;
     const preparedQuery= {
-       text: `UPDATE "user" SET name = COALESCE($1, name), firstname = COALESCE($2, firstname), email = COALESCE($3, email), pseudo = COALESCE($4, pseudo), password = COALESCE($5, password), description = COALESCE($6, description), availability = COALESCE($7, availability) WHERE id=$8 RETURNING *`,
+       text: `UPDATE "user" SET name = COALESCE($1, name), firstname = COALESCE($2, firstname), email = COALESCE($3, email), pseudo = COALESCE($4, pseudo), password = COALESCE($5, password), description = COALESCE($6, description), availability = COALESCE($7, availability), "upadted_at" = MOW() WHERE id=$8 RETURNING *`,
        values: [name, firstname, email, pseudo, password, description, availability, userId]
     }
     const results = await client.query(preparedQuery);

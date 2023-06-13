@@ -13,6 +13,10 @@ const errorHandler = (err, res) => {
         logger.error(err);
     }
 
+    if(/project_user_id_fkey/.test(message)) {
+      message = 'Vous ne pouvez pas supprimer votre profil avant de supprimer vos projets'
+    }
+
     // Si l'application n'est pas en développement on reste vague sur l'erreur serveur
     if (statusCode === 500 && res.app.get('env') !== 'development') {
         message = 'Internal Server Error';
