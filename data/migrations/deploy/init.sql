@@ -13,7 +13,7 @@ CREATE TABLE "user" (
     "pseudo" VARCHAR(64) NOT NULL UNIQUE,
     "password" VARCHAR(64) NOT NULL,
     "description" TEXT NOT NULL,
-    "availability" BOOLEAN NOT NULL DEFAULT FALSE,
+    "availability" BOOLEAN DEFAULT FALSE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ,
     CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
@@ -23,7 +23,7 @@ CREATE TABLE "project" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "title" VARCHAR(64) NOT NULL UNIQUE,
     "description" TEXT NOT NULL,
-    "availability" BOOLEAN NOT NULL DEFAULT FALSE,
+    "availability" BOOLEAN DEFAULT FALSE,
     "user_id" INT NOT NULL REFERENCES "user" ("id"),
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ

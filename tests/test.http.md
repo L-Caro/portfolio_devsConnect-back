@@ -38,5 +38,3 @@ Content-Type: application/json
     "description": "ceci est un test",
     "availability": false
 }
-
-
