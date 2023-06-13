@@ -15,7 +15,6 @@ router.delete('/:id', controllerHandler(userController.deleteOneUser));
 
 module.exports = router;
 
-
 // Doc Swagger
 /**
 * @swagger
@@ -30,6 +29,7 @@ module.exports = router;
 *         - pseudo
 *         - password
 *         - description
+*         - availability
 *       properties:
 *         id:
 *           type: integer
@@ -134,12 +134,7 @@ module.exports = router;
  *     responses:
  *       200:
  *         description: The user description by id
- *         content:	￼[
-Array with all tags of the user
-
-￼{
-id	integer
-name	string
+ *         content:
  *           application/json:
  *             schema:
  *               type: array
