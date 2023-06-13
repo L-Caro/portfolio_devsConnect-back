@@ -136,31 +136,31 @@ module.exports = router;
  * /api/projects/{id}:
  *  put:
  *    summary: Update the project by its id
- *      tags: [Projects]
- *      parameters:
- *        - in: path
- *          name: id
- *          schema:
- *            type: string
- *          required: true
- *          description: The project id
- *      requestBody:
+ *    tags: [Projects]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: string
  *        required: true
+ *        description: The project id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Project'
+ *    responses:
+ *      200:
+ *        description: The project has been updated
  *        content:
  *          application/json:
  *            schema:
- *                $ref: '#/components/schemas/Project'
- *      responses:
- *        200:
- *          description: The project has been updated
- *          content:
- *            application/json:
- *              schema:
- *                 $ref: '#/components/schemas/Project'
- *        404:
- *          description: The project was not found
- *        500:
- *          description: Something went wrong
+ *              $ref: '#/components/schemas/Project'
+ *      404:
+ *        description: The project was not found
+ *      500:
+ *        description: Something went wrong
  */
 
 /**
