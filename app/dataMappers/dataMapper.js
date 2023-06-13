@@ -12,28 +12,19 @@ const dataMapper = {
       "project"."id",
       "project"."title",
       "project"."description",
-      (
-        SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
-        FROM (
-          SELECT DISTINCT "tag"."id", "tag"."name"
-          FROM "project_has_tag"
-          INNER JOIN "tag" ON "project"."id" = "project_has_tag"."project_id"
-          WHERE "project_has_tag"."project_id" = "project"."id"
-          ORDER BY "tag"."id"
-        ) AS "tag"
-      ) AS tags,
-      (
-        SELECT json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name"))
-        FROM (
-          SELECT DISTINCT "user"."id", "user"."name"
-          FROM "project_has_user"
-          INNER JOIN "user" ON "project"."id" = "project_has_user"."project_id"
-          WHERE "project_has_user"."project_id" = "project"."id"
-          ORDER BY "user"."id"
-        )AS "user"
-      ) AS users
+      "project"."availability",
+      json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name")) AS tags,
+      json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name")) AS users
     FROM
       "project"
+    LEFT JOIN
+      "project_has_tag" ON "project"."id" = "project_has_tag"."project_id"
+    LEFT JOIN
+      "tag" ON "project_has_tag"."tag_id" = "tag"."id"
+    LEFT JOIN
+      "project_has_user" ON "project"."id" = "project_has_user"."project_id"
+    LEFT JOIN
+      "user" ON "project_has_user"."user_id" = "user"."id"
     GROUP BY
       "project"."id";
     `);
@@ -43,7 +34,35 @@ const dataMapper = {
   //methode pour recuperer un seul projet a partir de l'id recu en parametre
   async findOneProject (id){
     const preparedQuery = {
-      text: `SELECT * FROM "project" WHERE "id" = $1`,
+      text: `SELECT
+      "project"."id",
+      "project"."title",
+      "project"."description",
+      "project"."availability",
+      (
+          SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
+          FROM (
+              SELECT DISTINCT ON ("tag"."id") "tag"."id", "tag"."name"
+              FROM "project_has_tag"
+              INNER JOIN "tag" ON "project_has_tag"."tag_id" = "tag"."id"
+              WHERE "project_has_tag"."project_id" = "project"."id"
+              ORDER BY "tag"."id"
+          ) AS "tag"
+      ) AS tags,
+      (
+          SELECT json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name"))
+          FROM (
+              SELECT DISTINCT ON ("user"."id") "user"."id", "user"."name"
+              FROM "project_has_user"
+              INNER JOIN "user" ON "project_has_user"."user_id" = "user"."id"
+              WHERE "project_has_user"."project_id" = "project"."id"
+              ORDER BY "user"."id"
+          ) AS "user"
+      ) AS users
+  FROM
+      "project"
+  WHERE
+      "project"."id" = $1;`,
       values: [id],
     };
     const results = await client.query(preparedQuery);
@@ -55,7 +74,42 @@ const dataMapper = {
 
   async removeOneProject (id){
     const preparedQuery = {
-      text: `DELETE FROM "project" WHERE "id" = $1 RETURNING *`,
+      text: `WITH deleted_tags AS (
+        DELETE FROM "project_has_tag"
+        WHERE "project_id" = $1
+        RETURNING *
+    ),
+    deleted_users AS (
+        DELETE FROM "project_has_user"
+        WHERE "project_id" = $1
+        RETURNING *
+    ),
+    deleted_project AS (
+        DELETE FROM "project"
+        WHERE "id" = $1
+        RETURNING *
+    )
+    SELECT
+        deleted_project.*,
+        (
+            SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
+            FROM (
+                SELECT DISTINCT "tag"."id", "tag"."name"
+                FROM "tag"
+                INNER JOIN deleted_tags ON "tag"."id" = deleted_tags."tag_id"
+                ORDER BY "tag"."id"
+            ) AS "tag"
+        ) AS tags,
+        (
+            SELECT json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name"))
+            FROM (
+                SELECT DISTINCT "user"."id", "user"."name"
+                FROM "user"
+                INNER JOIN deleted_users ON "user"."id" = deleted_users."user_id"
+                ORDER BY "user"."id"
+            ) AS "user"
+        ) AS users
+    FROM deleted_project;`,
       values: [id],
     };
     const results = await client.query(preparedQuery);
@@ -77,11 +131,14 @@ const dataMapper = {
   async updateOneProject (projectId, updatedFields) {
     const {title, description, availability, user_id} = updatedFields;
     const preparedQuery= {
-       text: `UPDATE "project" SET title = COALESCE($1, title), description = COALESCE($2, description), availability = COALESCE($3, availability), user_id = COALESCE($4, user_id) WHERE id=$5 RETURNING *`,
-       values: [title, description, availability, user_id, projectId]
+       text: `UPDATE "project" SET title = COALESCE($1, title), description = COALESCE($2, description), availability = COALESCE($3, availability), user_id = COALESCE($4, user_id, updated_at = COALESCE($5, updated_at)) WHERE id=$6 RETURNING *`,
+       values: [title, description, availability, updated_at, user_id, projectId]
     }
     const results = await client.query(preparedQuery);
-    return results.rows[0];
+    if (!results.rows[0]) {
+      throw new ApiError('Project not found', { statusCode: 404 });
+    }
+    return results.rows[0]; 
   },
 
 /// --- USER
