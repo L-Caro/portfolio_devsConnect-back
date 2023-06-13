@@ -9,33 +9,33 @@ const dataMapper = {
   findAllProjects: async () => {
     const results = await client.query(`
     SELECT
-    "project"."id",
-    "project"."title",
-    "project"."description",
-    (
-      SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
-      FROM (
-        SELECT DISTINCT "tag"."id", "tag"."name"
-        FROM "project_has_tag"
-        INNER JOIN "tag" ON "project"."id" = "project_has_tag"."project_id"
-        WHERE "project_has_tag"."project_id" = "project"."id"
-        ORDER BY "tag"."id"
-      ) AS "tag"
-    ) AS tags,
-    (
-      SELECT json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name"))
-      FROM (
-        SELECT DISTINCT "user"."id", "user"."name"
-        FROM "project_has_user"
-        INNER JOIN "user" ON "project"."id" = "project_has_user"."project_id"
-        WHERE "project_has_user"."project_id" = "project"."id"
-        ORDER BY "user"."id"
-      )AS "user"
-    ) AS users
-  FROM
-    "project"
-  GROUP BY
-    "project"."id";
+      "project"."id",
+      "project"."title",
+      "project"."description",
+      (
+        SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
+        FROM (
+          SELECT DISTINCT "tag"."id", "tag"."name"
+          FROM "project_has_tag"
+          INNER JOIN "tag" ON "project"."id" = "project_has_tag"."project_id"
+          WHERE "project_has_tag"."project_id" = "project"."id"
+          ORDER BY "tag"."id"
+        ) AS "tag"
+      ) AS tags,
+      (
+        SELECT json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name"))
+        FROM (
+          SELECT DISTINCT "user"."id", "user"."name"
+          FROM "project_has_user"
+          INNER JOIN "user" ON "project"."id" = "project_has_user"."project_id"
+          WHERE "project_has_user"."project_id" = "project"."id"
+          ORDER BY "user"."id"
+        )AS "user"
+      ) AS users
+    FROM
+      "project"
+    GROUP BY
+      "project"."id";
     `);
     return results.rows; 
   },
@@ -87,13 +87,75 @@ const dataMapper = {
 /// --- USER
 
   findAllUsers: async () => {
-    const results = await client.query('SELECT * FROM "user"');
+    const preparedQuery ={
+      text: `SELECT
+        "user"."id",
+        "user"."name",
+        "user"."firstname",
+        "user"."pseudo",
+        "user"."description",
+        "user"."availability",
+        "user"."created_at",
+        "user"."updated_at",
+        (
+          SELECT json_agg(json_build_object('id', "project"."id", 'name', "project"."name"))
+          FROM (
+            SELECT DISTINCT "user"."id", "user"."name"
+            FROM "project_has_user"
+            INNER JOIN "project" ON "project"."id" = "project_has_user"."project_id"
+            WHERE "project_has_user"."user_id" = "user"."id"
+            ORDER BY "user"."id"
+          )AS "project"
+        ) AS projects,
+        (
+          SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
+          FROM (
+            SELECT DISTINCT "tag"."id", "tag"."name"
+            FROM "user_has_tag"
+            INNER JOIN "tag" ON "user"."id" = "user_has_tag"."user_id"
+            WHERE "user_has_tag"."user_id" = "user"."id"
+            ORDER BY "tag"."id"
+          ) AS "tag"
+        )AS tags
+      FROM "user"`};
+    const results = await client.query(preparedQuery);
     return results.rows; 
   },
 
   async findOneUser (id){
     const preparedQuery = {
-      text: `SELECT * FROM "user" WHERE "id" = $1`,
+      text: `SELECT
+      "user"."id",
+      "user"."name",
+      "user"."firstname",
+      "user"."pseudo",
+      "user"."email",
+      "user"."description",
+      "user"."availability",
+      "user"."created_at",
+      "user"."updated_at",
+      (
+        SELECT json_agg(json_build_object('id', "project"."id", 'name', "project"."name"))
+        FROM (
+          SELECT DISTINCT "user"."id", "user"."name"
+          FROM "project_has_user"
+          INNER JOIN "project" ON "project"."id" = "project_has_user"."project_id"
+          WHERE "project_has_user"."user_id" = "user"."id"
+          ORDER BY "user"."id"
+        )AS "project"
+      ) AS projects,
+      (
+        SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
+        FROM (
+          SELECT DISTINCT "tag"."id", "tag"."name"
+          FROM "user_has_tag"
+          INNER JOIN "tag" ON "user"."id" = "user_has_tag"."user_id"
+          WHERE "user_has_tag"."user_id" = "user"."id"
+          ORDER BY "tag"."id"
+        ) AS "tag"
+      )AS tags
+    FROM "user"
+    WHERE "id" = $1`,
       values: [id],
     };
     const results = await client.query(preparedQuery);
@@ -117,7 +179,7 @@ const dataMapper = {
 
   async createOneUser (name, firstname, email, pseudo, password, description, availability) {
     const preparedQuery= {
-       text: `INSERT INTO "user" (name, firstname, email, pseudo, password, description, availability) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+       text: `INSERT INTO "user" (name, firstname, email, pseudo, password, description, availability) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
        values: [name, firstname, email, pseudo, password, description, availability]
     }
     const results = await client.query(preparedQuery);
