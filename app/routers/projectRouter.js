@@ -24,7 +24,6 @@ module.exports = router;
  *       required:
  *         - title
  *         - description
- *         - availibility
  *         - user_id
  *       properties:
  *         id:

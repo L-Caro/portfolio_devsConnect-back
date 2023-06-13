@@ -64,3 +64,40 @@ YAMLSemanticError: Implicit map keys need to be on a single line at line 13, col
   "statusCode": 500,
   "message": "update or delete on table \"project\" violates foreign key constraint \"project_has_tag_project_id_fkey\" on table \"project_has_tag\""
 }
+
+## Route PUT
+
+```js
+
+```
+/**
+ * @swagger
+ * /api/projects/{id}:
+ *  put:
+ *   summary: Update the project by its id
+ *    tags: [Projects]
+ *    parameters:
+ *     - in: path
+ *      name: id
+ *      schema:
+ *       type: string
+ *       required: true
+ *        description: The project id
+ *    requestBody:
+ *     required: true
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: '#/components/schemas/Project'
+ *    responses:
+ *     200:
+ *      description: The project has been updated
+ *       content:
+ *        application/jsorn:
+ *         schema:
+ *          $ref: '#/components/schemas/Project'
+ *     404:
+ *      description: The project was not found
+ *     500:
+ *      description: Something went wrong
+ */

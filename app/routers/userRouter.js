@@ -30,7 +30,6 @@ module.exports = router;
 *         - pseudo
 *         - password
 *         - description
-*         - availability
 *       properties:
 *         id:
 *           type: integer
@@ -135,7 +134,12 @@ module.exports = router;
  *     responses:
  *       200:
  *         description: The user description by id
- *         content:
+ *         content:	￼[
+Array with all tags of the user
+
+￼{
+id	integer
+name	string
  *           application/json:
  *             schema:
  *               type: array
