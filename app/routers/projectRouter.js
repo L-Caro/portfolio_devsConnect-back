@@ -41,6 +41,26 @@ module.exports = router;
  *         user_id:
  *           type: integer
  *           description: The auto-generated id of the project's creator
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               name:
+ *                 type: string  
+ *           description: Array with all tags of the user
+ *         users:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               name:
+ *                 type: string  
+ *           description: Array of objects for the projects of the user
  *         created_at:
  *           type: timestamp
  *           description: The auto-generated time of the project's creation
@@ -53,6 +73,8 @@ module.exports = router;
  *         description: Lorem ipsum blabla
  *         availibility: TRUE
  *         user_id: 2
+ *         tags: [Java, C, C++]
+ *         users: [4, 2, 3]
  *         created_at: "2023-06-06T19:08:42.845Z"
  *         updated_at: "2023-06-07T08:08:42.845Z"
  */
@@ -177,7 +199,7 @@ module.exports = router;
  *         description: The project id
  *     responses:
  *       200:
- *         description: The project has been updated
- *       404:
- *         description: The project was not found
+ *         description: The project has been deleted successfully
+ *       500:
+ *         description: Something went wrong
  */
