@@ -13,23 +13,21 @@ const dataMapper = {
       "project"."title",
       "project"."description",
       (
-        SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
+        SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
         FROM (
           SELECT DISTINCT "tag"."id", "tag"."name"
-          FROM "project_has_tag"
-          INNER JOIN "tag" ON "project"."id" = "project_has_tag"."project_id"
+          FROM "tag"
+          INNER JOIN "project_has_tag" ON "tag"."id" = "project_has_tag"."tag_id"
           WHERE "project_has_tag"."project_id" = "project"."id"
-          ORDER BY "tag"."id"
         ) AS "tag"
       ) AS tags,
       (
-        SELECT json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name"))
+        SELECT json_agg(json_build_object('id', "user"."id", 'name', "user"."name"))
         FROM (
           SELECT DISTINCT "user"."id", "user"."name"
-          FROM "project_has_user"
-          INNER JOIN "user" ON "project"."id" = "project_has_user"."project_id"
+          FROM "user"
+          INNER JOIN "project_has_user" ON "user"."id" = "project_has_user"."user_id"
           WHERE "project_has_user"."project_id" = "project"."id"
-          ORDER BY "user"."id"
         )AS "user"
       ) AS users
     FROM
@@ -98,23 +96,21 @@ const dataMapper = {
         "user"."created_at",
         "user"."updated_at",
         (
-          SELECT json_agg(json_build_object('id', "project"."id", 'name', "project"."name"))
+          SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
           FROM (
-            SELECT DISTINCT "user"."id", "user"."name"
-            FROM "project_has_user"
-            INNER JOIN "project" ON "project"."id" = "project_has_user"."project_id"
+            SELECT DISTINCT "project"."id", "project"."title"
+            FROM "project"
+            INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
             WHERE "project_has_user"."user_id" = "user"."id"
-            ORDER BY "user"."id"
           )AS "project"
         ) AS projects,
         (
           SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
           FROM (
             SELECT DISTINCT "tag"."id", "tag"."name"
-            FROM "user_has_tag"
-            INNER JOIN "tag" ON "user"."id" = "user_has_tag"."user_id"
+            FROM "tag"
+            INNER JOIN "user_has_tag" ON "tag"."id" = "user_has_tag"."tag_id"
             WHERE "user_has_tag"."user_id" = "user"."id"
-            ORDER BY "tag"."id"
           ) AS "tag"
         )AS tags
       FROM "user"`};
@@ -135,23 +131,21 @@ const dataMapper = {
       "user"."created_at",
       "user"."updated_at",
       (
-        SELECT json_agg(json_build_object('id', "project"."id", 'name', "project"."name"))
+        SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
         FROM (
-          SELECT DISTINCT "user"."id", "user"."name"
-          FROM "project_has_user"
-          INNER JOIN "project" ON "project"."id" = "project_has_user"."project_id"
+          SELECT DISTINCT "project"."id", "project"."title"
+          FROM "project"
+          INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
           WHERE "project_has_user"."user_id" = "user"."id"
-          ORDER BY "user"."id"
         )AS "project"
       ) AS projects,
       (
         SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
         FROM (
           SELECT DISTINCT "tag"."id", "tag"."name"
-          FROM "user_has_tag"
-          INNER JOIN "tag" ON "user"."id" = "user_has_tag"."user_id"
+          FROM "tag"
+          INNER JOIN "user_has_tag" ON "tag"."id" = "user_has_tag"."tag_id"
           WHERE "user_has_tag"."user_id" = "user"."id"
-          ORDER BY "tag"."id"
         ) AS "tag"
       )AS tags
     FROM "user"
