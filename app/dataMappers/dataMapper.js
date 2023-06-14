@@ -131,9 +131,9 @@ const dataMapper = {
       "user"."created_at",
       "user"."updated_at",
       (
-        SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
+        SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability"))
         FROM (
-          SELECT DISTINCT "project"."id", "project"."title"
+          SELECT DISTINCT "project"."id", "project"."title", "project"."description", "project"."availability"
           FROM "project"
           INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
           WHERE "project_has_user"."user_id" = "user"."id"
