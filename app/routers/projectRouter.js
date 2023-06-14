@@ -73,8 +73,8 @@ module.exports = router;
  *         description: Lorem ipsum blabla
  *         availibility: TRUE
  *         user_id: 2
- *         tags: [Java, C, C++]
- *         users: [4, 2, 3]
+ *         tags: [{id: 2, name: Javascript}, {id: 3, name: HTML}, {id: 4, name: CSS}]
+ *         users: [{id: 4, name: Caro}, {id: 2, name: Mangeot}, {id: 3, name: Danglot}]
  *         created_at: "2023-06-06T19:08:42.845Z"
  *         updated_at: "2023-06-07T08:08:42.845Z"
  */
@@ -83,7 +83,7 @@ module.exports = router;
  * @swagger
  * tags:
  *   name: Projects
- *   description: The projects managing API
+ *   description: API routes for the Projects
  */
 
 /**
@@ -101,6 +101,8 @@ module.exports = router;
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Project'
+ *       500:
+ *         description: Internal Server Error
  */
 
 /**
@@ -125,8 +127,10 @@ module.exports = router;
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Project'
- *       404:
+ *       204:
  *         description: The project was not found
+ *       500:
+ *         description: Internal Server Error
  */
 
 /**
@@ -149,7 +153,7 @@ module.exports = router;
  *            schema:
  *              $ref: '#/components/schemas/Project'
  *      500:
- *        description: Server error
+ *        description: Internal Server Error
  */
 
 /**
@@ -178,10 +182,10 @@ module.exports = router;
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/Project'
- *      404:
+ *      204:
  *        description: The project was not found
  *      500:
- *        description: Something went wrong
+ *        description: Internal Server Error
  */
 
 /**
@@ -200,6 +204,8 @@ module.exports = router;
  *     responses:
  *       200:
  *         description: The project has been deleted successfully
+ *       204:
+ *         description: The project was not found
  *       500:
- *         description: Something went wrong
+ *         description: Internal Server Error
  */

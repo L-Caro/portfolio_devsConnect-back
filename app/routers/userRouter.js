@@ -54,7 +54,7 @@ module.exports = router;
 *           description: The user pseudo
 *         availibility: 
 *           type: boolean
-*           description: The project availibility
+*           description: The user availibility
 *         tags:
 *           type: array
 *           items:
@@ -77,10 +77,10 @@ module.exports = router;
 *           description: Array of objects for the projects of the user
 *         created_at: 
 *           type: timestamp
-*           description: The auto-generated time of the project's creation
+*           description: The auto-generated time of the user's creation
 *         updated_at: 
 *           type: timestamp
-*           description: The auto-generated time of the project's update
+*           description: The auto-generated time of the user's update
 *       example:
 *         id: 1
 *         name: Captain
@@ -118,6 +118,8 @@ module.exports = router;
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Users'
+ *       500:
+ *         description: Internal Server Error
  */
 
 /**
@@ -142,8 +144,10 @@ module.exports = router;
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Users'
- *       404:
+ *       204:
  *         description: The User was not found
+ *       500:
+ *         description: Internal Server Error
  */
 
 /**
@@ -157,7 +161,7 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/users'
+ *            $ref: '#/components/schemas/Users'
  *    responses:
  *      200:
  *        description: The user has been successfully created
@@ -166,7 +170,7 @@ module.exports = router;
  *            schema:
  *              $ref: '#/components/schemas/Users'
  *      500:
- *        description: Server error
+ *        description: Internal Server Error
  */
 
 /**
@@ -194,11 +198,11 @@ module.exports = router;
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/users'
- *      404:
+ *              $ref: '#/components/schemas/Users'
+ *      204:
  *        description: The user was not found
  *      500:
- *        description: Something went wrong
+ *        description: Internal Server Error
  */
 
 /**
@@ -217,6 +221,8 @@ module.exports = router;
  *     responses:
  *       200:
  *         description: The user has been updated
- *       404:
+ *       204:
  *         description: The user was not found
+ *       500:
+ *        description: Vous ne pouvez pas supprimer votre profil avant de supprimer vos projets
  */

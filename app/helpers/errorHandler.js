@@ -13,6 +13,7 @@ const errorHandler = (err, res) => {
         logger.error(err);
     }
 
+    // regex : doit contenir exactement ce texte
     if(/project_user_id_fkey/.test(message)) {
       message = 'Vous ne pouvez pas supprimer votre profil avant de supprimer vos projets'
     }
