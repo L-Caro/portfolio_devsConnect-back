@@ -90,6 +90,8 @@ module.exports = router;
 *         password: harengs1234
 *         description: Vieux loup de mer
 *         availability: true
+*         tags: [{id:1, name:Java}]
+*         projects: [{id:1, name:DevsConnect}]
 *         created_at: "2023-06-06T19:08:42.845Z"
 *         updated_at: "2023-06-07T08:08:42.845Z"
 */
@@ -115,7 +117,7 @@ module.exports = router;
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/users'
+ *                 $ref: '#/components/schemas/Users'
  */
 
 /**
@@ -139,7 +141,7 @@ module.exports = router;
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/users'
+ *                 $ref: '#/components/schemas/Users'
  *       404:
  *         description: The User was not found
  */
