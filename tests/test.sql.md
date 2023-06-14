@@ -182,5 +182,3 @@ SELECT
     ) AS users
 FROM deleted_project;
 ```
-
-
