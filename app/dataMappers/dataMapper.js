@@ -240,13 +240,31 @@ const dataMapper = {
     return results.rows[0];
   },
 
-  async createOneUser (name, firstname, email, pseudo, password, description, availability) {
-    const preparedQuery= { // vérifier si le password n'est pas renvoyé en clair et le retirer du return
-       text: `INSERT INTO "user" (name, firstname, email, pseudo, password, description, availability) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-       values: [name, firstname, email, pseudo, password, description, availability]
-    }
-    const results = await client.query(preparedQuery);
-    return results.rows[0];
+  async createOneUser(name, firstname, email, pseudo, password, description, availability, tags) {
+    const preparedUserQuery = {
+      text: `INSERT INTO "user" (name, firstname, email, pseudo, password, description, availability) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      values: [name, firstname, email, pseudo, password, description, availability],
+    };
+  
+    const userResult = await client.query(preparedUserQuery);
+    const user = userResult.rows[0];
+  
+    const addTagsToUser = tags.map(async (tag) => {
+      const tagId = tag.id;      
+      // Effectuer des opérations asynchrones : la requête à la base de données
+      const preparedTagQuery = {
+        text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
+        values: [user.id, tagId],
+      };
+  
+      const tagResult = await client.query(preparedTagQuery);
+      return tagResult.rows[0];
+    });
+  
+  // Fonction native : attendre que toutes les opérations asynchrones se terminent
+    await Promise.all(addTagsToUser);
+  
+    return user; // Tableau des résultats des opérations asynchrones
   },
 
   async updateOneUser (userId, updatedFields) { 
