@@ -13,7 +13,7 @@ const authController = {
         return authController.sendTokens(response, request.ip, user);
       }
     }
-    throw new ApiError('Forbidden', { statusCode: 403 }));
+    throw new ApiError('Forbidden', { statusCode: 403 });
   },
 
   async tokenRefresh(request, response, next) {

@@ -168,42 +168,44 @@ const dataMapper = {
     const results = await client.query(preparedQuery);
     const project = results.rows[0];
 
-    const deleteTagsFromProject = await client.query({
+/*     const deleteTagsFromProject = await client.query({
       text: `DELETE FROM "project_has_tag" WHERE "project_id" = $1`,
       values: [projectId],
-    });
+    }); */
 
-    const addTagsToProject = tags.map(async (tagId) => {
+    const updatedTags = [];
+    for (const tag of tags) {
+      const tagId = tag.id;
       const preparedTagQuery = {
         text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
         values: [projectId, tagId],
       };
 
       const tagResults = await client.query(preparedTagQuery);
-      return tagResults.rows[0];
-    });
+      updatedTags.push(tagResults.rows[0]);
+    };
 
-    const deleteUsersFromProject = await client.query({
+/*     const deleteUsersFromProject = await client.query({
       text: `DELETE FROM "project_has_user" WHERE "project_id" = $1`,
       values: [projectId],
-    });
+    }); */
 
-    const addUsersToProject = users.map(async (userId) => {
+    const updatedUsers = [];
+    for (const user of users) {
+      const userId = user.id;
       const preparedUserQuery = {
         text: `INSERT INTO "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
         values: [projectId, userId],
       };
 
       const userResults = await client.query(preparedUserQuery);
-      return userResults.rows[0];
-    });
+      updatedUsers.push(userResults.rows[0]);
+    };
 
-    await Promise.all(deleteTagsFromProject);
-    await Promise.all(addTagsToProject);
-    await Promise.all(deleteUsersFromProject);
-    await Promise.all(addUsersToProject);
-
-    return project;
+    if (!results.rows[0]) {
+      throw new ApiError('Project not found', { statusCode: 204 });
+    }
+    return { project, updatedTags, updatedUsers };
   },
    
 /// --- USER
