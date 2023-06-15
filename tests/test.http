@@ -1,4 +1,49 @@
 @baseUrl = http://localhost:3000
+@accessToken = {{login.response.body.$.data.accessToken}}
+@refreshToken = {{login.response.body.$.data.refreshToken}}
 
 
-GET {{baseUrl}}/api/projects/65
+# @name register
+POST {{baseUrl}}/register
+content-type: application/json
+
+{
+    "email": "benji@oclock.io",
+    "password": "secret"
+}
+
+###
+# @name login
+POST {{baseUrl}}/login
+content-type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "secret"
+}
+
+###
+
+GET {{baseUrl}}/api/book
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+POST {{baseUrl}}/api/book
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "title": "La stratégie Ender",
+    "author": "Orson Scott Card"
+}
+
+###
+POST {{baseUrl}}/refresh-token
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "refreshToken": "{{refreshToken}}"
+}

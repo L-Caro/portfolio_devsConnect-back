@@ -1,16 +1,17 @@
 const express = require("express");
 const projectController = require("../controllers/projectController");
 const controllerHandler = require("../helpers/controllerHandler");
+const { authorize } = require('../auth');
 const router = express.Router();
 
 router.get("/", controllerHandler(projectController.getAllProjects));
 router.get("/:id", controllerHandler(projectController.getOneProject));
 
-router.post("/", controllerHandler(projectController.addOneProject));
+router.post("/", authorize('create', 'project'), controllerHandler(projectController.addOneProject));
 
-router.put("/:id", controllerHandler(projectController.editOneProject));
+router.put("/:id", authorize('modify', 'project'), controllerHandler(projectController.editOneProject));
 
-router.delete("/:id", controllerHandler(projectController.deleteOneProject));
+router.delete("/:id", authorize('delete', 'project'), controllerHandler(projectController.deleteOneProject));
 
 module.exports = router;
 
