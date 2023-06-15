@@ -42,10 +42,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
   "tags": [{"id": 4, "name": "CSS"}, {"id": 3, "name": "HTML"}],
   "users": [
     {
-      "id": 1,
-      "name": "Gandji"
-    },
-    {
       "id": 2,
       "name": "Mangeot"
     },

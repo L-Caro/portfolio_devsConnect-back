@@ -166,7 +166,11 @@ const dataMapper = {
     };
 
     const results = await client.query(preparedQuery);
+    
     const project = results.rows[0];
+    if (!project) {
+      throw new ApiError('Project not found', { statusCode: 204 });
+    };
 
 /*     const deleteTagsFromProject = await client.query({
       text: `DELETE FROM "project_has_tag" WHERE "project_id" = $1`,
@@ -177,7 +181,10 @@ const dataMapper = {
     for (const tag of tags) {
       const tagId = tag.id;
       const preparedTagQuery = {
-        text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
+        text: `UPDATE "project_has_tag" 
+        SET tag_id = $1
+        WHERE project_id = $2
+        RETURNING *`,
         values: [projectId, tagId],
       };
 
@@ -194,7 +201,10 @@ const dataMapper = {
     for (const user of users) {
       const userId = user.id;
       const preparedUserQuery = {
-        text: `INSERT INTO "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
+        text: `UPDATE "project_has_user" 
+        SET user_id = $1
+        WHERE project_id = $2
+        RETURNING *`,
         values: [projectId, userId],
       };
 
@@ -202,9 +212,7 @@ const dataMapper = {
       updatedUsers.push(userResults.rows[0]);
     };
 
-    if (!results.rows[0]) {
-      throw new ApiError('Project not found', { statusCode: 204 });
-    }
+    
     return { project, updatedTags, updatedUsers };
   },
    
