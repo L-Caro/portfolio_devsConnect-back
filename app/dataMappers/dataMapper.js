@@ -129,13 +129,27 @@ const dataMapper = {
     return results.rows[0];
   },
 
-  async createOneProject(title, description, availability, user_id) {
-    const preparedQuery= {
+  async createOneProject(title, description, availability, user_id, tags) {
+    const preparedProjectQuery= {
        text: `INSERT INTO "project" (title, description, availability, user_id) VALUES ($1, $2, $3, $4) RETURNING *`,
        values: [title, description, availability, user_id]
     }
-    const results = await client.query(preparedQuery);
-    return results.rows[0];
+    const projectResults = await client.query(preparedProjectQuery);
+    const project = await projectResults.rows[0];
+
+    const addTagsToProject = tags.map(async (tagId) => {
+      const preparedTagQuery = {
+          text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
+          values: [project.id, tagId],
+        };
+    
+    const tagResults = await client.query(preparedTagQuery);
+    return tagResults.rows[0];
+    });
+
+    await Promise.all(addTagsToProject);
+
+    return project;
   },
 
   async updateOneProject (projectId, updatedFields) {
@@ -250,8 +264,7 @@ const dataMapper = {
     const user = userResult.rows[0];
   
     const addTagsToUser = tags.map(async (tag) => {
-      const tagId = tag.id;      
-      // Effectuer des opérations asynchrones : la requête à la base de données
+      const tagId = tag.id;
       const preparedTagQuery = {
         text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
         values: [user.id, tagId],

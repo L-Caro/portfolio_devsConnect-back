@@ -1,4 +1,4 @@
-/* const client = require('./database');
+const client = require('./database');
 
 const dataMapper = {
   async createOneUser(name, firstname, email, pseudo, password, description, availability, tags) {
@@ -28,4 +28,4 @@ const dataMapper = {
   }
 }
 
-module.exports = dataMapper; */
+module.exports = dataMapper;

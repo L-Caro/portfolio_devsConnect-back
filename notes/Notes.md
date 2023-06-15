@@ -1,5 +1,5 @@
 # createOneUser with tags
-
+--> nouvelles fonctions addTagsToUser, addTagsToProject et itérer les fonctions dans les create et update
 ## dataMapper
 
 ```js
@@ -13,6 +13,7 @@ async createOneUser(name, firstname, email, pseudo, password, description, avail
   const user = userResult.rows[0];
 
   const addTagsToUser = tags.map(async (tagId) => {
+    const tagId = tag.id;
     // Effectuer des opérations asynchrones : la requête à la base de données
     const preparedTagQuery = {
       text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
