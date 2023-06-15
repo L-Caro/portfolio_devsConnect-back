@@ -50,7 +50,7 @@ module.exports = router;
  *                 type: integer
  *               name:
  *                 type: string  
- *           description: Array with all tags of the user
+ *           description: Array with all tags of the project
  *         users:
  *           type: array
  *           items:
@@ -60,7 +60,7 @@ module.exports = router;
  *                 type: integer
  *               name:
  *                 type: string  
- *           description: Array of objects for the projects of the user
+ *           description: Array of objects for the users of the project
  *         created_at:
  *           type: timestamp
  *           description: The auto-generated time of the project's creation
