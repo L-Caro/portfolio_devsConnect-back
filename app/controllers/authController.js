@@ -36,10 +36,11 @@ const authController = {
   },
 
   async sendTokens(response, ip, user) {
+    const userID = user.id;
     // create an access token
     const accessToken = auth.generateAccessToken(ip, user);
     // create a refresh token
-    const refreshToken = auth.generateRefreshToken(user.id);
+    const refreshToken = auth.generateRefreshToken(userID);
     // save refresh token to db
     await dataMapper.setRefreshToken(user.id, refreshToken);
     // send tokens to client
@@ -48,6 +49,7 @@ const authController = {
       data: {
         accessToken,
         refreshToken,
+        userID,
       },
     });
   },

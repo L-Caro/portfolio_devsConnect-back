@@ -67,13 +67,20 @@ const auth = {
           }
 
           // check for modify or delete project 
-          if (permission === "modify" && section === "project" || permission === "delete"&& section === "project") {
+          if (permission === "modify" && section === "project" || permission === "delete" && section === "project") {
             const projectID = parseInt(req.params.id);
-            console.log(projectID);
             const projectOwnerId = await dataMapper.findProjectOwner(projectID);
-            console.log(projectOwnerId);
-            console.log(decoded.data.id);
+            if(!projectOwnerId){
+              new ApiError('Not found', { statusCode: 404 });
+            };
             if (decoded.data.id === projectOwnerId){
+              return next();
+            };
+          }
+
+          if (permission === "modify" && section === "user" || permission === "delete" && section === "user") {
+            const routeID = parseInt(req.params.id);
+            if (decoded.data.id === routeID){
               return next();
             };
           }
@@ -83,7 +90,7 @@ const auth = {
         }
         new ApiError('Forbidden', { statusCode: 403 });
       } catch (ApiError) {
-        console.log(ApiError);
+        throw ApiError;
       }
     };
   },
