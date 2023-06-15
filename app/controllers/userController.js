@@ -1,4 +1,5 @@
 const dataMapper = require("../dataMappers/dataMapper");
+const bcrypt = require('bcrypt');
 
 const userController = {
     async getAllUsers(_, res) {
@@ -22,6 +23,17 @@ const userController = {
       const { name, firstname, email, pseudo, password, description, availability } = req.body;
       const user = await dataMapper.createOneUser(name, firstname, email, pseudo, password, description, availability);
       res.json({status: 'success', data: user })
+    },
+
+    //methode pour s'enregistrer
+    async register(req, res, next) {
+      const { name, firstname, email, pseudo, password, description, availability } = req.body;
+      const hashedPWD = await bcrypt.hash(password, 10);
+      if (!name || !firstname || !email || !pseudo || !password) {
+        throw new ApiError('Missing information', { statusCode: 400 });
+      }
+      await dataMapper.createOneUser(name, firstname, email, pseudo, hashedPWD, description, availability);
+      res.json({status: 'success' });
     },
 
     async editOneUser(req, res) {

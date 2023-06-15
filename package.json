@@ -11,11 +11,17 @@
   },
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=development DEBUG=app:* npx nodemon",
+    "start": "NODE_ENV=production node index.js"
+  },
   "repository": "git@github.com:O-clock-Starship/projet-03-DevsConnect-back.git",
   "author": "Elyette-Gandji <elyette.gandji@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "bcrypt": "^5.1.0",
     "bunyan": "^1.8.15",
-    "debug": "^4.3.4"
+    "debug": "^4.3.4",
+    "jsonwebtoken": "^9.0.0"
   }
 }
