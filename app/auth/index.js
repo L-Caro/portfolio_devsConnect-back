@@ -69,10 +69,10 @@ const auth = {
           // check for modify or delete project 
           if (permission === "modify" && section === "project" || permission === "delete"&& section === "project") {
             const projectID = parseInt(req.params.id);
-            console.log(projectID);
+            //console.log(projectID);
             const projectOwnerId = await dataMapper.findProjectOwner(projectID);
-            console.log(projectOwnerId);
-            console.log(decoded.data.id);
+            //console.log(projectOwnerId);
+            //console.log(decoded.data.id);
             if (decoded.data.id === projectOwnerId){
               return next();
             };

@@ -151,20 +151,61 @@ const dataMapper = {
 
     return project;
   },
-
-  async updateOneProject (projectId, updatedFields) {
-    const {title, description, availability, user_id} = updatedFields;
-    const preparedQuery= {
-       text: `UPDATE "project" SET title = COALESCE($1, title), description = COALESCE($2, description), availability = COALESCE($3, availability), user_id = COALESCE($4, user_id), updated_at = NOW() WHERE id=$5 RETURNING *`,
-       values: [title, description, availability, user_id, projectId]
-    }
+  
+  async updateOneProject(projectId, updatedFields) {
+    const { title, description, availability, user_id, tags, users } = updatedFields;
+    const preparedQuery = {
+      text: `UPDATE "project"
+      SET title = COALESCE($1, title),
+        description = COALESCE($2, description),
+        availability = COALESCE($3, availability),
+        user_id = COALESCE($4, user_id)
+      WHERE id = $5
+      RETURNING *`,
+      values: [title, description, availability, user_id, projectId],
+      
+    };
     const results = await client.query(preparedQuery);
-    if (!results.rows[0]) {
-      throw new ApiError('Project not found', { statusCode: 204 });
-    }
-    return results.rows[0]; 
-  },
+    const project = results.rows[0];
 
+    const deleteTagsFromProject = await client.query({
+      text: `DELETE FROM "project_has_tag" WHERE "project_id" = $1`,
+      values: [projectId],
+    });
+
+    const addTagsToProject = tags.map(async (tagId) => {
+      const preparedTagQuery = {
+        text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
+        values: [projectId, tagId],
+      };
+
+      const tagResults = await client.query(preparedTagQuery);
+      return tagResults.rows[0];
+    });
+
+    const deleteUsersFromProject = await client.query({
+      text: `DELETE FROM "project_has_user" WHERE "project_id" = $1`,
+      values: [projectId],
+    });
+
+    const addUsersToProject = users.map(async (userId) => {
+      const preparedUserQuery = {
+        text: `INSERT INTO "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
+        values: [projectId, userId],
+      };
+
+      const userResults = await client.query(preparedUserQuery);
+      return userResults.rows[0];
+    });
+
+    await Promise.all(deleteTagsFromProject);
+    await Promise.all(addTagsToProject);
+    await Promise.all(deleteUsersFromProject);
+    await Promise.all(addUsersToProject);
+
+    return project;
+  },
+    
 /// --- USER
 
   findAllUsers: async () => {

@@ -29,11 +29,10 @@ const projectController = {
 
     async editOneProject(req, res) {
       const projectId = req.params.id;
-      const { title, description, availability, user_id } = req.body;
-      const project = await dataMapper.updateOneProject(projectId, {title, description, availability, user_id});
+      const { title, description, availability, user_id, tags, users } = req.body;
+      const project = await dataMapper.updateOneProject(projectId, {title, description, availability, user_id, tags, users});
       res.json({status: 'success', data: project })
     }
 };
 
 module.exports = projectController;
-
