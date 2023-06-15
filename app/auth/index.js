@@ -78,7 +78,6 @@ const auth = {
             };
           }
 
-
           // forbidden
           new ApiError('Unauthorized', { statusCode: 401 });
         }
