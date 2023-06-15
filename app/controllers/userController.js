@@ -19,8 +19,8 @@ const userController = {
     },
 
     async addOneUser(req, res) {
-      const { name, firstname, email, pseudo, password, description, availability } = req.body;
-      const user = await dataMapper.createOneUser(name, firstname, email, pseudo, password, description, availability);
+      const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
+      const user = await dataMapper.createOneUser(name, firstname, email, pseudo, password, description, availability, tags);
       res.json({status: 'success', data: user })
     },
 
