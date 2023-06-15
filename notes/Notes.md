@@ -41,6 +41,70 @@ async addOneUser(req, res) {
     },
 ```
 
+# updateOneProject : avant ajout tags et users
+```js
+async updateOneProject (projectId, updatedFields) {
+    const {title, description, availability, user_id, tags, users} = updatedFields;
+    const preparedQuery= {
+       text: `UPDATE "project" 
+          SET title = COALESCE($1, title), 
+          description = COALESCE($2, description), 
+          availability = COALESCE($3, availability), 
+          user_id = COALESCE($4, user_id), 
+          updated_at = NOW() 
+       WHERE id=$5 RETURNING *`,
+       values: [title, description, availability, user_id, projectId]
+    }
+    const results = await client.query(preparedQuery);
+    if (!results.rows[0]) {
+      throw new ApiError('Project not found', { statusCode: 204 });
+    }
+    return results.rows[0]; 
+  },
+```
+
+Avec tags et users mais erreur de syntaxe INSERT
+```js
+  async updateOneProject(projectId, updatedFields) {
+    const { title, description, availability, user_id, tags, users } = updatedFields;
+    const preparedQuery = {
+      text: `UPDATE "project"
+             SET title = COALESCE($1, title),
+                 description = COALESCE($2, description),
+                 availability = COALESCE($3, availability),
+                 user_id = COALESCE($4, user_id),
+                 updated_at = NOW()
+             WHERE id = $5
+             RETURNING *`,
+      values: [title, description, availability, user_id, projectId]
+    };
+  
+    if (tags) {
+      preparedQuery.text += `; DELETE FROM "project_has_tag" WHERE project_id = $5;`; // += permet de concaténer les requêtes
+      for (const tag of tags) {
+        preparedQuery.text += ` INSERT INTO "project_has_tag" (project_id, tag_id) VALUES ($${preparedQuery.values.length + 1})`;
+        // $$ permet de délimiter une variable dans une requête
+        // $5 correspond à l'id du projet, $6 correspond à l'id du premier tag, $7 au deuxième, etc.
+        preparedQuery.values.push(tag);
+        // On ajoute l'id du tag dans le tableau des valeurs
+      }
+    }
+  
+    if (users) {
+      preparedQuery.text += `; DELETE FROM "project_has_user" WHERE project_id = $5;`;
+      for (const user of users) {
+        preparedQuery.text += ` INSERT INTO "project_has_user" (project_id, user_id) VALUES ($${preparedQuery.values.length + 1})`;
+        preparedQuery.values.push(user);
+      }
+    }
+  
+    const results = await client.query(preparedQuery);
+    if (!results.rows[0]) {
+      throw new ApiError('Project not found', { statusCode: 204 });
+    }
+    return results.rows[0]; 
+  },
+```
 ## Jointures tous les projets
 
 - les tag
