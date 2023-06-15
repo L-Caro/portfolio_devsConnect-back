@@ -33,6 +33,7 @@ const projectController = {
       const project = await dataMapper.updateOneProject(projectId, {title, description, availability, user_id, tags, users});
       res.json({status: 'success', data: project })
     }
+
 };
 
 module.exports = projectController;

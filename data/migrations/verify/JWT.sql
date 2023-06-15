@@ -2,6 +2,7 @@
 
 BEGIN;
 
--- XXX Add verifications here.
+
+SELECT "refresh_token" FROM "user" WHERE false;
 
 ROLLBACK;

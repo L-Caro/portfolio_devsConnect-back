@@ -151,7 +151,7 @@ const dataMapper = {
 
     return project;
   },
-  
+
   async updateOneProject(projectId, updatedFields) {
     const { title, description, availability, user_id, tags, users } = updatedFields;
     const preparedQuery = {
@@ -163,8 +163,8 @@ const dataMapper = {
       WHERE id = $5
       RETURNING *`,
       values: [title, description, availability, user_id, projectId],
-      
     };
+
     const results = await client.query(preparedQuery);
     const project = results.rows[0];
 
@@ -205,7 +205,7 @@ const dataMapper = {
 
     return project;
   },
-    
+   
 /// --- USER
 
   findAllUsers: async () => {

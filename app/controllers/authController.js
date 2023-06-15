@@ -13,7 +13,7 @@ const authController = {
         return authController.sendTokens(response, request.ip, user);
       }
     }
-    return next(new ApiError('Forbidden', { statusCode: 403 }));
+    throw new ApiError('Forbidden', { statusCode: 403 }));
   },
 
   async tokenRefresh(request, response, next) {
@@ -36,10 +36,11 @@ const authController = {
   },
 
   async sendTokens(response, ip, user) {
+    const userID = user.id;
     // create an access token
     const accessToken = auth.generateAccessToken(ip, user);
     // create a refresh token
-    const refreshToken = auth.generateRefreshToken(user.id);
+    const refreshToken = auth.generateRefreshToken(userID);
     // save refresh token to db
     await dataMapper.setRefreshToken(user.id, refreshToken);
     // send tokens to client
@@ -48,6 +49,7 @@ const authController = {
       data: {
         accessToken,
         refreshToken,
+        userID,
       },
     });
   },
