@@ -4,12 +4,30 @@
 
 
 # @name register
-POST {{baseUrl}}/register
+POST {{baseUrl}}/signin
 content-type: application/json
 
 {
-    "email": "benji@oclock.io",
-    "password": "secret"
+    "email": "benjo@olck.io",
+    "password": "secret",
+    "name": "Benjamin",
+    "firstname": "Gandji",
+    "pseudo": "Gao",
+    "description": "Lorem ipsum blabla",
+    "tags": [
+        {
+          "id": 2,
+          "name": "Javascript"
+        },
+        {
+          "id": 3,
+          "name": "HTML"
+        },
+        {
+          "id": 6,
+          "name": "SQL"
+        }
+      ]
 }
 
 ###
@@ -24,37 +42,47 @@ content-type: application/json
 
 ###
 
-GET {{baseUrl}}/api/book
+GET {{baseUrl}}/api/projects/1
 content-type: application/json
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer 
 
 ###
 
 PUT {{baseUrl}}/api/projects/1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYW1vbkBib2Zpcy5lZyIsImlkIjoyfSwiaWF0IjoxNjg2ODM2MTg4LCJleHAiOjE2ODY4OTAxODh9.I6zBVMUoKg1mvmImNreX0RCFMpvRUi_mgzcjk__WDkY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYW1vbkBib2Zpcy5lZyIsImlkIjoyfSwiaWF0IjoxNjg2OTE3MDUxLCJleHAiOjE2ODY5NzEwNTF9._8_v3Ia9WvHsbb2U0qxjyfcTwIj856Ktjrf_uNfKSKk
 
 {
-  "title": "Biscoc 5",
-  "description": "Lorem ipsum blabla",
-  "availibility": true,
-  "user_id": 2,
-  "tags": [{"id": 4, "name": "CSS"}, {"id": 3, "name": "HTML"}],
-  "users": [
-    {
-      "id": 2,
-      "name": "Mangeot"
-    },
-    {
-      "id": 4,
-      "name": "Caro"
-    },
-    {
-      "id": 3,
-      "name": "Danglot"
+      "title": "Biscoc O",
+      "description": "Lorem ipsum blabla",
+      "availability": true,
+      "tags": [  
+        {
+          "id": 1,
+          "name": "Java"
+        },      
+        {
+          "id": 3,
+          "name": "HTML"
+        },
+        {
+          "id": 6,
+          "name": "SQL"
+        }
+      ],
+      "users": [
+        {
+          "id": 1,
+          "name": "Gandji",
+          "is_active": false
+        },        
+        {
+          "id": 3,
+          "name": "Danglot",
+          "is_active": true
+        }
+      ]
     }
-  ]
-}
 
 ###
 POST {{baseUrl}}/refresh-token

@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const dataMapper = require('../dataMappers/dataMapper');
 const auth = require('../auth');
+const ApiError = require('../errors/apiError.js');
 
 const authController = {
   async login(request, response, next) {
