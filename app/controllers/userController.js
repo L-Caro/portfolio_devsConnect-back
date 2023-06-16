@@ -1,5 +1,6 @@
 const dataMapper = require("../dataMappers/dataMapper");
 const bcrypt = require('bcrypt');
+const ApiError = require('../errors/apiError.js');
 
 const userController = {
     async getAllUsers(_, res) {
@@ -19,27 +20,21 @@ const userController = {
       res.json({status: 'success', data: user })
     },
 
-    async addOneUser(req, res) {
-      const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
-      const user = await dataMapper.createOneUser(name, firstname, email, pseudo, password, description, availability, tags);
-      res.json({status: 'success', data: user })
-    },
-
     //methode pour s'enregistrer
     async register(req, res, next) {
-      const { name, firstname, email, pseudo, password, description, availability } = req.body;
+      const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
       const hashedPWD = await bcrypt.hash(password, 10);
       if (!name || !firstname || !email || !pseudo || !password) {
         throw new ApiError('Missing information', { statusCode: 400 });
       }
-      await dataMapper.createOneUser(name, firstname, email, pseudo, hashedPWD, description, availability);
+      await dataMapper.createOneUser(name, firstname, email, pseudo, hashedPWD, description, availability, tags);
       res.json({status: 'success' });
     },
 
     async editOneUser(req, res) {
       const userId = req.params.id;
-      const { name, firstname, email, pseudo, password, description, availability } = req.body;
-      const user = await dataMapper.updateOneUser(userId, {name, firstname, email, pseudo, password, description, availability});
+      const { name, firstname, email, pseudo, password, description, availability, tags, projects } = req.body;
+      const user = await dataMapper.updateOneUser(userId, {name, firstname, email, pseudo, password, description, availability, tags, projects});
       res.json({status: 'success', data: user })
     }
 };

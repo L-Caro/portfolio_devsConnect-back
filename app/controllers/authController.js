@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const dataMapper = require('../dataMappers/dataMapper');
 const auth = require('../auth');
+const ApiError = require('../errors/apiError.js');
 
 const authController = {
   async login(request, response, next) {
@@ -13,7 +14,7 @@ const authController = {
         return authController.sendTokens(response, request.ip, user);
       }
     }
-    throw new ApiError('Forbidden', { statusCode: 403 }));
+    throw new ApiError('Forbidden', { statusCode: 403 });
   },
 
   async tokenRefresh(request, response, next) {

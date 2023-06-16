@@ -14,7 +14,7 @@ const userController = require('../controllers/userController');
 const router = express.Router();
 
 // User registration route
-router.post('/signin', controllerHandler(userController.addOneUser));
+router.post('/signin', controllerHandler(userController.register));
 
 // User login route
 router.post('/login', controllerHandler(authController.login));

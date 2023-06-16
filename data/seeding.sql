@@ -52,7 +52,6 @@ INSERT INTO "user_has_tag" (user_id, tag_id) VALUES
 INSERT INTO "project_has_user" (project_id, user_id, is_active) VALUES
 (1, 1, true),
 (1, 3, false),
-(1, 1, true),
 (2, 2, false),
 (2, 4, true),
 (3, 2, false),

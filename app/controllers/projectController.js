@@ -22,15 +22,15 @@ const projectController = {
     },
 
     async addOneProject(req, res) {
-      const { title, description, availability, user_id, tags } = req.body;
-      const project = await dataMapper.createOneProject(title, description, availability, user_id, tags);
+      const { title, description, availability, tags } = req.body;
+      const project = await dataMapper.createOneProject(title, description, availability, tags);
       res.json({status: 'success', data: project })
     },
 
     async editOneProject(req, res) {
       const projectId = req.params.id;
-      const { title, description, availability, user_id, tags, users } = req.body;
-      const project = await dataMapper.updateOneProject(projectId, {title, description, availability, user_id, tags, users});
+      const { title, description, availability, tags, users } = req.body;
+      const project = await dataMapper.updateOneProject(projectId, {title, description, availability, tags, users});
       res.json({status: 'success', data: project })
     }
 
