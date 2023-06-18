@@ -48,41 +48,39 @@ Authorization: Bearer
 
 ###
 
-PUT {{baseUrl}}/api/projects/1
+PUT {{baseUrl}}/api/users/2
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYW1vbkBib2Zpcy5lZyIsImlkIjoyfSwiaWF0IjoxNjg2OTE3MDUxLCJleHAiOjE2ODY5NzEwNTF9._8_v3Ia9WvHsbb2U0qxjyfcTwIj856Ktjrf_uNfKSKk
 
 {
-      "title": "Biscoc O",
-      "description": "Lorem ipsum blabla",
-      "availability": true,
-      "tags": [  
-        {
-          "id": 1,
-          "name": "Java"
-        },      
-        {
-          "id": 3,
-          "name": "HTML"
-        },
-        {
-          "id": 6,
-          "name": "SQL"
-        }
-      ],
-      "users": [
-        {
-          "id": 1,
-          "name": "Gandji",
-          "is_active": false
-        },        
-        {
-          "id": 3,
-          "name": "Danglot",
-          "is_active": true
-        }
-      ]
-    }
+    "name": "Captain",
+    "firstname": "Hadock",
+    "email": "captain@gmail.com",
+    "pseudo": "Moussailon",
+    "password": "harengs14",
+    "description": "Vieux loup de mer",
+    "availability": true,
+    "tags": [
+      {
+        "id": 3,
+        "name": "Java"
+      },
+      {
+        "id": 2,
+        "name": "Javascript"
+      }
+    ],
+    "projects": [
+      {
+        "id": 1,
+        "name": "DevsConnect"
+      },
+      {
+        "id": 2,
+        "name": "DevsDeConnect"
+      }
+    ]
+  }
 
 ###
 POST {{baseUrl}}/refresh-token
