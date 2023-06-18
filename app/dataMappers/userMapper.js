@@ -132,6 +132,8 @@ const updateOneUser = async (userId, userUpdate) => {
   
     const tagsToDelete = currentUserTags.filter(
       (tag) => !userUpdate.tags.some((updatedTag) => updatedTag.id === tag.tag_id)
+      // TODO : vérifier si ça bloque quand on n'entre pas de tag à mettre à jour
+      // si userUpdate.tags est undefined --> userUpdate.tags && userUpdate.tags.some : la condition sera évaluée à false et plus undefined
     );
     const tagsToCreate = userUpdate.tags.filter(
       (tag) => !currentUserTags.some((existingTag) => existingTag.tag_id === tag.id)

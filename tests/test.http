@@ -54,17 +54,12 @@ content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoicGFub0ByYW1peC5nYSIsImlkIjozfSwiaWF0IjoxNjg3MTA1MDA1LCJleHAiOjE2ODcxNTkwMDV9.Dj00J9H3usjUDzPwxLPQXeV6aMstYi9XD_9Iri7aSAY
 
 {
-  "status": "success",
-  "data": {
-    "id": 3,
     "name": "Danglot",
     "firstname": "Clément",
     "pseudo": "Panoramix",
     "email": "pano@ramix.ga",
     "description": "Grande hutte à la sortie du village",
     "availability": true,
-    "created_at": "2023-06-16T13:52:57.098Z",
-    "updated_at": null,
     "projects": [
       {
         "id": 1,
@@ -75,11 +70,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
     ],
     "tags": [
       {
-        "id": 2,
-        "name": "Javascript"
+        "id": 1,
+        "name": "Java"
       },
       {
-        "id": 3,
+        "id": 4,
         "name": "HTML"
       },
       {
@@ -87,8 +82,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
         "name": "SQL"
       }
     ]
-  }
 }
+
 
 ###
 POST {{baseUrl}}/refresh-token

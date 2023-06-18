@@ -1,3 +1,4 @@
+```js
 const client = require('./database');
 const ApiError = require('../errors/apiError.js');
 
@@ -347,3 +348,4 @@ const dataMapper = {
 };
 
 module.exports = dataMapper;
+```

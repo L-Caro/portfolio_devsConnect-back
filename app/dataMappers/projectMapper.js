@@ -148,6 +148,8 @@ const createOneProject = async(title, description, availability, user_id, tags) 
     // Ajouter les nouveaux tags
     const tagsToAdd = projectUpdate.tags.filter(
       (updatedTag) => !currentProject.tags.some((tag) => tag.tag_id === updatedTag.id)
+      // TODO : vérifier si ça bloque quand on n'entre pas de tag à mettre à jour
+      // si projectUpdate.tags est undefined --> projectUpdate.tags && projectUpdate.tags.some : la condition sera évaluée à false et plus undefined
     );
     if (tagsToAdd.length > 0) {
       await projectTagMapper.createProjectHasTag(projectId, tagsToAdd.map((tag) => tag.id));
