@@ -1,4 +1,4 @@
-const tokenMapper = require('./tokenMapper');
+const authMapper = require('./authMapper');
 const projectMapper = require('./projectMapper');
 const userMapper = require('./userMapper');
 const tagMapper = require('./tagMapper');
@@ -8,7 +8,7 @@ const userTagMapper = require('./userTagMapper');
 
 // Exportez les fonctions regroupées par type
 module.exports = {
-  token: tokenMapper,
+  auth: authMapper,
   projects: projectMapper,
   users: userMapper,
   tags: tagMapper,
