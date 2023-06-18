@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const dataMapper = require('../dataMappers/dataMapper');
+const authMapper = require('../dataMappers/authMapper');
 const auth = require('../auth');
 const ApiError = require('../errors/apiError.js');
 
@@ -7,7 +7,7 @@ const authController = {
   async login(request, response, next) {
     const { password, email } = request.body;
     // retrieve user from db
-    const user = await dataMapper.findUserByEmail(email);
+    const user = await authMapper.findUserByEmail(email);
     if (user) {
       // check if provided password match with hash
       if (await bcrypt.compare(password, user.password)) {
@@ -43,7 +43,7 @@ const authController = {
     // create a refresh token
     const refreshToken = auth.generateRefreshToken(userID);
     // save refresh token to db
-    await dataMapper.setRefreshToken(user.id, refreshToken);
+    await authMapper.setRefreshToken(user.id, refreshToken);
     // send tokens to client
     return response.status(200).json({
       status: 'success',

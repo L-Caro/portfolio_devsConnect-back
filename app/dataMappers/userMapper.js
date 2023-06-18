@@ -3,17 +3,6 @@ const userTagMapper = require('./userTagMapper');
 const projectUserMapper = require('./projectUserMapper');
 const ApiError = require('../errors/apiError.js');
 
-const findUserByEmail = async(email) => {
-  const preparedQuery = {
-    text: `SELECT * FROM "user"
-           WHERE "email" = $1`,
-    values: [email],
-  };
-
-  const results = await client.query(preparedQuery);
-  return results.rows[0];
-}
-
 const findAllUsers = async () => {
   const preparedQuery ={
     text: `SELECT

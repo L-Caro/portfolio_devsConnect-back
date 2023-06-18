@@ -3,16 +3,6 @@ const projectTagMapper = require('./projectTagMapper');
 const projectUserMapper = require('./projectUserMapper');
 const ApiError = require('../errors/apiError.js');
 
-const findProjectOwner = async(projectId) => {
-  const preparedQuery = {
-    text: `SELECT "project"."user_id" FROM "project"
-           WHERE "project"."id" = $1`,
-    values: [projectId],
-  };
-
-  const results = await client.query(preparedQuery);
-  return results.rows[0].user_id;
-}
 
 // methode listee en arrow pour tester different coding style avec requetes sql pour tous les projets
 const findAllProjects = async () => {

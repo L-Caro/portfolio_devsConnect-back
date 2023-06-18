@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const dataMapper = require('../dataMappers/dataMapper');
+const authMapper = require('../dataMappers/authMapper');
 const ApiError = require('../errors/apiError.js');
 
 const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env;
@@ -69,7 +69,7 @@ const auth = {
           // check for modify or delete project 
           if (permission === "modify" && section === "project" || permission === "delete" && section === "project") {
             const projectID = parseInt(req.params.id);
-            const projectOwnerId = await dataMapper.findProjectOwner(projectID);
+            const projectOwnerId = await authMapper.findProjectOwner(projectID);
             if(!projectOwnerId){
               new ApiError('Not found', { statusCode: 404 });
             };
@@ -104,7 +104,7 @@ const auth = {
    */
   async isValidRefreshToken(token) {
     const decodedToken = jwt.verify(token, JWT_REFRESH_SECRET);
-    const storedToken = await dataMapper.getRefreshToken(decodedToken.id);
+    const storedToken = await authMapper.getRefreshToken(decodedToken.id);
     return token === storedToken;
   },
 
@@ -116,7 +116,7 @@ const auth = {
    */
   async getTokenUser(token) {
     const decoded = jwt.verify(token, JWT_SECRET, { ignoreExpiration: true });
-    return dataMapper.findUserByEmail(decoded.data.email);
+    return authMapper.findUserByEmail(decoded.data.email);
   },
 };
 
