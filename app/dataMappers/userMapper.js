@@ -122,65 +122,65 @@ const createOneUser = async(name, firstname, email, pseudo, password, descriptio
     et les users qui lui sont associés, ayant une relation project/user dans la table project_has_user
     et je veux que ça me renvoie le projet avec les tags et les users mis à jour */
    
-    const updateOneUser = async (userId, userUpdate) => {
-      const currentUser = await userMapper.findOneUser(userId);
-      if (!currentUser) {
-        throw new ApiError('User not found', { statusCode: 204 });
-      }
-    
-      const currentUserTags = currentUser.tags || [];
-    
-      const tagsToDelete = currentUserTags.filter(
-        (tag) => !userUpdate.tags.some((updatedTag) => updatedTag.id === tag.tag_id)
-      );
-      const tagsToCreate = userUpdate.tags.filter(
-        (tag) => !currentUserTags.some((existingTag) => existingTag.tag_id === tag.id)
-      );
-    
-      await Promise.all([
-        ...tagsToDelete.map((tag) => userTagMapper.deleteUserHasTag(userId, tag.id)),
-        ...tagsToCreate.map((tag) => userTagMapper.createUserHasTag(userId, tag.id)),
-      ]);
-
-  // je veux vérifier si le statut is_active de la table project_has_user est le meme que celui du user reçu
-  // si il est different je veux le mettre à jour
-
-  const projectsToUpdate = userUpdate.projects.filter((project) => {
-    const currentProject = currentUser.projects.find(
-      (existingProject) => existingProject.id === project.id
-    );
-    return project.is_active !== currentProject.is_active;
-  });
-
-  await Promise.all(
-    projectsToUpdate.map((project) =>
-      projectUserMapper.updateProjectHasUser(userId, project.id, project.is_active)
-    )
-  );
-  //TODO voir en cas d'ajout ou suppression d'user concomitant a l'update
-  // actuellement, la length du tableau des users du projet doit être la même que celle du tableau des users modifiés
+const updateOneUser = async (userId, userUpdate) => {
+    const currentUser = await findOneUser(userId);
+    if (!currentUser) {
+      throw new ApiError('User not found', { statusCode: 204 });
+    }
   
-  const preparedQuery = { //je mets à jour le projet
-    text: `UPDATE "user"
-    SET "name" = COALESCE($1, "name"), 
-       "firstname" = COALESCE($2, "firstname"), 
-       "email" = COALESCE($3, "email"), 
-       "pseudo" = COALESCE($4, "pseudo"), 
-       "password" = COALESCE($5, "password"), 
-       "description" = COALESCE($6, "description"), 
-       "availability" = COALESCE($7, "availability")
-    WHERE "id"=$8 
-    RETURNING "name", "firstname", "email", "pseudo", "description", "availability"`,
-  values: [
-    userUpdate.name,
-    userUpdate.firstname,
-    userUpdate.email,
-    userUpdate.pseudo,
-    userUpdate.password,
-    userUpdate.description,
-    userUpdate.availability,
-    userId,
-  ],
+    const currentUserTags = currentUser.tags || [];
+  
+    const tagsToDelete = currentUserTags.filter(
+      (tag) => !userUpdate.tags.some((updatedTag) => updatedTag.id === tag.tag_id)
+    );
+    const tagsToCreate = userUpdate.tags.filter(
+      (tag) => !currentUserTags.some((existingTag) => existingTag.tag_id === tag.id)
+    );
+  
+    await Promise.all([
+      ...tagsToDelete.map((tag) => userTagMapper.deleteUserHasTag(userId, tag.id)),
+      ...tagsToCreate.map((tag) => userTagMapper.createUserHasTag(userId, tag.id)),
+    ]);
+
+// je veux vérifier si le statut is_active de la table project_has_user est le meme que celui du user reçu
+// si il est different je veux le mettre à jour
+
+const projectsToUpdate = userUpdate.projects.filter((project) => {
+  const currentProject = currentUser.projects.find(
+    (existingProject) => existingProject.id === project.id
+  );
+  return project.is_active !== currentProject.is_active;
+});
+
+await Promise.all(
+  projectsToUpdate.map((project) =>
+    projectUserMapper.updateProjectHasUser(userId, project.id, project.is_active)
+  )
+);
+//TODO voir en cas d'ajout ou suppression d'user concomitant a l'update
+// actuellement, la length du tableau des users du projet doit être la même que celle du tableau des users modifiés
+
+const preparedQuery = { //je mets à jour le projet
+  text: `UPDATE "user"
+  SET "name" = COALESCE($1, "name"), 
+      "firstname" = COALESCE($2, "firstname"), 
+      "email" = COALESCE($3, "email"), 
+      "pseudo" = COALESCE($4, "pseudo"), 
+      "password" = COALESCE($5, "password"), 
+      "description" = COALESCE($6, "description"), 
+      "availability" = COALESCE($7, "availability")
+  WHERE "id"=$8 
+  RETURNING "name", "firstname", "email", "pseudo", "description", "availability"`,
+values: [
+  userUpdate.name,
+  userUpdate.firstname,
+  userUpdate.email,
+  userUpdate.pseudo,
+  userUpdate.password,
+  userUpdate.description,
+  userUpdate.availability,
+  userId,
+],
 };
 
 const results = await client.query(preparedQuery);
@@ -190,7 +190,6 @@ return user;
 }
 
 module.exports = {
-  findUserByEmail,
   findAllUsers,
   findOneUser,
   removeOneUser,

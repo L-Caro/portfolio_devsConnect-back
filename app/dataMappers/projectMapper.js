@@ -132,7 +132,7 @@ const createOneProject = async(title, description, availability, user_id, tags) 
   //projectUpdate = {title, description, availability, tags, users}
   const updateOneProject = async (projectId, projectUpdate) => {
     // Récupérer le projet actuel avec les tags et les utilisateurs
-    const currentProject = await projectMapper.findOneProject(projectId);
+    const currentProject = await findOneProject(projectId);
     if (!currentProject) {
       throw new ApiError('Project not found', { statusCode: 204 });
     }
@@ -181,7 +181,6 @@ const createOneProject = async(title, description, availability, user_id, tags) 
   };
 
   module.exports = {
-    findProjectOwner,
     findAllProjects,
     findOneProject,
     removeOneProject,

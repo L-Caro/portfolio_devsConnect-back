@@ -1,4 +1,4 @@
-const projectMapper = require('./dataMappers/projectMapper');
+const projectMapper = require('../dataMappers/projectMapper');
 
 //controller pour les projets sans refacto d'un controllerHandler et sans gestion centralisee des erreurs
 

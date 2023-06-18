@@ -1,4 +1,4 @@
-const tagMapper = require('./dataMappers/tagMapper');
+const tagMapper = require('../dataMappers/tagMapper');
 
 //controller pour les tags sans refacto d'un controllerHandler et sans gestion centralisee des erreurs
 const tagController = {

@@ -1,4 +1,4 @@
-const userMapper = require('./dataMappers/userMapper');
+const userMapper = require('../dataMappers/userMapper');
 const bcrypt = require('bcrypt');
 const ApiError = require('../errors/apiError.js');
 
