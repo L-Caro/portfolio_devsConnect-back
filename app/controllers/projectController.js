@@ -22,8 +22,8 @@ const projectController = {
     },
 
     async addOneProject(req, res) {
-      const { title, description, availability, tags } = req.body;
-      const project = await projectMapper.createOneProject(title, description, availability, tags);
+      const { title, description, availability, user_id, tags } = req.body;
+      const project = await projectMapper.createOneProject(title, description, availability, user_id, tags);
       res.json({status: 'success', data: project })
     },
 
