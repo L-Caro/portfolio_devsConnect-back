@@ -59,3 +59,10 @@ INSERT INTO "project_has_user" (project_id, user_id, is_active) VALUES
 (4, 4, true);
     
 COMMIT;
+
+
+UPDATE "project_has_user" 
+      SET "is_active" = NOT"is_active" 
+      WHERE "project_has_user"."project_id" = 1 
+      AND "project_has_user"."user_id" = 1 
+      RETURNING *;
