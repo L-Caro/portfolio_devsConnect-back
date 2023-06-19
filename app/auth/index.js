@@ -73,6 +73,7 @@ const auth = {
             if(!projectOwnerId){
               new ApiError('Not found', { statusCode: 404 });
             };
+
             if (decoded.data.id === projectOwnerId){
               return next();
             };

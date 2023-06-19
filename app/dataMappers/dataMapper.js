@@ -53,16 +53,16 @@ const dataMapper = {
           INNER JOIN "project_has_tag" ON "tag"."id" = "project_has_tag"."tag_id"
           WHERE "project_has_tag"."project_id" = "project"."id"
         ) AS "tag"
-      ) AS tags,
+      ) AS "tags",
       (
-        SELECT json_agg(json_build_object('id', "user"."id", 'name', "user"."name"))
+        SELECT json_agg(json_build_object('id', "user"."id", 'pseudo', "user"."pseudo", 'is_active', "user"."is_active"))
         FROM (
-          SELECT DISTINCT "user"."id", "user"."name"
+          SELECT DISTINCT "user"."id", "user"."pseudo", "project_has_user"."is_active"
           FROM "user"
           INNER JOIN "project_has_user" ON "user"."id" = "project_has_user"."user_id"
           WHERE "project_has_user"."project_id" = "project"."id"
         )AS "user"
-      ) AS users
+      ) AS "users"
     FROM "project"
     GROUP BY
       "project"."id";
@@ -79,7 +79,7 @@ const dataMapper = {
       "project"."description",
       "project"."availability",
       "project"."user_id",
-      ( 
+      (  
           SELECT "user"."pseudo"
           FROM "user"
           WHERE "user"."id" = "project"."user_id"
@@ -93,17 +93,17 @@ const dataMapper = {
               WHERE "project_has_tag"."project_id" = "project"."id"
               ORDER BY "tag"."id"
           ) AS "tag"
-      ) AS tags,
+      ) AS "tags",
       (
-          SELECT json_agg(json_build_object('user_id', "user"."id", 'user_pseudo', "user"."pseudo"))
+          SELECT json_agg(json_build_object('user_id', "user"."id", 'pseudo', "user"."pseudo", 'is_active', "user"."is_active"))
           FROM (
-              SELECT DISTINCT ON ("user"."id") "user"."id", "user"."pseudo"
+              SELECT DISTINCT ON ("user"."id") "user"."id", "user"."pseudo", "project_has_user"."is_active"
               FROM "user"
               INNER JOIN "project_has_user" ON "project_has_user"."user_id" = "user"."id"
               WHERE "project_has_user"."project_id" = "project"."id"
               ORDER BY "user"."id"
           ) AS "user"
-      ) AS users
+      ) AS "users"
   FROM
       "project"
   WHERE
@@ -131,12 +131,13 @@ const dataMapper = {
 
   async createOneProject(title, description, availability, user_id, tags) {
     const preparedProjectQuery= {
-       text: `INSERT INTO "project" (title, description, availability, user_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+       text: `INSERT INTO "project" ("title", "description", "availability", "user_id") VALUES ($1, $2, $3, $4) RETURNING *`,
        values: [title, description, availability, user_id]
     }
     const projectResults = await client.query(preparedProjectQuery);
     const project = await projectResults.rows[0];
-
+    
+    if (tags){
     const addTagsToProject = tags.map(async (tagId) => {
       const preparedTagQuery = {
           text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
@@ -148,51 +149,66 @@ const dataMapper = {
     });
 
     await Promise.all(addTagsToProject);
+  }
+
+  // il faut ajouter une relation project_has_user
 
     return project;
   },
 
-  async updateOneProject(projectId, updatedFields) {
-    const { title, description, availability, user_id, tags, users } = updatedFields;
-    const preparedQuery = {
-      text: `UPDATE "project"
-             SET title = COALESCE($1, title),
-                 description = COALESCE($2, description),
-                 availability = COALESCE($3, availability),
-                 user_id = COALESCE($4, user_id),
-                 updated_at = NOW()
-             WHERE id = $5
-             RETURNING *`,
-      values: [title, description, availability, user_id, projectId]
-    };
-  
-    if (tags) {
-      preparedQuery.text += `; DELETE FROM "project_has_tag" WHERE project_id = $5;`;
-      for (const tag of tags) {
-        preparedQuery.text += ` INSERT INTO "project_has_tag" (project_id, tag_id) VALUES ($5, $${preparedQuery.values.length + 1})`;
-        // += permet de concaténer les requêtes
-        // $$ permet de délimiter une variable dans une requête
-        // $5 correspond à l'id du projet, $6 correspond à l'id du premier tag, $7 au deuxième, etc.
-        preparedQuery.values.push(tag);
-        // On ajoute l'id du tag dans le tableau des valeurs
-      }
-    }
-  
-    if (users) {
-      preparedQuery.text += `; DELETE FROM "project_has_user" WHERE project_id = $5;`;
-      for (const user of users) {
-        preparedQuery.text += ` INSERT INTO "project_has_user" (project_id, user_id) VALUES ($5, $${preparedQuery.values.length + 1})`;
-        preparedQuery.values.push(user);
-      }
-    }
-  
-    const results = await client.query(preparedQuery);
-    if (!results.rows[0]) {
+  /* Je veux mettre à jour les champs title, description, availability, 
+  avec les tags qui lui sont associés, ayant une relation project/tag dans la table project_has_tag
+  et les users qui lui sont associés, ayant une relation project/user dans la table project_has_user
+  et je veux que ça me renvoie le projet avec les tags et les users mis à jour */
+ 
+  //projectUpdate = {title, description, availability, tags, users}
+  async updateOneProject(projectId, projectUpdate) {
+
+    const currentProject = await dataMapper.findOneProject(projectId);  //on recupere le project en cours pour recuperer les tableaux tags et users
+    if (!currentProject) {
       throw new ApiError('Project not found', { statusCode: 204 });
     }
-    return results.rows[0]; 
-  },
 
+    for (const tag of currentProject.tags) { //je parcours le tableau des tags du projet en cours
+      const tagToUpdate = projectUpdate.tags.find(upToDateTag => upToDateTag.id === tag.tag_id); //je verifie si le tag existe dans les tags reçus
+      if (!tagToUpdate) { //vérifie si tagToUpdate est faux ou non défini 
+          await dataMapper.deleteProjectHasTag(projectId, tag.tag_id); //je le supprime
+      }
+    }
+    for(const tag of projectUpdate.tags) { //je parcours le tableau des tags reçus
+      const tagToUpdate = currentProject.tags.find(existingTag => existingTag.tag_id === tag.id); //je verifie si le tag existe dans le projet actuel
+        if(!tagToUpdate) { // s'il n'existe pas dans le currentProject
+          await dataMapper.createProjectHasTag(projectId, tag.id); //je le crée
+        } 
+    }
+
+    // je veux vérifier si le statut is_active de la table project_has_user est le meme que celui du user reçu
+    // si il est different je veux le mettre à jour
+
+    for(const user of projectUpdate.users) { //je parcours le tableau des users du projet a jour
+      const currentUser = currentProject.users.find(existingUser => existingUser.user_id === user.id); //je récupère les users du projet actuel et je verifie s'ils existent dans le projet actuel
+      //console.log(currentUser);
+      if (user.is_active !== currentUser.is_active){ // je verifie si le booleen est different et si c'est le cas j'update
+        await dataMapper.updateProjectHasUser(projectId, user.id); //je mets à jour le user
+      }
+    }  
+    //TODO voir en cas d'ajout ou suppression d'user concomitant a l'update
+    // actuellement, la length du tableau des users du projet doit être la même que celle du tableau des users modifiés
+    
+    const preparedQuery = { //je mets à jour le projet
+        text: `UPDATE "project" 
+        SET title = COALESCE($1, title), 
+          description = COALESCE($2, description), 
+          availability = COALESCE($3, availability)
+        WHERE id=$4 RETURNING *`, 
+        values: [projectUpdate.title, projectUpdate.description, projectUpdate.availability, projectId],
+      };
+
+    const results = await client.query(preparedQuery); 
+    const project = await results.rows[0];
+
+    return project;
+  },
 
 /// --- USER
 
@@ -215,7 +231,7 @@ const dataMapper = {
             INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
             WHERE "project_has_user"."user_id" = "user"."id"
           )AS "project"
-        ) AS projects,
+        ) AS "projects",
         (
           SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
           FROM (
@@ -224,7 +240,7 @@ const dataMapper = {
             INNER JOIN "user_has_tag" ON "tag"."id" = "user_has_tag"."tag_id"
             WHERE "user_has_tag"."user_id" = "user"."id"
           ) AS "tag"
-        )AS tags
+        )AS "tags"
       FROM "user"`};
     const results = await client.query(preparedQuery);
     return results.rows; 
@@ -250,7 +266,7 @@ const dataMapper = {
           INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
           WHERE "project_has_user"."user_id" = "user"."id"
         )AS "project"
-      ) AS projects,
+      ) AS "projects",
       (
         SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
         FROM (
@@ -259,7 +275,7 @@ const dataMapper = {
           INNER JOIN "user_has_tag" ON "tag"."id" = "user_has_tag"."tag_id"
           WHERE "user_has_tag"."user_id" = "user"."id"
         ) AS "tag"
-      )AS tags
+      )AS "tags"
     FROM "user"
     WHERE "id" = $1`,
       values: [id],
@@ -283,9 +299,10 @@ const dataMapper = {
     return results.rows[0];
   },
 
+  // name, firstname, email, pseudo, hashedPWD, description, availability, tags);
   async createOneUser(name, firstname, email, pseudo, password, description, availability, tags) {
     const preparedUserQuery = {
-      text: `INSERT INTO "user" (name, firstname, email, pseudo, password, description, availability) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      text: `INSERT INTO "user" ("name", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
       values: [name, firstname, email, pseudo, password, description, availability],
     };
   
@@ -309,20 +326,78 @@ const dataMapper = {
     return user; // Tableau des résultats des opérations asynchrones
   },
 
-  async updateOneUser (userId, updatedFields) { 
-    const {name, firstname, email, pseudo, password, description, availability} = updatedFields;
-    const preparedQuery= { // vérifier si le password n'est pas renvoyé en clair et le retirer du return
-       text: `UPDATE "user" SET name = COALESCE($1, name), firstname = COALESCE($2, firstname), email = COALESCE($3, email), pseudo = COALESCE($4, pseudo), password = COALESCE($5, password), description = COALESCE($6, description), availability = COALESCE($7, availability), updated_at = NOW() WHERE id=$8 RETURNING *`,
-       values: [name, firstname, email, pseudo, password, description, availability, userId]
+  /* Je veux mettre à jour les champs name, firstname, email, pseudo, password, description, availability,  
+  avec les tags qui lui sont associés, ayant une relation user/tag dans la table user_has_tag
+  et les users qui lui sont associés, ayant une relation project/user dans la table project_has_user
+  et je veux que ça me renvoie le projet avec les tags et les users mis à jour */
+ 
+  async updateOneUser(userId, userUpdate) {
+
+    const currentUser = await dataMapper.findOneUser(userId);  //on recupere le user actuel pour recuperer les tableaux tags et projects
+    if (!currentUser) {
+      throw new ApiError('User not found', { statusCode: 204 });
     }
-    const results = await client.query(preparedQuery);
-    return results.rows[0];
+
+    const currentUserTags = currentUser.tags || [];
+    for (const tag of currentUserTags) { //je parcours le tableau des tags du user actuel
+      const tagToUpdate = userUpdate.tags.find(upToDateTag => upToDateTag.id === tag.tag_id); //je verifie si le tag existe dans les tags reçus
+      if (!tagToUpdate) { //vérifie si tagToUpdate est faux ou non défini 
+        console.log('deleting tag');
+          await dataMapper.deleteUserHasTag(userId, tag.id); //je le supprime
+      }
+    }
+    for(const tag of userUpdate.tags) { //je parcours le tableau des tags reçus
+      const tagToUpdate = currentUserTags.find(existingTag => existingTag.tag_id === tag.id); //je verifie si le tag existe dans le user actuel
+        if(!tagToUpdate) { // s'il n'existe pas dans le currentUser
+          console.log('creating tag');
+          await dataMapper.createUserHasTag(userId, tag.id); //je le crée
+        } 
+    }
+
+    // je veux vérifier si le statut is_active de la table project_has_user est le meme que celui du user reçu
+    // si il est different je veux le mettre à jour
+
+    for(const project of userUpdate.projects) { //je parcours le tableau des projects du user a jour
+      const currentProject = currentUser.projects.find(existingProject => existingProject.id === project.id); //je récupère les users du projet actuel et je verifie s'ils existent dans le projet actuel
+      if (project.is_active !== currentUser.projects.is_active){ // je verifie si le booleen est different et si c'est le cas j'update
+        await dataMapper.updateProjectHasUser(userId, project.id); //je mets à jour le user
+      }
+    }  
+    //TODO voir en cas d'ajout ou suppression d'user concomitant a l'update
+    // actuellement, la length du tableau des users du projet doit être la même que celle du tableau des users modifiés
+    
+    const preparedQuery = { //je mets à jour le projet
+        text: `UPDATE "user"
+        SET "name" = COALESCE($1, "name"), 
+           "firstname" = COALESCE($2, "firstname"), 
+           "email" = COALESCE($3, "email"), 
+           "pseudo" = COALESCE($4, "pseudo"), 
+           "password" = COALESCE($5, "password"), 
+           "description" = COALESCE($6, "description"), 
+           "availability" = COALESCE($7, "availability")
+        WHERE "id"=$8 
+        RETURNING "name", "firstname", "email", "pseudo", "description", "availability"`, 
+        values: [userUpdate.name, userUpdate.firstname, userUpdate.email, userUpdate.pseudo, userUpdate.password, userUpdate.description, userUpdate.availability, userId],
+      };
+
+    const results = await client.query(preparedQuery); 
+    const user = await results.rows[0];
+
+    return user;
+  },
+
+  async findAllTags(){
+      const allTags = await client.query(`SELECT * FROM "tag"`);
+      if (!allTags.rows) {
+        throw new ApiError('Tags not found', { statusCode: 204 });
+      }
+      return results.rows; 
   },
 
   //methode pour recuperer un tag en fonction de l'id recue en parametre
   async findOneTag (id){
     const preparedQuery = {
-      text: `SELECT * FROM tag WHERE "id" = $1`,
+      text: `SELECT * FROM "tag" WHERE "id" = $1`,
       values: [id],
     };
     const results = await client.query(preparedQuery);
@@ -331,6 +406,111 @@ const dataMapper = {
     }
     return results.rows[0]; 
   }, 
+
+// --------- PROJECT_HAS_USER
+
+/* Je veux ajouter un user à un project */
+
+  async createProjectHasUser (projectID, userID) {
+    const preparedQuery = {
+      text: `INSERT INTO "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
+      values: [projectID, userID],
+    };
+    const results = await client.query(preparedQuery);
+    if (!results.rows[0]) {
+      throw new ApiError('Relation not found', { statusCode: 204 });
+    }
+    return results.rows[0]; 
+  },
+
+  /* Je veux modifier le statut d'un user dans un projet en modifiant le boolean is active */
+
+  async updateProjectHasUser (projectID, userID) {
+    const result = await client.query(`UPDATE "project_has_user" 
+      SET "is_active" = NOT"is_active"
+      WHERE "project_has_user"."project_id" = ${projectID} 
+      AND "project_has_user"."user_id" = ${userID} 
+      RETURNING *`
+    );
+    if (!result.rows[0]) {
+      throw new ApiError('Relation not found', { statusCode: 204 });
+    }
+    return result.rows[0]; 
+  },
+
+  /* Je veux retirer un user d'un project */
+
+  async deleteProjectHasUser (projectID, userID) {
+    const preparedQuery = {
+      text: `DELETE FROM "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
+      values: [projectID, userID],
+    };
+    const result = await client.query(preparedQuery);
+    if (!result.rows[0]) {
+      throw new ApiError('Relation not found', { statusCode: 204 });
+    }
+    return result.rows[0];
+  },
+  
+// --------- PROJECT_HAS_TAG
+
+  /* Je veux ajouter un tag à un project */
+
+  async createProjectHasTag (projectId, tagId) {
+    const preparedQuery = {
+      text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
+      values: [projectId, tagId],
+    };
+    const results = await client.query(preparedQuery);
+    if (!results.rows[0]) {
+      throw new ApiError('Relation not found', { statusCode: 204 });
+    }
+    return results.rows[0]; 
+  },
+
+  /* Je veux retirer un tag d'un project */
+  
+  async deleteProjectHasTag (projectId, tagId) {
+    const preparedQuery = {
+      text: `DELETE FROM "project_has_tag" WHERE "project_id" = $1 AND "tag_id" = $2 RETURNING *`,
+      values: [projectId, tagId],
+    };
+    const result = await client.query(preparedQuery);
+    if (!result.rows[0]) {
+      throw new ApiError('Relation not found', { statusCode: 204 });
+    }
+    return result.rows[0];
+  },
+
+  // --------- USER_HAS_TAG
+
+  /* Je veux ajouter un tag à un user */
+
+  async createUserHasTag (userId, tagId) {
+    const preparedQuery = {
+      text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
+      values: [userId, tagId],
+    };
+    const results = await client.query(preparedQuery);
+    if (!results.rows[0]) {
+      throw new ApiError('Relation not found', { statusCode: 204 });
+    }
+    return results.rows[0]; 
+  },
+
+  /* Je veux retirer un tag d'un user */
+  
+  async deleteUserHasTag (userId, tagId) {
+    const preparedQuery = {
+      text: `DELETE FROM "user_has_tag" WHERE "user_id" = $1 AND "tag_id" = $2 RETURNING *`,
+      values: [userId, tagId],
+    };
+    const result = await client.query(preparedQuery);
+    if (!result.rows[0]) {
+      throw new ApiError('Relation not found', { statusCode: 204 });
+    }
+    return result.rows[0];
+  }
 
 };
 
