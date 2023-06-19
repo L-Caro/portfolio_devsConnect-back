@@ -1,244 +1,36 @@
-# createOneUser with tags
---> nouvelles fonctions addTagsToUser, addTagsToProject et itérer les fonctions dans les create et update
-## dataMapper
+# Opérateurs ?., ?? et ||
 
-```js
-async createOneUser(name, firstname, email, pseudo, password, description, availability, tags) {
-  const preparedUserQuery = {
-    text: `INSERT INTO "user" (name, firstname, email, pseudo, password, description, availability) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-    values: [name, firstname, email, pseudo, password, description, availability],
-  };
+## Opérateur `?.` (opérateur d'accès conditionnel)
 
-  const userResult = await client.query(preparedUserQuery);
-  const user = userResult.rows[0];
+L'opérateur `?.` permet d'accéder aux propriétés d'un objet de manière sécurisée en évitant une erreur si l'objet est null ou undefined. Cet opérateur vérifie si l'objet avant le `?.` existe et est défini. Si c'est le cas, l'expression se poursuit et renvoie la valeur de la propriété. Sinon, l'expression renvoie undefined sans générer d'erreur.
 
-  const addTagsToUser = tags.map(async (tagId) => {
-    const tagId = tag.id;
-    // Effectuer des opérations asynchrones : la requête à la base de données
-    const preparedTagQuery = {
-      text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
-      values: [user.id, tagId],
-    };
+## Opérateur `??` (opérateur de coalescence nulle)
 
-    const tagResult = await client.query(preparedTagQuery);
-    return tagResult.rows[0];
-  });
+L'opérateur `??` permet de fournir une valeur de substitution ou une valeur par défaut lorsque l'opérande de gauche est null ou undefined. Si l'opérande de gauche est null ou undefined, l'opérateur `??` renvoie l'opérande de droite. Sinon, il renvoie l'opérande de gauche.
 
-// Attendre que toutes les opérations asynchrones se terminent
-  await Promise.all(addTagsToUser);
+## Opérateur `||` (opérateur logique OR)
 
-  return user; // Tableau des résultats des opérations asynchrones
-}
-```
+Il est utilisé pour évaluer des expressions booléennes et renvoie la première valeur qui peut être évaluée à `true`.
 
-## controller
+- Si l'opérande de gauche peut être converti en `true`, l'opérateur renvoie cet opérande de gauche.
+- Si l'opérande de gauche peut être converti en `false`, l'opérateur renvoie l'opérande de droite.
+- Si l'opérande de gauche est une valeur différente de `false`, `null`, `undefined`, `0`, `NaN` ou une chaîne de caractères vide (`''`), il est considéré comme une valeur véridique (`truthy`) et l'opérateur renvoie cette valeur de gauche.
+- Si l'opérande de gauche est `false`, `null`, `undefined`, `0`, `NaN` ou une chaîne de caractères vide (`''`), il est considéré comme une valeur fausse (`falsy`) et l'opérateur renvoie l'opérande de droite.
 
-```js
-async addOneUser(req, res) {
-      const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
-      const user = await dataMapper.createOneUser(name, firstname, email, pseudo, password, description, availability, tags);
-      res.json({status: 'success', data: user })
-    },
-```
+## Exemple de la méthode updateOneUser
 
-## updateOneUser : avant ajout tags et users
+`currentProject.tags?.filter(tag => !projectUpdate.tags?.includes(tag.tag_id))`
 
-```js
-async updateOneUser (userId, updatedFields) { 
-    const {name, firstname, email, pseudo, password, description, availability, tags, projects} = updatedFields;
-    const preparedQuery= { // vérifier si le password n'est pas renvoyé en clair et le retirer du return
-       text: `UPDATE "user"
-       SET "name" = COALESCE($1, "name"), 
-          "firstname" = COALESCE($2, "firstname"), 
-          "email" = COALESCE($3, "email"), 
-          "pseudo" = COALESCE($4, "pseudo"), 
-          "password" = COALESCE($5, "password"), 
-          "description" = COALESCE($6, "description"), 
-          "availability" = COALESCE($7, "availability")
-       WHERE "id"=$8 
-       RETURNING *`,
-       values: [name, firstname, email, pseudo, password, description, availability, userId]
-    }
-    const results = await client.query(preparedQuery);
-    const user = results.rows[0];
-    if (!user) {
-      throw new ApiError('User not found', { statusCode: 204 });
-    };
+`currentProject.tags?.` : Si `currentProject.tags` est null ou undefined, cela renvoie immédiatement undefined, et la suite de l'expression n'est pas évaluée.
 
-    const updatedTags = [];
-    for (const tag of tags) {
-      const tagId = tag.id;
-      const preparedTagQuery = {
-        text: `UPDATE "user_has_tag" 
-        SET "tag_id" = $1
-        WHERE "user_id" = $2
-        RETURNING *`,
-        values: [userId, tagId],
-      };
+`filter(tag => !projectUpdate.tags?.includes(tag.tag_id))` : Si `currentProject.tags` existe, cette partie de l'expression filtre les tags qui ne sont pas inclus dans `projectUpdate.tags`. L'opérateur `?.` est utilisé avec `projectUpdate.tags` pour vérifier si `projectUpdate.tags` est null ou undefined. Si c'est le cas, l'expression renvoie également undefined, et la fonction de filtre n'est pas appelée.
 
-      const tagResults = await client.query(preparedTagQuery);
-      updatedTags.push(tagResults.rows[0]);
-    };
-
-    const updatedProjects = [];
-    for (const project of projects) {
-      const projectId = project.id;
-      const preparedProjectQuery = {
-        text: `UPDATE "project_has_user" 
-        SET "project_id" = $1
-        WHERE "user_id" = $2
-        RETURNING *`,
-        values: [userId, projectId],
-      };
-
-      const projectResults = await client.query(preparedProjectQuery);
-      updatedProjects.push(projectResults.rows[0]);
-    };
-
-    return { user, updatedTags, updatedProjects };
-  },
-```
-
-## Proposition copilot
-```js
-async updateOneProject(id, title, description, availability, tags, users) {
-    const preparedProjectQuery = {
-      text: `UPDATE "project" SET "title" = $1, "description" = $2, "availability" = $3 WHERE "id" = $4 RETURNING *`,
-      values: [title, description, availability, id],
-    };
-    const projectResults = await client.query(preparedProjectQuery);
-    const project = await projectResults.rows[0];
-
-    const deleteTagsFromProject = tags.map(async (tagId) => {
-      const preparedTagQuery = {
-        text: `DELETE FROM "project_has_tag" WHERE "project_id" = $1 AND "tag_id" = $2 RETURNING *`,
-        values: [project.id, tagId],
-      };
-      const tagResults = await client.query(preparedTagQuery);
-      return tagResults.rows[0];
-    });
-
-    await Promise.all(deleteTagsFromProject);
-
-    const addTagsToProject = tags.map(async (tagId) => {
-      const preparedTagQuery = {
-        text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
-        values: [project.id, tagId],
-      };
-      const tagResults = await client.query(preparedTagQuery);
-      return tagResults.rows[0];
-    });
-
-    await Promise.all(addTagsToProject);
-
-    const deleteUsersFromProject = users.map(async (userId) => {
-      const preparedUserQuery = {
-        text: `DELETE FROM "project_has_user" WHERE "project_id" = $1 AND "user_id" = $2 RETURNING *`,
-        values: [project.id, userId],
-      };
-      const userResults = await client.query(preparedUserQuery);
-      return userResults.rows[0];
-    });
-
-    await Promise.all(deleteUsersFromProject);
-
-    const addUsersToProject = users.map(async (userId) => {
-      const preparedUserQuery = {
-        text: `INSERT INTO "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
-        values: [project.id, userId],
-      };
-      const userResults = await client.query(preparedUserQuery);
-      return userResults.rows[0];
-    });
-
-    await Promise.all(addUsersToProject);
-
-    return project;
-  },
-```
-
-## Jointures tous les projets
-
-- les tag
-- les membres
-
-Recupere tous les champs de project, crée un tableau format json d'objets, crée un objet avec le format 'titre champs', valeur ; inner join tout basé sur les id puis regroupe par id de projet
-Afficher tous les projets groupés par id, avec leurs tags et les participants
-
-SELECT "project"."title", "project"."id",
-json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name")) AS "tags",
-json_agg(json_build_object('user_id', "user"."id", 'user_name', "user"."name")) AS "users"
-FROM "project"
-INNER JOIN "project_has_tag" ON "project"."id" = "project_has_tag"."project_id"
-INNER JOIN "tag" ON "project_has_tag"."tag_id" = "tag"."id"
-INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
-INNER JOIN "user" ON "project_has_user"."user_id" = "user"."id"
-GROUP BY "project"."id";
-
-SELECT project.id, project.title,
-json_agg(json_build_object('tag_id', tag.id, 'tag_name', tag.name)) AS tags
-FROM project
-INNER JOIN project_has_tag ON project.id = project_has_tag.project_id
-INNER JOIN tag ON project_has_tag.tag_id = tag.id
-GROUP BY project.id, project.title;
-
-https://www.postgresql.org/docs/9.5/functions-json.html
-
-*Afficher le nom de la plantation et le libellé des rangées concrnées (une ligne par rangée)*
-*Grouper par plantation et ne présenter qu'une ligne par plantation avec ``ARRAY_AGG``*
-
-```SQL
-SELECT DISTINCT 
-    "field"."name", 
-    ARRAY_AGG ("row"."label" ORDER BY "species"."common_name" ASC)
-FROM "species"
-    JOIN "variety"
-        ON "variety"."species_id" = "species"."id"
-     JOIN "row"
-        ON "row"."variety_id" = "variety"."id"
-    JOIN "field"
-        ON "row"."field_id" = "field"."id"
-WHERE "variety"."bitterness" = 5
-GROUP BY 
-    "field"."name";
-```
-
-
-## Fausse route authentification du front
-
-```js
-async postUsers(req, res) {
-    // Récupérer les données envoyées dans le corps de la requête
-    const { email, password } = req.body;
-
-    // Vérifier les informations d'identification
-    const user = await dataMapper.findUserByEmail(email);
-
-    if (user && user.password === password) {
-      // Connexion réussie
-      console.log("Connexion réussie");
-      res.json({
-        success: true,
-        message: "Connexion réussie",
-        pseudo: user.pseudo,
-        logged: true,
-      });
-    } else {
-      console.log("Identifiants invalides");
-      // Identifiants invalides
-      res.json({
-        success: false,
-        message: "Identifiants invalides",
-        logged: false,
-      });
-    }
-  },
-```
+`|| []` : Si l'expression précédente (`currentProject.tags?.filter(...)`) renvoie undefined, cela signifie que `currentProject.tags` était null ou undefined, ce qui implique qu'il n'y a pas de tags à supprimer. Dans ce cas, l'opérateur `||` est utilisé pour fournir un tableau vide `[]` comme valeur par défaut. Cela garantit que `tagsToDelete` est toujours un tableau et peut être utilisé par la suite dans la boucle `for`.
 
 ## ON DELETE CASCADE
 
-FOREIGN KEY (ClientID)
-        REFERENCES Clients (ClientID)
+FOREIGN KEY (ClientId)
+        REFERENCES Clients (ClientId)
         ON DELETE CASCADE
 
 A foreign key with cascade delete means that if a record in the parent table is deleted, then the corresponding records in the child table will automatically be deleted. This is called a cascade delete in SQL Server.

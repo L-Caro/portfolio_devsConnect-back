@@ -13,8 +13,6 @@ const createProjectHasTag = async(projectId, tagId) => {
   return results.rows[0]; 
 }
 
-/* Je veux retirer un tag d'un project */
-
 const deleteProjectHasTag = async(projectId, tagId) => {
   const preparedQuery = {
     text: `DELETE FROM "project_has_tag" WHERE "project_id" = $1 AND "tag_id" = $2 RETURNING *`,

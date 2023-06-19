@@ -1,7 +1,6 @@
 const client = require('./database');
 const ApiError = require('../errors/apiError.js');
 
-// devient postulant à un projet  POST /api/users/:id/projects/:projectId 
 const createProjectHasUser = async(projectId, userId) => {
   const preparedQuery = {
     text: `INSERT INTO "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
@@ -14,7 +13,6 @@ const createProjectHasUser = async(projectId, userId) => {
   return results.rows[0]; 
 }
 
-// Je veux modifier le statut d'un postulant en is_active true : bouton Accepter  PUT /api/users/:id/projects/:projectId
 const updateProjectHasUser = async(projectId, userId) => {
   const result = await client.query(`UPDATE "project_has_user" 
     SET "is_active" = NOT"is_active"
@@ -28,7 +26,6 @@ const updateProjectHasUser = async(projectId, userId) => {
   return result.rows[0]; 
 }
 
-// Je refuse un user postulant à un project : bouton Refuser ou Me retirer  DELETE /api/users/:id/projects/:projectId
 const deleteProjectHasUser = async(projectId, userId) => {
   const preparedQuery = {
     text: `DELETE FROM "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,

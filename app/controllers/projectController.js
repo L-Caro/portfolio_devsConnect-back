@@ -1,15 +1,14 @@
 const projectMapper = require('../dataMappers/projectMapper');
 const projectUserMapper = require('../dataMappers/projectUserMapper');
 
-//controller pour les projets sans refacto d'un controllerHandler et sans gestion centralisee des erreurs
-
+//controller pour les projects sans refacto d'un controllerHandler et sans gestion centralisee des erreurs
 const projectController = {
     async getAllProjects(_, res) {
       const projects = await projectMapper.findAllProjects();
       res.json({status: 'success', data: projects})
     },
 
-    //cette methode recupere l'id dans les parametres de la requete 
+    //cette méthode récupère l'id dans les paramètres de la requête 
     async getOneProject(req, res) {
       const projectId = req.params.id;
       const project = await projectMapper.findOneProject(projectId);
@@ -22,6 +21,7 @@ const projectController = {
       res.json({status: 'success', data: project })
     },
 
+    // cette méthode récupère les données dans le body de la requête, hors users
     async addOneProject(req, res) {
       const { title, description, availability, user_id, tags } = req.body;
       const project = await projectMapper.createOneProject(title, description, availability, user_id, tags);
@@ -35,6 +35,7 @@ const projectController = {
       res.json({status: 'success', data: project })
     },
 
+    // cets méthodes récupèrent les id des projets et users dans les paramètres de la requête 
     async addUserToProject(req, res) {
       const { projectId, userId } = req.params;
       const projectHasUser = await projectUserMapper.createProjectHasUser(projectId, userId);

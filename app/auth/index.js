@@ -71,8 +71,8 @@ const auth = {
 
           // check for modify or delete project 
           if (permission === "modify" && section === "project" || permission === "delete" && section === "project") {
-            const projectID = parseInt(req.params.id);
-            const projectOwnerId = await projectMapper.findProjectOwner(projectID);
+            const projectId = parseInt(req.params.id);
+            const projectOwnerId = await projectMapper.findProjectOwner(projectId);
             if(!projectOwnerId){
               new ApiError('Not found', { statusCode: 404 });
             };
@@ -83,8 +83,8 @@ const auth = {
           }
 
           if (permission === "modify" && section === "user" || permission === "delete" && section === "user") {
-            const routeID = parseInt(req.params.id);
-            if (decoded.data.id === routeID){
+            const routeId = parseInt(req.params.id);
+            if (decoded.data.id === routeId){
               return next();
             };
           }

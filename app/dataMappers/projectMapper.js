@@ -1,11 +1,8 @@
 const client = require('./database');
 const projectTagMapper = require('./projectTagMapper');
-const projectUserMapper = require('./projectUserMapper');
 const ApiError = require('../errors/apiError.js');
 
-
-// methode listee en arrow pour tester different coding style avec requetes sql pour tous les projets
-const findAllProjects = async () => { //OK
+const findAllProjects = async () => {
   const results = await client.query(`
   SELECT
     "project"."id",
@@ -38,8 +35,7 @@ const findAllProjects = async () => { //OK
   return results.rows; 
 }
 
-//methode pour recuperer un seul projet a partir de l'id recu en parametre
-const findOneProject = async (id) => { //OK
+const findOneProject = async (id) => {
   const preparedQuery = {
     text: `SELECT
     "project"."id",
@@ -85,121 +81,94 @@ WHERE
   return results.rows[0]; 
 }
 
-const removeOneProject = async(id) => { //OK
+const removeOneProject = async(id) => {
   const preparedQuery = {
     text: `DELETE FROM "project" WHERE "id" = $1 RETURNING *`,
     values: [id],
-  };
-  const results = await client.query(preparedQuery);
-  if (!results.rows[0]) {
+  }
+  // destructuration de tableau pour récupérer le premier élément
+  const [results] = (await client.query(preparedQuery)).rows;
+  if (!results) {
     throw new ApiError('Project already deleted', { statusCode: 204 });
   }
-  return results.rows[0];
+  return results;
 }
 
-const createOneProject = async(title, description, availability, user_id, tags) => { //OK
-  console.log(user_id);
+const createOneProject = async(title, description, availability, user_id, tags) => {
   const preparedProjectQuery= {
      text: `INSERT INTO "project" ("title", "description", "availability", "user_id") VALUES ($1, $2, $3, $4) RETURNING *`,
      values: [title, description, availability, user_id]
   }
-  const projectResults = await client.query(preparedProjectQuery);
-  const project = await projectResults.rows[0];
-  
-  if (tags){
-  const addTagsToProject = tags.map(async (tagId) => {
+  // destructuration de tableau pour récupérer le premier élément
+  const [project] = (await client.query(preparedProjectQuery)).rows;
+  if (!project) {
+    throw new ApiError('Nothing to create', { statusCode: 204 });
+  }
+
+  // utilisation de ?. pour gérer le cas où tags est null ou undefined
+  const addTagsToProject = tags?.map(async (tagId) => {
     const preparedTagQuery = {
         text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
         values: [project.id, tagId],
-      };
-  
-  const tagResults = await client.query(preparedTagQuery);
-  return tagResults.rows[0];
+    };
+    // destructuration de tableau pour récupérer le premier élément
+    const [tagResults] = (await client.query(preparedTagQuery)).rows;
+    return tagResults;
   });
 
   await Promise.all(addTagsToProject);
-  };
-
-// TODO il faut ajouter une relation project_has_user
 
   return project;
-}
+};
 
-/* Je veux mettre à jour les champs title, description, availability, 
-  avec les tags qui lui sont associés, ayant une relation project/tag dans la table project_has_tag
-  et les users qui lui sont associés, ayant une relation project/user dans la table project_has_user
-  et je veux que ça me renvoie le projet avec les tags et les users mis à jour */
- 
-  // TODO : fonctionne mais refacto les fonctions if
-
-  const updateOneProject = async (projectId, projectUpdate) => {  //projectUpdate = {title, description, availability, tags}
-    // Récupérer le projet actuel avec les tags
-    const currentProject = await findOneProject(projectId);
-    if (!currentProject) {
-      throw new ApiError('Project not found', { statusCode: 204 });
-    }
-  
-    // Supprimer les tags absents
-    if (currentProject.tags) { 
-      if (!projectUpdate.tags) { 
-        projectUpdate.tags = [];
-      };
-      // le front envoie un tableau d'id de tags
-      const tagsToDelete = currentProject.tags.filter(
-        (tag) => !projectUpdate.tags.some((updatedTag) => updatedTag === tag.tag_id)
-      );
-      tagsToDelete.forEach(async tag => {
-        await projectTagMapper.deleteProjectHasTag(projectId, tag.tag_id);
-      });
-    };
-    
-    // Ajouter les nouveaux tags
-    if (projectUpdate.tags) { 
-      if (!currentProject.tags) { 
-        currentProject.tags = [];
-      };
-      // le front envoie un tableau d'id de tags
-      const tagsToAdd = projectUpdate.tags.filter(
-        (updatedTag) => !currentProject.tags.some((tag) => tag.tag_id === updatedTag)
-      );
-      tagsToAdd.forEach(async tag => {
-        await projectTagMapper.createProjectHasTag(projectId, tag);
-      });
-    };
-  
-    // Mettre à jour les champs du projet
-    const preparedQuery = {
-      text: `UPDATE "project" 
-        SET title = COALESCE($1, title), 
-          description = COALESCE($2, description), 
-          availability = COALESCE($3, availability),
-          updated_at = NOW()
-        WHERE id=$4 RETURNING *`,
-      values: [projectUpdate.title, projectUpdate.description, projectUpdate.availability, projectId],
-    };
-  
-    const results = await client.query(preparedQuery);
-    const project = results.rows[0];
-  
-    return project;
-  };
-
-  const findProjectOwner = async(projectId) => {
-    const preparedQuery = {
-      text: `SELECT "project"."user_id" FROM "project"
-             WHERE "project"."id" = $1`,
-      values: [projectId],
-    };
-  
-    const results = await client.query(preparedQuery);
-    return results.rows[0].user_id;
+const updateOneProject = async (projectId, projectUpdate) => {
+  const currentProject = await findOneProject(projectId);
+  if (!currentProject) {
+    throw new ApiError('Project not found', { statusCode: 204 });
   }
 
-  module.exports = {
-    findAllProjects,
-    findOneProject,
-    removeOneProject,
-    createOneProject,
-    updateOneProject,
-    findProjectOwner
+  // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
+  const tagsToDelete = currentProject.tags?.filter(tag => !projectUpdate.tags?.includes(tag.tag_id)) || [];
+  for (const tag of tagsToDelete) {
+    await projectTagMapper.deleteProjectHasTag(projectId, tag.tag_id);
+  }
+  
+  const tagsToAdd = projectUpdate.tags?.filter(updatedTag => !currentProject.tags?.some(tag => tag.tag_id === updatedTag)) || [];
+  for (const tag of tagsToAdd) {
+    await projectTagMapper.createProjectHasTag(projectId, tag);
+  }
+
+  const preparedQuery = {
+    text: `UPDATE "project" 
+      SET title = COALESCE($1, title), 
+        description = COALESCE($2, description), 
+        availability = COALESCE($3, availability),
+        updated_at = NOW()
+      WHERE id=$4 RETURNING *`,
+    values: [projectUpdate.title, projectUpdate.description, projectUpdate.availability, projectId],
   };
+  // destructuration de tableau pour récupérer le premier élément
+  const [results] = (await client.query(preparedQuery)).rows;
+
+  return results;
+};
+
+const findProjectOwner = async(projectId) => {
+  const preparedQuery = {
+    text: `SELECT "project"."user_id" FROM "project"
+            WHERE "project"."id" = $1`,
+    values: [projectId],
+  };
+// destructuration de tableau pour récupérer le premier élément
+  const [results] = (await client.query(preparedQuery)).rows;
+  return results.user_id;
+}
+
+module.exports = {
+  findAllProjects,
+  findOneProject,
+  removeOneProject,
+  createOneProject,
+  updateOneProject,
+  findProjectOwner
+};
