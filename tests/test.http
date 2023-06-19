@@ -8,12 +8,13 @@ POST {{baseUrl}}/signin
 content-type: application/json
 
 {
-    "email": "benjo@olck.io",
+    "email": "jo@olck.io",
     "password": "secret",
-    "name": "Benjamin",
-    "firstname": "Gandji",
-    "pseudo": "Gao",
+    "name": "Mangeot",
+    "firstname": "Pierre",
+    "pseudo": "Pierrot",
     "description": "Lorem ipsum blabla",
+    "availability": true,
     "tags": [
         {
           "id": 2,
@@ -36,7 +37,7 @@ POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "amon@bofis.eg",
+    "email": "pano@ramix.ga",
     "password": "secret"
 }
 
@@ -48,41 +49,41 @@ Authorization: Bearer
 
 ###
 
-PUT {{baseUrl}}/api/projects/1
+PUT {{baseUrl}}/api/users/3
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYW1vbkBib2Zpcy5lZyIsImlkIjoyfSwiaWF0IjoxNjg2OTE3MDUxLCJleHAiOjE2ODY5NzEwNTF9._8_v3Ia9WvHsbb2U0qxjyfcTwIj856Ktjrf_uNfKSKk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoicGFub0ByYW1peC5nYSIsImlkIjozfSwiaWF0IjoxNjg3MTA1MDA1LCJleHAiOjE2ODcxNTkwMDV9.Dj00J9H3usjUDzPwxLPQXeV6aMstYi9XD_9Iri7aSAY
 
 {
-      "title": "Biscoc O",
-      "description": "Lorem ipsum blabla",
-      "availability": true,
-      "tags": [  
-        {
-          "id": 1,
-          "name": "Java"
-        },      
-        {
-          "id": 3,
-          "name": "HTML"
-        },
-        {
-          "id": 6,
-          "name": "SQL"
-        }
-      ],
-      "users": [
-        {
-          "id": 1,
-          "name": "Gandji",
-          "is_active": false
-        },        
-        {
-          "id": 3,
-          "name": "Danglot",
-          "is_active": true
-        }
-      ]
-    }
+    "name": "Danglot",
+    "firstname": "Clément",
+    "pseudo": "Panoramix",
+    "email": "pano@ramix.ga",
+    "description": "Grande hutte à la sortie du village",
+    "availability": true,
+    "projects": [
+      {
+        "id": 1,
+        "title": "Biscoc O",
+        "description": "Lorem ipsum blabla",
+        "availability": true
+      }
+    ],
+    "tags": [
+      {
+        "id": 1,
+        "name": "Java"
+      },
+      {
+        "id": 4,
+        "name": "HTML"
+      },
+      {
+        "id": 6,
+        "name": "SQL"
+      }
+    ]
+}
+
 
 ###
 POST {{baseUrl}}/refresh-token
