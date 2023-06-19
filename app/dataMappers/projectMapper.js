@@ -144,6 +144,7 @@ const createOneProject = async(title, description, availability, user_id, tags) 
     if (tagsToDelete.length > 0) {
       await projectTagMapper.deleteProjectHasTag(projectId, tagsToDelete.map((tag) => tag.tag_id));
     }
+    console.log('deleted');
   
     // Ajouter les nouveaux tags
     const tagsToAdd = projectUpdate.tags.filter(
@@ -154,6 +155,7 @@ const createOneProject = async(title, description, availability, user_id, tags) 
     if (tagsToAdd.length > 0) {
       await projectTagMapper.createProjectHasTag(projectId, tagsToAdd.map((tag) => tag.id));
     }
+    console.log('created');
   
     // Mettre à jour le statut is_active des utilisateurs
     const usersToUpdate = projectUpdate.users.filter((updatedUser) => {

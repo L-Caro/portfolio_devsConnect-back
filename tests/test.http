@@ -37,7 +37,7 @@ POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "pano@ramix.ga",
+    "email": "captain@gmail.com",
     "password": "secret"
 }
 
@@ -49,39 +49,39 @@ Authorization: Bearer
 
 ###
 
-PUT {{baseUrl}}/api/users/3
+PUT {{baseUrl}}/api/projects/1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoicGFub0ByYW1peC5nYSIsImlkIjozfSwiaWF0IjoxNjg3MTA1MDA1LCJleHAiOjE2ODcxNTkwMDV9.Dj00J9H3usjUDzPwxLPQXeV6aMstYi9XD_9Iri7aSAY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiY2FwdGFpbkBnbWFpbC5jb20iLCJpZCI6Mn0sImlhdCI6MTY4NzE1OTIzNCwiZXhwIjoxNjg3MjEzMjM0fQ.YgeHjogfjtSOd23vVX-BXCedRzeiH_wGMYnfav8XsX4
 
 {
-    "name": "Danglot",
-    "firstname": "Clément",
-    "pseudo": "Panoramix",
-    "email": "pano@ramix.ga",
-    "description": "Grande hutte à la sortie du village",
-    "availability": true,
-    "projects": [
-      {
-        "id": 1,
-        "title": "Biscoc O",
-        "description": "Lorem ipsum blabla",
-        "availability": true
-      }
-    ],
-    "tags": [
-      {
-        "id": 1,
-        "name": "Java"
-      },
-      {
-        "id": 4,
-        "name": "HTML"
-      },
-      {
-        "id": 6,
-        "name": "SQL"
-      }
-    ]
+  "title": "Biscoc O",
+  "description": "Lorem ipsum blabla",
+  "availibility": true,
+  "user_id": 2,
+  "tags": [
+    {
+      "id": 2,
+      "name": "Javascript"
+    },
+    {
+      "id": 3,
+      "name": "HTML"
+    },
+    {
+      "id": 1,
+      "name": "Java"
+    }
+  ],
+  "users": [
+    {
+      "id": 4,
+      "name": "Caro"
+    },
+    {
+      "id": 2,
+      "name": "Mangeot"
+    }
+  ]
 }
 
 

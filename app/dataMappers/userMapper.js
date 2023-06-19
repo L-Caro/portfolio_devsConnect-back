@@ -37,7 +37,7 @@ const findAllUsers = async () => {
   return results.rows; 
 }
 
-const findOneUser = async(id) => {
+const findOneUser = async(id) => { 
   const preparedQuery = {
     text: `SELECT
     "user"."id",
@@ -91,7 +91,7 @@ const removeOneUser = async(id) => {
 }
 
 // name, firstname, email, pseudo, hashedPWD, description, availability, tags);
-const createOneUser = async(name, firstname, email, pseudo, password, description, availability, tags) => {
+const createOneUser = async(name, firstname, email, pseudo, password, description, availability, tags) => { //OK
   const preparedUserQuery = {
     text: `INSERT INTO "user" ("name", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
     values: [name, firstname, email, pseudo, password, description, availability],
