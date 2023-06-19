@@ -1,10 +1,11 @@
 const client = require('./database');
 const ApiError = require('../errors/apiError.js');
 
-const createProjectHasUser = async(projectID, userID) => {
+// devient postulant à un projet  POST /api/users/:id/projects/:projectId 
+const createProjectHasUser = async(projectId, userId) => {
   const preparedQuery = {
     text: `INSERT INTO "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
-    values: [projectID, userID],
+    values: [projectId, userId],
   };
   const results = await client.query(preparedQuery);
   if (!results.rows[0]) {
@@ -13,13 +14,12 @@ const createProjectHasUser = async(projectID, userID) => {
   return results.rows[0]; 
 }
 
-/* Je veux modifier le statut d'un user dans un projet en modifiant le boolean is active */
-
-const updateProjectHasUser = async(projectID, userID) => {
+// Je veux modifier le statut d'un postulant en is_active true : bouton Accepter  PUT /api/users/:id/projects/:projectId
+const updateProjectHasUser = async(projectId, userId) => {
   const result = await client.query(`UPDATE "project_has_user" 
     SET "is_active" = NOT"is_active"
-    WHERE "project_has_user"."project_id" = ${projectID} 
-    AND "project_has_user"."user_id" = ${userID} 
+    WHERE "project_has_user"."project_id" = ${projectId} 
+    AND "project_has_user"."user_id" = ${userId} 
     RETURNING *`
   );
   if (!result.rows[0]) {
@@ -28,12 +28,11 @@ const updateProjectHasUser = async(projectID, userID) => {
   return result.rows[0]; 
 }
 
-/* Je veux retirer un user d'un project */
-
-const deleteProjectHasUser = async(projectID, userID) => {
+// Je refuse un user postulant à un project : bouton Refuser ou Me retirer  DELETE /api/users/:id/projects/:projectId
+const deleteProjectHasUser = async(projectId, userId) => {
   const preparedQuery = {
     text: `DELETE FROM "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
-    values: [projectID, userID],
+    values: [projectId, userId],
   };
   const result = await client.query(preparedQuery);
   if (!result.rows[0]) {

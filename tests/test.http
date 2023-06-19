@@ -4,31 +4,19 @@
 
 
 # @name register
-POST {{baseUrl}}/signin
+PUT {{baseUrl}}/api/users/12
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYmlwb3VAb2xjay5pbyIsImlkIjoxMiwibG9nZ2VkIjp0cnVlLCJwc2V1ZG8iOiJQYXQifSwiaWF0IjoxNjg3MTc1NTQzLCJleHAiOjE2ODcyMjk1NDN9.U3ZH4tpc9GFKNvhFB1cUZpFbY7EtnSjCZQqaVBqplWw
 
 {
-    "email": "jo@olck.io",
+    "email": "bipou@olck.io",
     "password": "secret",
-    "name": "Mangeot",
+    "name": "Manot",
     "firstname": "Pierre",
-    "pseudo": "Pierrot",
-    "description": "Lorem ipsum blabla",
+    "pseudo": "Pat",
+    "description": "Loem ipsum blabla",
     "availability": true,
-    "tags": [
-        {
-          "id": 2,
-          "name": "Javascript"
-        },
-        {
-          "id": 3,
-          "name": "HTML"
-        },
-        {
-          "id": 6,
-          "name": "SQL"
-        }
-      ]
+    "tags": [ 1, 4 ]
 }
 
 ###
@@ -51,37 +39,14 @@ Authorization: Bearer
 
 PUT {{baseUrl}}/api/projects/1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiY2FwdGFpbkBnbWFpbC5jb20iLCJpZCI6Mn0sImlhdCI6MTY4NzE1OTIzNCwiZXhwIjoxNjg3MjEzMjM0fQ.YgeHjogfjtSOd23vVX-BXCedRzeiH_wGMYnfav8XsX4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiY2FwdGFpbkBnbWFpbC5jb20iLCJpZCI6MiwibG9nZ2VkIjp0cnVlLCJwc2V1ZG8iOiJNb3Vzc2FpbG9uIn0sImlhdCI6MTY4NzE3NTgzNSwiZXhwIjoxNjg3MjI5ODM1fQ.sp70NO-duK0YW7eQzNbRBkxzIgtoFQQSsJwGetiY8so
 
 {
   "title": "Biscoc O",
-  "description": "Lorem ipsum blabla",
+  "description": "Lorsum blabla",
   "availibility": true,
   "user_id": 2,
-  "tags": [
-    {
-      "id": 2,
-      "name": "Javascript"
-    },
-    {
-      "id": 3,
-      "name": "HTML"
-    },
-    {
-      "id": 1,
-      "name": "Java"
-    }
-  ],
-  "users": [
-    {
-      "id": 4,
-      "name": "Caro"
-    },
-    {
-      "id": 2,
-      "name": "Mangeot"
-    }
-  ]
+  "tags": [ 2, 1 ]
 }
 
 

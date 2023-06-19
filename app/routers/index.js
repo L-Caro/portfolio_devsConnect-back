@@ -8,7 +8,6 @@ const userRouter = require('./userRouter');
 const tagRouter = require('./tagRouter');
 
 // require pour JWT authController pour les routes login et refresh et authorize pour les verifs de validite et regles d'acces
-const authController = require('../controllers/authController');
 const userController = require('../controllers/userController');
 
 const router = express.Router();
@@ -17,10 +16,10 @@ const router = express.Router();
 router.post('/signin', controllerHandler(userController.register));
 
 // User login route
-router.post('/login', controllerHandler(authController.login));
+router.post('/login', controllerHandler(userController.login));
 
 // Refresh token route
-router.post('/refresh-token', controllerHandler(authController.tokenRefresh));
+router.post('/refresh-token', controllerHandler(userController.tokenRefresh));
 
 router.use('/api/projects', projectRouter);
 router.use('/api/users', userRouter);

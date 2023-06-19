@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const authMapper = require('../dataMappers/authMapper');
+const userMapper = require('../dataMappers/userMapper');
+const projectMapper = require('../dataMappers/projectMapper');
 const ApiError = require('../errors/apiError.js');
 
 const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env;
@@ -21,6 +22,8 @@ const auth = {
           ip,
           email: user.email,
           id: user.id,
+          logged: true,
+          pseudo: user.pseudo,
         },
       },
       JWT_SECRET,
@@ -69,7 +72,7 @@ const auth = {
           // check for modify or delete project 
           if (permission === "modify" && section === "project" || permission === "delete" && section === "project") {
             const projectID = parseInt(req.params.id);
-            const projectOwnerId = await authMapper.findProjectOwner(projectID);
+            const projectOwnerId = await projectMapper.findProjectOwner(projectID);
             if(!projectOwnerId){
               new ApiError('Not found', { statusCode: 404 });
             };
@@ -104,7 +107,7 @@ const auth = {
    */
   async isValidRefreshToken(token) {
     const decodedToken = jwt.verify(token, JWT_REFRESH_SECRET);
-    const storedToken = await authMapper.getRefreshToken(decodedToken.id);
+    const storedToken = await userMapper.getRefreshToken(decodedToken.id);
     return token === storedToken;
   },
 
@@ -116,7 +119,7 @@ const auth = {
    */
   async getTokenUser(token) {
     const decoded = jwt.verify(token, JWT_SECRET, { ignoreExpiration: true });
-    return authMapper.findUserByEmail(decoded.data.email);
+    return userhMapper.findUserByEmail(decoded.data.email);
   },
 };
 
