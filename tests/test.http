@@ -37,9 +37,26 @@ POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "pano@ramix.ga",
+    "email": "jo@olck.io",
     "password": "secret"
 }
+
+###
+
+
+# @name update user
+PUT {{baseUrl}}/api/users/12
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiam9Ab2xjay5pbyIsImlkIjoxMn0sImlhdCI6MTY4NzE2MDcxNSwiZXhwIjoxNjg3MTYxNjE1fQ.AHFqQ607ihCpVbV0Z2vXvRGlZQKZM6Zt-tWGxTEggMk
+
+{
+    "name": "MangeotUPTED",
+    "firstname": "PierreUPDED",
+    "pseudo": "PierrotUPTED",
+    "description": "Lorem ipsum blabUPDATED",
+    "availability": true
+}
+
 
 ###
 
@@ -49,25 +66,17 @@ Authorization: Bearer
 
 ###
 
-PUT {{baseUrl}}/api/users/3
+POST {{baseUrl}}/signin
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoicGFub0ByYW1peC5nYSIsImlkIjozfSwiaWF0IjoxNjg3MTA1MDA1LCJleHAiOjE2ODcxNTkwMDV9.Dj00J9H3usjUDzPwxLPQXeV6aMstYi9XD_9Iri7aSAY
 
 {
-    "name": "Danglot",
+    "email": "panssso@ramix.ga",
+    "name": "Dangfsdflot",
     "firstname": "Clément",
-    "pseudo": "Panoramix",
-    "email": "pano@ramix.ga",
-    "description": "Grande hutte à la sortie du village",
+    "pseudo": "Paasfnodddramix",
+    "password": "password",
+    "description": "Grande fff à la sortie du village",
     "availability": true,
-    "projects": [
-      {
-        "id": 1,
-        "title": "Biscoc O",
-        "description": "Lorem ipsum blabla",
-        "availability": true
-      }
-    ],
     "tags": [
       {
         "id": 1,
@@ -93,3 +102,13 @@ Authorization: Bearer {{accessToken}}
 {
     "refreshToken": "{{refreshToken}}"
 }
+
+###
+
+# @name create project
+
+DELETE {{baseUrl}}/api/projects/13
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiam9Ab2xjay5pbyIsImlkIjoxMn0sImlhdCI6MTY4NzE2MjI4MSwiZXhwIjoxNjg3MjE2MjgxfQ.LjxhYdZ0VImc9FBQkChV2WrR2TTlj56N8I_4CHT3mTs
+
+###

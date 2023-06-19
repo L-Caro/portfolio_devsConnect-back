@@ -21,9 +21,11 @@ const userController = {
     },
 
     //methode pour s'enregistrer
-    async register(req, res, next) {
+    async register(req, res) {
       const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
+      console.log(password);
       const hashedPWD = await bcrypt.hash(password, 10);
+      console.log(hashedPWD);
       if (!name || !firstname || !email || !pseudo || !password) {
         throw new ApiError('Missing information', { statusCode: 400 });
       }
