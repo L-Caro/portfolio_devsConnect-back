@@ -22,7 +22,7 @@ const auth = {
           ip,
           email: user.email,
           id: user.id,
-          logged: true,
+          logged: true, //
           pseudo: user.pseudo,
         },
       },
@@ -50,15 +50,15 @@ const auth = {
    * @param {*} section - the section that needs the permission
    * @returns {function} a mw function to check permission on the section
    */
-  authorize(permission, section) {
+  authorize(permission, section) { // section = project or user
     // eslint-disable-next-line consistent-return
-    return async (req, _, next) => {
+    return async (req, _, next) => { 
       try {
-        const authHeader = req.headers.authorization;
+        const authHeader = req.headers.authorization; 
         if (authHeader) {
-          const token = authHeader.split('Bearer ')[1];
+          const token = authHeader.split('Bearer ')[1]; 
           // retrieve token
-          const decoded = jwt.verify(token, JWT_SECRET);
+          const decoded = jwt.verify(token, JWT_SECRET); 
           // check ip consistency
           if (decoded.data.ip !== req.ip) {
             new ApiError('Unauthorized', { statusCode: 401 });
@@ -106,7 +106,7 @@ const auth = {
    * @returns {boolean}
    */
   async isValidRefreshToken(token) {
-    const decodedToken = jwt.verify(token, JWT_REFRESH_SECRET);
+    const decodedToken = jwt.verify(token, JWT_REFRESH_SECRET); 
     const storedToken = await userMapper.getRefreshToken(decodedToken.id);
     return token === storedToken;
   },
@@ -119,7 +119,7 @@ const auth = {
    */
   async getTokenUser(token) {
     const decoded = jwt.verify(token, JWT_SECRET, { ignoreExpiration: true });
-    return userhMapper.findUserByEmail(decoded.data.email);
+    return userMapper.findUserByEmail(decoded.data.email);
   },
 };
 

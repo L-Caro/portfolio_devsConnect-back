@@ -27,7 +27,22 @@ Il est utilisé pour évaluer des expressions booléennes et renvoie la premièr
 
 `|| []` : Si l'expression précédente (`currentProject.tags?.filter(...)`) renvoie undefined, cela signifie que `currentProject.tags` était null ou undefined, ce qui implique qu'il n'y a pas de tags à supprimer. Dans ce cas, l'opérateur `||` est utilisé pour fournir un tableau vide `[]` comme valeur par défaut. Cela garantit que `tagsToDelete` est toujours un tableau et peut être utilisé par la suite dans la boucle `for`.
 
-## ON DELETE CASCADE
+# Destructuration d'un tableau
+
+```js
+const projectResults = await client.query(preparedProjectQuery);
+const project = await projectResults.rows[0];
+  ```
+
+devient 
+
+```js
+const [project] = (await client.query(preparedProjectQuery)).rows;
+```
+
+La déstructuration `[project]` permet d'extraire le premier élément de `rows` directement dans la variable `project`.
+
+# ON DELETE CASCADE
 
 FOREIGN KEY (ClientId)
         REFERENCES Clients (ClientId)
@@ -37,7 +52,7 @@ A foreign key with cascade delete means that if a record in the parent table is 
 
 DELETE CASCADE: When we create a foreign key using this option, it deletes the referencing rows in the child table when the referenced row is deleted in the parent table which has a primary key.
 
-## Architecture
+# Architecture
 
 `index.js` à la racine : fichier d'init de l'API
 dossier app :

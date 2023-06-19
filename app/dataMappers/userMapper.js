@@ -91,7 +91,7 @@ const findOneUser = async(id) => {
   return results.rows[0]; 
 }
 
-const removeOneUser = async(id) => {
+const removeOneUser = async(id) => { 
   const preparedQuery = {
     text: `DELETE FROM "user" WHERE "id" = $1 RETURNING *`,
     values: [id],
@@ -104,7 +104,7 @@ const removeOneUser = async(id) => {
 }
 
 const createOneUser = async(name, firstname, email, pseudo, password, description, availability, tags) => {
-  const preparedUserQuery = {
+  const preparedUserQuery = { 
     text: `INSERT INTO "user" ("name", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
     values: [name, firstname, email, pseudo, password, description, availability],
   };
@@ -125,13 +125,13 @@ const createOneUser = async(name, firstname, email, pseudo, password, descriptio
   return user;
 }
 
-const updateOneUser = async (userId, userUpdate) => {
+const updateOneUser = async (userId, userUpdate) => { 
   const currentUser = await findOneUser(userId);
   if (!currentUser) {
     throw new ApiError('User not found', { statusCode: 204 });
   };
 
-  if (userUpdate.tags) { 
+  if (userUpdate.tags) {
     const currentUserTags = currentUser.tags;
   
     const tagsToDelete = currentUserTags.filter(
