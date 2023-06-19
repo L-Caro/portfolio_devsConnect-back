@@ -119,7 +119,7 @@ const createOneProject = async(title, description, availability, user_id, tags) 
   await Promise.all(addTagsToProject);
 }
 
-// il faut ajouter une relation project_has_user ?
+// TODO il faut ajouter une relation project_has_user
 
   return project;
 }
