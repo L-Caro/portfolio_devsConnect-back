@@ -51,9 +51,9 @@ module.exports = router;
 *         description:
 *           type: string
 *           description: The user pseudo
-*         availibility: 
+*         availability: 
 *           type: boolean
-*           description: The user availibility
+*           description: The user availability
 *         tags:
 *           type: array
 *           items:

@@ -37,41 +37,14 @@ Content-Type: application/json
 
 POST {{baseUrl}}/api/projects
 Content-Type: application/json
+Authorization: Bearer
 
 {
-  "id": 1,
-  "title": "Biscoc O",
+  "title": "Bisc3",
   "description": "Lorem ipsum blabla",
-  "availibility": true,
-  "user_id": 2,
-  "tags": [
-    {
-      "id": 2,
-      "name": "Javascript"
-    },
-    {
-      "id": 3,
-      "name": "HTML"
-    },
-    {
-      "id": 4,
-      "name": "CSS"
-    }
-  ],
-  "users": [
-    {
-      "id": 4,
-      "name": "Caro"
-    },
-    {
-      "id": 2,
-      "name": "Mangeot"
-    },
-    {
-      "id": 3,
-      "name": "Danglot"
-    }
-  ],
+  "availability": true,
+  "user_id": 1,
+  "tags": "[ 2, 1 ]",
   "created_at": "2023-06-06T19:08:42.845Z",
   "updated_at": "2023-06-07T08:08:42.845Z"
 }
@@ -108,4 +81,13 @@ Content-Type: application/json
         "name": "SQL"
       }
     ]
+}
+
+{
+  "title": "Blabla3",
+  "description": "Lor5um blabla",
+  "availability": false,
+  "user_id": 1,
+  "tags": "[ 2, 1, 3 ]",
+  "users": "[ 3, 2 ]"
 }

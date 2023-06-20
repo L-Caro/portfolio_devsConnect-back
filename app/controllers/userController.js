@@ -37,11 +37,11 @@ const userController = {
   },
 
   async sendTokens(response, ip, user) {
-    const userID = user.id;
+    const userId = user.id;
     // create an access token
     const accessToken = auth.generateAccessToken(ip, user);
     // create a refresh token
-    const refreshToken = auth.generateRefreshToken(userID);
+    const refreshToken = auth.generateRefreshToken(userId);
     // save refresh token to db
     await userMapper.setRefreshToken(user.id, refreshToken);
     // send tokens to client
@@ -50,7 +50,9 @@ const userController = {
       data: {
         accessToken,
         refreshToken,
-        userID,
+        userId,
+        logged: true,
+        pseudo: user.pseudo,
       },
     });
   },
@@ -60,6 +62,7 @@ const userController = {
     res.json({status: 'success', data : users})
   },
 
+  //cette méthode récupère l'id dans les paramètres de la requête 
   async getOneUser(req, res) {
     const userId = req.params.id;
     const user = await userMapper.findOneUser(userId);
@@ -72,12 +75,12 @@ const userController = {
     res.json({status: 'success', data: user })
   },
 
-  //methode pour s'enregistrer
+  // méthode pour s'enregistrer / création d'un nouvel utilisateur
+  // cette méthode récupère les données dans le body de la requête
   async register(req, res) {
     const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
-    console.log(password);
     const hashedPWD = await bcrypt.hash(password, 10);
-    console.log(hashedPWD);
+
     if (!name || !firstname || !email || !pseudo || !password) {
       throw new ApiError('Missing information', { statusCode: 400 });
     }

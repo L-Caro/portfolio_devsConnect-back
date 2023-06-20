@@ -7,7 +7,7 @@ const tagController = {
       res.json({status: 'success', data : tags})
     },
 
-    //cette methode recupere l'id dans les parametres de la requete 
+    //cette méthode récupère l'id dans les paramètres de la requête 
     async getOneTag(req, res) {
       const tagId = req.params.id;
       const tag = await tagMapper.findOneTag(tagId);

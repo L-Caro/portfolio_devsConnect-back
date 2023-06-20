@@ -13,8 +13,6 @@ const createUserHasTag = async(userId, tagId) => {
   return results.rows[0]; 
 }
 
-/* Je veux retirer un tag d'un user */
-
 const deleteUserHasTag = async(userId, tagId) => {
   const preparedQuery = {
     text: `DELETE FROM "user_has_tag" WHERE "user_id" = $1 AND "tag_id" = $2 RETURNING *`,
