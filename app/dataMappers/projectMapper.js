@@ -1,5 +1,6 @@
 const client = require('./database');
 const projectTagMapper = require('./projectTagMapper');
+const projectUserMapper = require('./projectUserMapper');
 const ApiError = require('../errors/apiError.js');
 
 const findAllProjects = async () => {
@@ -106,7 +107,8 @@ const createOneProject = async(title, description, availability, user_id, tags) 
   }
 
   // utilisation de ?. pour gérer le cas où tags est null ou undefined
-  const addTagsToProject = tags?.map(async (tagId) => {
+  parsedTags = JSON.parse(tags);
+  const addTagsToProject = parsedTags?.map(async (tagId) => {
     const preparedTagQuery = {
         text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
         values: [project.id, tagId],
@@ -118,6 +120,9 @@ const createOneProject = async(title, description, availability, user_id, tags) 
 
   await Promise.all(addTagsToProject);
 
+  // ajout du titulaire du projet dans projectHasUser
+  await projectUserMapper.createProjectHasUser(project.id, project.user_id);
+
   return project;
 };
 
@@ -128,12 +133,15 @@ const updateOneProject = async (projectId, projectUpdate) => {
   }
 
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
-  const tagsToDelete = currentProject.tags?.filter(tag => !projectUpdate.tags?.includes(tag.tag_id)) || [];
+  parsedUpdatedTags = JSON.parse(projectUpdate.tags);
+  const currentProjectTags = currentProject.tags;
+
+  const tagsToDelete = currentProjectTags?.filter(currentProjectTags => !parsedUpdatedTags?.includes(currentProjectTags.tag_id)) || [];
   for (const tag of tagsToDelete) {
-    await projectTagMapper.deleteProjectHasTag(projectId, tag.tag_id);
+    await projectTagMapper.deleteProjectHasTag(projectId, tag);
   }
   
-  const tagsToAdd = projectUpdate.tags?.filter(updatedTag => !currentProject.tags?.some(tag => tag.tag_id === updatedTag)) || [];
+  const tagsToAdd = parsedUpdatedTags?.filter(parsedUpdatedTags => !currentProjectTags?.some(tag => tag.tag_id === parsedUpdatedTags)) || [];
   for (const tag of tagsToAdd) {
     await projectTagMapper.createProjectHasTag(projectId, tag);
   }

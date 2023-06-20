@@ -36,9 +36,9 @@ module.exports = router;
  *         description:
  *           type: string
  *           description: The project description
- *         availibility:
+ *         availability:
  *           type: boolean
- *           description: The project availibility
+ *           description: The project availability
  *         user_id:
  *           type: integer
  *           description: The auto-generated id of the project's creator
@@ -72,7 +72,7 @@ module.exports = router;
  *         id: 1
  *         title: Biscoc O
  *         description: Lorem ipsum blabla
- *         availibility: TRUE
+ *         availability: TRUE
  *         user_id: 2
  *         tags: [{id: 2, name: Javascript}, {id: 3, name: HTML}, {id: 4, name: CSS}]
  *         users: [{id: 4, name: Caro}, {id: 2, name: Mangeot}, {id: 3, name: Danglot}]

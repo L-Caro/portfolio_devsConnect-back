@@ -1,7 +1,5 @@
+# PROJECTS
 ```js
-
-// PROJECTS
-
 // methode listee en arrow pour tester different coding style avec requetes sql pour tous les projets
 const findAllProjects = async () => { //OK
   const results = await client.query(`
@@ -192,9 +190,10 @@ const createOneProject = async(title, description, availability, user_id, tags) 
     const results = await client.query(preparedQuery);
     return results.rows[0].user_id;
   }
+```
 
-// USERS
-
+# USERS
+```js
 const setRefreshToken = async(id, token) => {
   const preparedQuery = {
     text: 'UPDATE "user" set "refresh_token" = $2 WHERE "id" = $1 RETURNING *',
@@ -407,9 +406,10 @@ const findUserByEmail = async(email) => {
   const results = await client.query(preparedQuery);
   return results.rows[0];
 }
+```
 
-// TAGS
-
+# TAGS
+```js
 const findAllTags = async () => { // OK
   const preparedQuery = `SELECT * FROM "tag"`;
   const results = await client.query(preparedQuery);
@@ -431,9 +431,10 @@ if (!results.rows[0]) {
 }
 return results.rows[0]; 
 }
+```
 
-// USER HAS TAG
-
+# USER HAS TAG
+```js
 const createUserHasTag = async(userId, tagId) => {
   const preparedQuery = {
     text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
@@ -459,9 +460,10 @@ const deleteUserHasTag = async(userId, tagId) => {
   }
   return result.rows[0];
 }
+```
 
-// PROJECT HAS USER
-
+# PROJECT HAS USER
+```js
 // l'user devient postulant à un projet 
 // POST /api/users/:id/projects/:projectId
 
@@ -507,9 +509,10 @@ const deleteProjectHasUser = async(projectId, userId) => {
   }
   return result.rows[0];
 }
+```
 
-// PROJECT HAS TAG
-
+# PROJECT HAS TAG
+```js
 const createProjectHasTag = async(projectId, tagId) => {
   const preparedQuery = {
     text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,

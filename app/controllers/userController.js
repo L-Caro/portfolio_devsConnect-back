@@ -51,6 +51,8 @@ const userController = {
         accessToken,
         refreshToken,
         userId,
+        logged: true,
+        pseudo: user.pseudo,
       },
     });
   },

@@ -112,7 +112,9 @@ const createOneUser = async(name, firstname, email, pseudo, password, descriptio
   const userResult = await client.query(preparedUserQuery);
   const user = userResult.rows[0];
 
-  tags.forEach(async (tagId) => {
+  const parsedTags = JSON.parse(tags);
+
+  parsedTags.forEach(async (tagId) => {
     const preparedTagQuery = {
       text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
       values: [user.id, tagId],
@@ -131,13 +133,15 @@ const updateOneUser = async (userId, userUpdate) => {
     throw new ApiError('User not found', { statusCode: 204 });
   };
 
-  if (userUpdate.tags) {
+  const parsedUpdatedTags = JSON.parse(userUpdate.tags);
+
+  if (parsedUpdatedTags) {
     const currentUserTags = currentUser.tags;
   
     const tagsToDelete = currentUserTags.filter(
-      (tag) => !userUpdate.tags.some((updatedTag) => updatedTag === tag.tag_id)
+      (tag) => !parsedUpdatedTags.some((updatedTag) => updatedTag === tag.tag_id)
     );
-    const tagsToCreate = userUpdate.tags.filter(
+    const tagsToCreate = parsedUpdatedTags.filter(
       (tag) => !currentUserTags.some((existingTag) => existingTag.tag_id === tag)
     );
   

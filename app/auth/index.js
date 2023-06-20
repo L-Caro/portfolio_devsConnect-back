@@ -22,8 +22,6 @@ const auth = {
           ip,
           email: user.email,
           id: user.id,
-          logged: true, //
-          pseudo: user.pseudo,
         },
       },
       JWT_SECRET,
