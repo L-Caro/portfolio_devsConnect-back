@@ -87,7 +87,7 @@ const auth = {
             };
           }
 
-          if (permission === "add" || "remove" && section === "projectHasUser") {
+          if (permission === "add" && section === "projectHasUser" || permission === "remove" && section === "projectHasUser") {
             const userId = parseInt(req.params.userId);
             if (decoded.data.id === userId){
               return next();
@@ -95,7 +95,7 @@ const auth = {
           }
 
 
-          if (permission === "accept" || "remove" && section === "projectHasUser") {
+          if (permission === "accept" && section === "projectHasUser" || permission === "remove" && section === "projectHasUser") {
             const projectId = parseInt(req.params.projectId);
             const projectOwnerId = await projectMapper.findProjectOwner(projectId);
             if(!projectOwnerId){

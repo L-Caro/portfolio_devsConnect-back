@@ -12,8 +12,13 @@ const setRefreshToken = async(id, token) => {
   return results.rows;
 }
 
-const getRefreshToken = async(id) => {
-  // TODO : où est la fonction ? 
+const getRefreshToken = async (id) => {
+  const preparedQuery = {
+    text: 'SELECT "refresh_token" FROM "user" WHERE "id" = $1',
+    values: [id],
+  };
+  const results = await client.query(preparedQuery);
+  return results.rows[0].refresh_token;
 }
 
 const findAllUsers = async () => {
