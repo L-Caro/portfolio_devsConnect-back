@@ -89,6 +89,25 @@ const auth = {
             };
           }
 
+          if (permission === "add" || "remove" && section === "projectHasUser") {
+            const userId = parseInt(req.params.userId);
+            if (decoded.data.id === userId){
+              return next();
+            };
+          }
+
+
+          if (permission === "accept" || "remove" && section === "projectHasUser") {
+            const projectId = parseInt(req.params.projectId);
+            const projectOwnerId = await projectMapper.findProjectOwner(projectId);
+            if(!projectOwnerId){
+              new ApiError('Not found', { statusCode: 404 });
+            };
+            if (decoded.data.id === projectOwnerId){
+              return next();
+            };
+          }
+
           // forbidden
           new ApiError('Unauthorized', { statusCode: 401 });
         }
