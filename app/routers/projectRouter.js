@@ -13,6 +13,15 @@ router.put("/:id", authorize('modify', 'project'), controllerHandler(projectCont
 
 router.delete("/:id", authorize('delete', 'project'), controllerHandler(projectController.deleteOneProject));
 
+
+//ajouter les verifications d'autorisations a auth/index.js
+router.post("/:projectId/user/:userId", authorize('add', 'projectHasUser'), controllerHandler(projectController.addUserToProject));
+
+router.put("/:projectId/user/:userId", authorize('accept', 'projectHasUSer'), controllerHandler(projectController.updateUserToProject));
+
+router.delete("/:projectId/user/:userId", authorize('remove', 'projectHasUser'), controllerHandler(projectController.deleteUserToProject));
+
+
 module.exports = router;
 
 // Doc Swagger
