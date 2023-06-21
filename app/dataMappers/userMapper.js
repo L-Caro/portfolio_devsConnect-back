@@ -175,6 +175,7 @@ const updateOneUser = async (userId, userUpdate) => {
     ],
   };
 
+
   const [results] = (await client.query(preparedQuery)).rows;
 
   return results;
