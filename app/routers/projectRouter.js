@@ -102,7 +102,7 @@ module.exports = router;
  * @swagger
  * components:
  *   schemas:
- *     Project POST and PUT:
+ *     Project PUT:
  *       type: object
  *       required:
  *         - title
@@ -154,6 +154,57 @@ module.exports = router;
  *         user_id: 2
  *         tags: [ 2, 3, 4 ]
  *         users: [ 4, 2, 3 ]
+ *         created_at: "2023-06-06T19:08:42.845Z"
+ *         updated_at: "2023-06-07T08:08:42.845Z"
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Project POST:
+ *       type: object
+ *       required:
+ *         - title
+ *         - description
+ *         - user_id
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the project
+ *         title:
+ *           type: string
+ *           description: The project title
+ *         description:
+ *           type: string
+ *           description: The project description
+ *         availability:
+ *           type: boolean
+ *           description: The project availability
+ *         user_id:
+ *           type: integer
+ *           description: The auto-generated id of the project's creator
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *           description: Array with all tags id of the project
+ *         created_at:
+ *           type: timestamp
+ *           description: The auto-generated time of the project's creation
+ *         updated_at:
+ *           type: timestamp
+ *           description: The auto-generated time of the project's update
+ *       example:
+ *         id: 1
+ *         title: Biscoc O
+ *         description: Lorem ipsum blabla
+ *         availability: TRUE
+ *         user_id: 2
+ *         tags: [ 2, 3, 4 ]
  *         created_at: "2023-06-06T19:08:42.845Z"
  *         updated_at: "2023-06-07T08:08:42.845Z"
  */
@@ -236,14 +287,14 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Project POST and PUT'
+ *            $ref: '#/components/schemas/Project POST'
  *    responses:
  *      200:
  *        description: The project has been successfully created
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Project POST and PUT'
+ *              $ref: '#/components/schemas/Project POST'
  *      500:
  *        description: Internal Server Error
  */
@@ -323,14 +374,14 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Project POST and PUT'
+ *            $ref: '#/components/schemas/Project PUT'
  *    responses:
  *      200:
  *        description: The project has been updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Project POST and PUT'
+ *              $ref: '#/components/schemas/Project PUT'
  *      204:
  *        description: The project was not found
  *      500:

@@ -22,9 +22,6 @@ const getRefreshToken = async (id) => {
 }
 
 const findAllUsers = async () => {
-  // TODO Retirés - à valider avec Pierre
-  //    "user"."created_at",
-  //   "user"."updated_at",
   const preparedQuery ={
     text: `SELECT
       "user"."id",
@@ -66,8 +63,6 @@ const findOneUser = async(id) => {
     "user"."email",
     "user"."description",
     "user"."availability",
-    "user"."created_at",
-    "user"."updated_at",
     (
       SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability"))
       FROM (

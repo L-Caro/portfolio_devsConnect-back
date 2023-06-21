@@ -71,7 +71,7 @@ module.exports = router;
 *             properties:
 *               id:
 *                 type: integer
-*               name:
+*               title:
 *                 type: string  
 *           description: Array of objects for the projects of the user
 *         created_at: 
@@ -90,9 +90,177 @@ module.exports = router;
 *         description: Vieux loup de mer
 *         availability: true
 *         tags: [{id: 1, name: Java}]
-*         projects: [{id: 1, name: DevsConnect}]
+*         projects: [{id: 1, title: DevsConnect}]
 *         created_at: "2023-06-06T19:08:42.845Z"
 *         updated_at: "2023-06-07T08:08:42.845Z"
+*/
+
+/**
+* @swagger
+* components:
+*   schemas:
+*     Users PUT:
+*       type: object
+*       required:
+*         - name
+*         - firstname
+*         - email
+*         - pseudo
+*         - password
+*         - description
+*         - availability
+*       properties:
+*         id:
+*           type: integer
+*           description: The auto-generated id of the user
+*         name:
+*           type: string
+*           description: The user name
+*         firstname:
+*           type: string
+*           description: The user firstname
+*         email:
+*           type: string
+*           description: The user email
+*         pseudo:
+*           type: string
+*           description: The user pseudo
+*         password:
+*           type: string
+*           description: The user password
+*         description:
+*           type: string
+*           description: The user pseudo
+*         availability: 
+*           type: boolean
+*           description: The user availability
+*         tags:
+*           type: array
+*           items:
+*             type: object
+*             properties:
+*               id:
+*                 type: integer
+*           description: Array of objects for the ids of the tags of the user
+*         projects:
+*           type: array
+*           items:
+*             type: object
+*             properties:
+*               id:
+*                 type: integer
+*           description: Array of objects for the ids of the projects of the user
+*         created_at: 
+*           type: timestamp
+*           description: The auto-generated time of the user's creation
+*         updated_at: 
+*           type: timestamp
+*           description: The auto-generated time of the user's update
+*       example:
+*         id: 1
+*         name: Captain
+*         firstname: Haddock
+*         email: captain@gmail.com
+*         pseudo: Moussaillon
+*         password: harengs1234
+*         description: Vieux loup de mer
+*         availability: true
+*         tags: [ 1, 2 ]
+*         projects: [ 2, 3 ]
+*         created_at: "2023-06-06T19:08:42.845Z"
+*         updated_at: "2023-06-07T08:08:42.845Z"
+*/
+
+/**
+* @swagger
+* components:
+*   schemas:
+*     Users POST:
+*       type: object
+*       required:
+*         - name
+*         - firstname
+*         - email
+*         - pseudo
+*         - password
+*         - description
+*         - availability
+*       properties:
+*         id:
+*           type: integer
+*           description: The auto-generated id of the user
+*         name:
+*           type: string
+*           description: The user name
+*         firstname:
+*           type: string
+*           description: The user firstname
+*         email:
+*           type: string
+*           description: The user email
+*         pseudo:
+*           type: string
+*           description: The user pseudo
+*         password:
+*           type: string
+*           description: The user password
+*         description:
+*           type: string
+*           description: The user pseudo
+*         availability: 
+*           type: boolean
+*           description: The user availability
+*         tags:
+*           type: array
+*           items:
+*             type: object
+*             properties:
+*               id:
+*                 type: integer
+*           description: Array of objects for the ids of the tags of the user
+*         created_at: 
+*           type: timestamp
+*           description: The auto-generated time of the user's creation
+*         updated_at: 
+*           type: timestamp
+*           description: The auto-generated time of the user's update
+*       example:
+*         id: 1
+*         name: Captain
+*         firstname: Haddock
+*         email: captain@gmail.com
+*         pseudo: Moussaillon
+*         password: harengs1234
+*         description: Vieux loup de mer
+*         availability: true
+*         tags: [ 1, 2 ]
+*         created_at: "2023-06-06T19:08:42.845Z"
+*         updated_at: "2023-06-07T08:08:42.845Z"
+*/
+
+/**
+* @swagger
+* components:
+*   schemas:
+*     Users login:
+*       type: object
+*       required:
+*         - email
+*         - password
+*       properties:
+*         id:
+*           type: integer
+*           description: The auto-generated id of the user
+*         email:
+*           type: string
+*           description: The user email
+*         password:
+*           type: string
+*           description: The user password
+*       example:
+*         id: 1
+*         email: captain@gmail.com
+*         password: harengs1234
 */
 
 /**
@@ -160,14 +328,14 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Users'
+ *            $ref: '#/components/schemas/Users POST'
  *    responses:
  *      200:
  *        description: The user has been successfully created
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Users'
+ *              $ref: '#/components/schemas/Users POST'
  *      500:
  *        description: Internal Server Error
  */
@@ -176,21 +344,24 @@ module.exports = router;
  * @swagger
  * /api/login:
  *  post:
- *    summary: Connect a user
+ *    summary: Connexion of a user
  *    tags: [Users]
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Users'
+ *            $ref: '#/components/schemas/Users login'
  *    responses:
  *      200:
- *        description: The user has been successfully connected
+ *        description: Successful connection 
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Users login'
  *      500:
  *        description: Internal Server Error
  */
-
 
 /**
  * @swagger
@@ -210,14 +381,14 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Users'
+ *            $ref: '#/components/schemas/Users PUT'
  *    responses:
  *      200:
  *        description: The user has been updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Users'
+ *              $ref: '#/components/schemas/Users PUT'
  *      204:
  *        description: The user was not found
  *      500:
