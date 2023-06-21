@@ -39,12 +39,12 @@ Authorization: Bearer
 
 PUT {{baseUrl}}/api/projects/17
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MjQ4NzMwLCJleHAiOjE2ODczMDI3MzB9.65L3LnhFd7q1PzHg3o85YP_kCiSLSVBWQVSqPQVFc2s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MzUwNDg0LCJleHAiOjE2ODc0MDQ0ODR9.86xyi2N52fOdajcDh_quUxNzGM8QV-YvbTTrC4KlrQU
 
 {
-  "title": "Blabla3",
+  "title": "Blabla",
   "description": "Lor5um blabla",
-  "availability": false,
+  "availability": true,
   "user_id": 1,
   "tags": "[ 2, 1, 3 ]"
 }

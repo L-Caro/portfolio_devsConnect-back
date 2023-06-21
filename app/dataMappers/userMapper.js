@@ -139,37 +139,17 @@ const updateOneUser = async (userId, userUpdate) => {
   };
 
   const parsedUpdatedTags = JSON.parse(userUpdate.tags);
-
-  if (parsedUpdatedTags) {
-    const currentUserTags = currentUser.tags;
+  const currentUserTags = currentUser.tags;
   
-    const tagsToDelete = currentUserTags.filter(
-      (tag) => !parsedUpdatedTags.some((updatedTag) => updatedTag === tag.tag_id)
-    );
-    const tagsToCreate = parsedUpdatedTags.filter(
-      (tag) => !currentUserTags.some((existingTag) => existingTag.tag_id === tag)
-    );
-  
-    await Promise.all([
-      ...tagsToDelete.map((tag) => userTagMapper.deleteUserHasTag(userId, tag.id)),
-      ...tagsToCreate.map((tag) => userTagMapper.createUserHasTag(userId, tag)),
-    ]);
-  };
-
-  if (currentUser.projects) {
-    const projectsToUpdate = userUpdate.projects.filter((project) => {
-      const currentProject = currentUser.projects.find(
-        (existingProject) => existingProject.id === project.id
-      );
-      return project.is_active !== currentProject.is_active;
-    });
-
-    await Promise.all(
-      projectsToUpdate.map((project) =>
-        projectUserMapper.updateProjectHasUser(userId, project.id, project.is_active)
-      )
-    );
-  };
+    const tagsToDelete = currentUserTags?.filter(currentUserTags => !parsedUpdatedTags?.includes(currentUserTags.tag_id)) || [];
+    for (const tag of tagsToDelete) {
+      await userTagMapper.deleteUserHasTag(userId, tag);
+    }
+    
+    const tagsToAdd = parsedUpdatedTags?.filter(parsedUpdatedTags => !currentUserTags?.includes(tag => tag.tag_id === parsedUpdatedTags)) || [];
+    for (const tag of tagsToAdd) {
+      await userTagMapper.createUserHasTag(userId, tag);
+    }
 
   const preparedQuery = {
     text: `UPDATE "user"
@@ -195,11 +175,10 @@ const updateOneUser = async (userId, userUpdate) => {
     ],
   };
 
-  const results = await client.query(preparedQuery);
-  const user = results.rows[0];
+  const [results] = (await client.query(preparedQuery)).rows;
 
-  return user;
-}
+  return results;
+};
 
 const findUserByEmail = async(email) => {
   const preparedQuery = {

@@ -164,7 +164,7 @@ const updateOneProject = async (projectId, projectUpdate) => {
 const findProjectOwner = async(projectId) => {
   const preparedQuery = {
     text: `SELECT "project"."user_id" FROM "project"
-            WHERE "project"."id" = $1`,
+           WHERE "project"."id" = $1`,
     values: [projectId],
   };
 // destructuration de tableau pour récupérer le premier élément
