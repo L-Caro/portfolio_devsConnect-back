@@ -35,7 +35,7 @@ const projectController = {
       res.json({status: 'success', data: project })
     },
 
-    // cets méthodes récupèrent les id des projets et users dans les paramètres de la requête 
+    // ces méthodes récupèrent les id des projets et users dans les paramètres de la requête 
     async addUserToProject(req, res) {
       const { projectId, userId } = req.params;
       const projectHasUser = await projectUserMapper.createProjectHasUser(projectId, userId);

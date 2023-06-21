@@ -151,9 +151,9 @@ module.exports = router;
 
 /**
  * @swagger
- * /api/users:
+ * /api/signin:
  *  post:
- *    summary: Create a new User
+ *    summary: Register a new user
  *    tags: [Users]
  *    requestBody:
  *      required: true
@@ -174,9 +174,29 @@ module.exports = router;
 
 /**
  * @swagger
+ * /api/login:
+ *  post:
+ *    summary: Connect a user
+ *    tags: [Users]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Users'
+ *    responses:
+ *      200:
+ *        description: The user has been successfully connected
+ *      500:
+ *        description: Internal Server Error
+ */
+
+
+/**
+ * @swagger
  * /api/users/{id}:
  *  put:
- *    summary: Update the user
+ *    summary: Update the user - permission needed
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -208,7 +228,7 @@ module.exports = router;
  * @swagger
  * /api/users/{id}:
  *  delete:
- *     summary: Delete the User by its id
+ *     summary: Delete the User by its id - permission needed
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -219,7 +239,7 @@ module.exports = router;
  *         description: The user id
  *     responses:
  *       200:
- *         description: The user has been updated
+ *         description: The user has been deleted
  *       204:
  *         description: The user was not found
  *       500:
