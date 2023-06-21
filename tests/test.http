@@ -4,19 +4,17 @@
 
 
 # @name register
-PUT {{baseUrl}}/api/users/12
+PUT {{baseUrl}}/api/projects/17
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYmlwb3VAb2xjay5pbyIsImlkIjoxMiwibG9nZ2VkIjp0cnVlLCJwc2V1ZG8iOiJQYXQifSwiaWF0IjoxNjg3MTc1NTQzLCJleHAiOjE2ODcyMjk1NDN9.U3ZH4tpc9GFKNvhFB1cUZpFbY7EtnSjCZQqaVBqplWw
 
 {
-    "email": "bipou@olck.io",
-    "password": "secret",
-    "name": "Manot",
-    "firstname": "Pierre",
-    "pseudo": "Pat",
-    "description": "Loem ipsum blabla",
-    "availability": true,
-    "tags": [ 1, 4 ]
+  "title": "Blabla3",
+  "description": "Lor5um blabla",
+  "availability": false,
+  "user_id": 1,
+  "tags": "[ 2, 4, 3 ]",
+  "users": "[ 3, 2 ]"
 }
 
 ###
@@ -39,14 +37,31 @@ Authorization: Bearer
 
 PUT {{baseUrl}}/api/projects/17
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MzUwNDg0LCJleHAiOjE2ODc0MDQ0ODR9.86xyi2N52fOdajcDh_quUxNzGM8QV-YvbTTrC4KlrQU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MzY2NjE2LCJleHAiOjE2ODc0MjA2MTZ9.VPcfEzh4k6qrbe8-qAoOWS-5qvXjawCACJIGOh9NHRQ
 
 {
   "title": "Blabla",
   "description": "Lor5um blabla",
-  "availability": true,
+  "availability": false,
   "user_id": 1,
-  "tags": "[ 2, 1, 3 ]"
+  "users": [ 3, 2 ],
+  "tags": "[ 1, 2, 3 ]"
+}
+
+###
+
+PUT {{baseUrl}}/api/users/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MzU5NjM1LCJleHAiOjE2ODc0MTM2MzV9.9lj9hFjbsVtlBWGbVnOxF6Q9v-l5MwkMqRJZkQ0WpFE
+
+{
+    "name": "Gandji",
+    "firstname": "Elyette",
+    "pseudo": "Yetdji",
+    "email": "numero@bis.eg",
+    "description": "Dernière pyramide à gauche",
+    "availability": true,
+    "tags": "[ 2, 3, 6 ]"
 }
 
 ###

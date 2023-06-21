@@ -57,6 +57,7 @@ Content-Type: application/json
     "firstname": "Clément",
     "pseudo": "Panoramix",
     "email": "pano@ramix.ga",
+    "password": "secret",
     "description": "Grande hutte à la sortie du village",
     "availability": true,
     "projects": [

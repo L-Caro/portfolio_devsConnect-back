@@ -27,6 +27,13 @@ module.exports = router;
 // Doc Swagger
 /**
  * @swagger
+ * tags:
+ *   name: Projects
+ *   description: API routes for the Projects
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Project:
@@ -68,8 +75,10 @@ module.exports = router;
  *             properties:
  *               id:
  *                 type: integer
- *               name:
+ *               pseudo:
  *                 type: string  
+ *               availability:
+ *                 type: boolean
  *           description: Array of objects for the users of the project
  *         created_at:
  *           type: timestamp
@@ -84,16 +93,89 @@ module.exports = router;
  *         availability: TRUE
  *         user_id: 2
  *         tags: [{id: 2, name: Javascript}, {id: 3, name: HTML}, {id: 4, name: CSS}]
- *         users: [{id: 4, name: Caro}, {id: 2, name: Mangeot}, {id: 3, name: Danglot}]
+ *         users: [{id: 4, pseudo: Bipbip, availability: true}, {id: 2, pseudo: Lulu, availability: false}, {id: 3, pseudo: Pilou, availability: true}]
  *         created_at: "2023-06-06T19:08:42.845Z"
  *         updated_at: "2023-06-07T08:08:42.845Z"
  */
 
 /**
  * @swagger
- * tags:
- *   name: Projects
- *   description: API routes for the Projects
+ * components:
+ *   schemas:
+ *     Project POST and PUT:
+ *       type: object
+ *       required:
+ *         - title
+ *         - description
+ *         - user_id
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the project
+ *         title:
+ *           type: string
+ *           description: The project title
+ *         description:
+ *           type: string
+ *           description: The project description
+ *         availability:
+ *           type: boolean
+ *           description: The project availability
+ *         user_id:
+ *           type: integer
+ *           description: The auto-generated id of the project's creator
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *           description: Array with all tags id of the project
+ *         users:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *           description: Array of objects for the users id of the project
+ *         created_at:
+ *           type: timestamp
+ *           description: The auto-generated time of the project's creation
+ *         updated_at:
+ *           type: timestamp
+ *           description: The auto-generated time of the project's update
+ *       example:
+ *         id: 1
+ *         title: Biscoc O
+ *         description: Lorem ipsum blabla
+ *         availability: TRUE
+ *         user_id: 2
+ *         tags: [ 2, 3, 4 ]
+ *         users: [ 4, 2, 3 ]
+ *         created_at: "2023-06-06T19:08:42.845Z"
+ *         updated_at: "2023-06-07T08:08:42.845Z"
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Project permissions:
+ *       type: object
+ *       required:
+ *         - user_id
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the project
+ *         user_id:
+ *           type: integer
+ *           description: The auto-generated id of the project's creator
+ *       example:
+ *         id: 1
+ *         user_id: 2
  */
 
 /**
@@ -136,7 +218,7 @@ module.exports = router;
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Project'
+ *                 $ref: '#/components/schemas/Project POST and PUT'
  *       204:
  *         description: The project was not found
  *       500:
@@ -147,21 +229,78 @@ module.exports = router;
  * @swagger
  * /api/projects:
  *  post:
- *    summary: Create a new project
+ *    summary: Create a new project - connected user
  *    tags: [Projects]
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Project'
+ *            $ref: '#/components/schemas/Project POST and PUT'
  *    responses:
  *      200:
  *        description: The project has been successfully created
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Project'
+ *              $ref: '#/components/schemas/Project POST and PUT'
+ *      500:
+ *        description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/projects/:projectId/user/:userId:
+ *  post:
+ *    summary: Permission to add a user to a project
+ *    tags: [Projects]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Project permissions'
+ *    responses:
+ *      200:
+ *        description: Permission granted to add a user to a project
+ *      500:
+ *        description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/projects/:projectId/user/:userId:
+ *  put:
+ *    summary: Permission to update the status of a user in a project
+ *    tags: [Projects]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Project permissions'
+ *    responses:
+ *      200:
+ *        description: Permission granted to update the status of a user in a project
+ *      500:
+ *        description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/projects/:projectId/user/:userId:
+ *  delete:
+ *    summary: Permission to delete a user in a project
+ *    tags: [Projects]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Project permissions'
+ *    responses:
+ *      200:
+ *        description: Permission granted to delete a user in a project
  *      500:
  *        description: Internal Server Error
  */
@@ -170,7 +309,7 @@ module.exports = router;
  * @swagger
  * /api/projects/{id}:
  *  put:
- *    summary: Update the project by its id
+ *    summary: Update the project by its id - permission needed
  *    tags: [Projects]
  *    parameters:
  *      - in: path
@@ -184,14 +323,14 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Project'
+ *            $ref: '#/components/schemas/Project POST and PUT'
  *    responses:
  *      200:
  *        description: The project has been updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Project'
+ *              $ref: '#/components/schemas/Project POST and PUT'
  *      204:
  *        description: The project was not found
  *      500:
@@ -202,7 +341,7 @@ module.exports = router;
  * @swagger
  * /api/projects/{id}:
  *  delete:
- *     summary: Update the project by its id
+ *     summary: Delete the project by its id - permission needed
  *     tags: [Projects]
  *     parameters:
  *       - in: path

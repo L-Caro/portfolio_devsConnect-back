@@ -106,7 +106,7 @@ const createOneProject = async(title, description, availability, user_id, tags) 
     throw new ApiError('Nothing to create', { statusCode: 204 });
   }
 
-  // utilisation de ?. pour gérer le cas où tags est null ou undefined
+  // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
   parsedTags = JSON.parse(tags);
   const addTagsToProject = parsedTags?.map(async (tagId) => {
     const preparedTagQuery = {
@@ -132,19 +132,20 @@ const updateOneProject = async (projectId, projectUpdate) => {
     throw new ApiError('Project not found', { statusCode: 204 });
   }
 
-  // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
-  parsedUpdatedTags = JSON.parse(projectUpdate.tags);
-  const currentProjectTags = currentProject.tags;
-
-  const tagsToDelete = currentProjectTags?.filter(currentProjectTags => !parsedUpdatedTags?.includes(currentProjectTags.tag_id)) || [];
-  for (const tag of tagsToDelete) {
-    await projectTagMapper.deleteProjectHasTag(projectId, tag);
-  }
+  const UpdatedTags = JSON.parse(projectUpdate.tags); // Convertit la string des updatedTags pour comparer avec les actuels
+  const currentProjectTags = currentProject.tags.map(tag => tag.id);
   
-  const tagsToAdd = parsedUpdatedTags?.filter(parsedUpdatedTags => !currentProjectTags?.some(tag => tag.tag_id === parsedUpdatedTags)) || [];
-  for (const tag of tagsToAdd) {
-    await projectTagMapper.createProjectHasTag(projectId, tag);
-  }
+  // Id des tags au lieu des objets complets
+  const tagsToDelete = currentProjectTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];
+    console.log(tagsToDelete);
+    for (const tagId of tagsToDelete) {
+      await projectTagMapper.deleteProjectHasTag(projectId, tagId);
+    }
+    
+  const tagsToAdd = UpdatedTags?.filter(tagId => !currentProjectTags?.includes(tagId)) || [];
+    for (const tagId of tagsToAdd) {
+      await projectTagMapper.createProjectHasTag(projectId, tagId);
+    }
 
   const preparedQuery = {
     text: `UPDATE "project" 
