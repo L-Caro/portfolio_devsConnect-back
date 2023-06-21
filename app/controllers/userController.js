@@ -91,7 +91,8 @@ const userController = {
   async editOneUser(req, res) {
     const userId = req.params.id;
     const { name, firstname, email, pseudo, password, description, availability, tags, projects } = req.body;
-    const user = await userMapper.updateOneUser(userId, {name, firstname, email, pseudo, password, description, availability, tags, projects});
+    const hashedPWD = await bcrypt.hash(password, 10);
+    const user = await userMapper.updateOneUser(userId, {name, firstname, email, pseudo, hashedPWD, description, availability, tags, projects});
     res.json({status: 'success', data: user })
   }
 };
