@@ -1,6 +1,7 @@
 const express = require('express');
 const router = require('./routers');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 // mise en place des methodes json et URL encoded dans l'app de l'api
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 //lancement du router
 app.use(router);
