@@ -132,12 +132,13 @@ const updateOneProject = async (projectId, projectUpdate) => {
     throw new ApiError('Project not found', { statusCode: 204 });
   }
 
-  const UpdatedTags = JSON.parse(projectUpdate.tags); // Convertit la string des updatedTags pour comparer avec les actuels
+  const UpdatedTags = projectUpdate.tags;
+  console.log(UpdatedTags);
   const currentProjectTags = currentProject.tags.map(tag => tag.id);
+  console.log(currentProjectTags); // undefined
   
   // Id des tags au lieu des objets complets
   const tagsToDelete = currentProjectTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];
-    console.log(tagsToDelete);
     for (const tagId of tagsToDelete) {
       await projectTagMapper.deleteProjectHasTag(projectId, tagId);
     }

@@ -15,8 +15,6 @@ module.exports = router;
 *   schemas:
 *     Tags:
 *       type: object
-*       required:
-*         - name
 *       properties:
 *         id:
 *           type: integer

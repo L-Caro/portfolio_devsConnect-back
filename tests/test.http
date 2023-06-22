@@ -13,8 +13,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
   "description": "Lor5um blabla",
   "availability": false,
   "user_id": 1,
-  "tags": "[ 2, 4, 3 ]",
-  "users": "[ 3, 2 ]"
+  "tags": "[ 2, 4, 3 ]"
 }
 
 ###
@@ -37,22 +36,33 @@ Authorization: Bearer
 
 PUT {{baseUrl}}/api/projects/17
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MzY2NjE2LCJleHAiOjE2ODc0MjA2MTZ9.VPcfEzh4k6qrbe8-qAoOWS-5qvXjawCACJIGOh9NHRQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDIxNzM2LCJleHAiOjE2ODc0NzU3MzZ9.qFM5clmHouLu6xSbMe2W3PlJE5JDV1d8CXPe3bGNI1s
 
 {
-  "title": "Blabla",
-  "description": "Lor5um blabla",
-  "availability": false,
-  "user_id": 1,
-  "users": [ 3, 2 ],
-  "tags": "[ 1, 2, 3 ]"
+    "title": "Blabla",
+    "description": "Lor5um blabla",
+    "availability": false,
+    "user_id": 1,
+    "tags": [ 1, 4, 3 ]
 }
 
 ###
 
+POST {{baseUrl}}/api/projects
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDIxNzM2LCJleHAiOjE2ODc0NzU3MzZ9.qFM5clmHouLu6xSbMe2W3PlJE5JDV1d8CXPe3bGNI1s
+
+{
+  "title": "Bisc3",
+  "description": "Lorem ipsum blabla",
+  "availability": true,
+  "user_id": 1,
+  "tags": [ 2, 1 ]
+}
+
 PUT {{baseUrl}}/api/users/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MzU5NjM1LCJleHAiOjE2ODc0MTM2MzV9.9lj9hFjbsVtlBWGbVnOxF6Q9v-l5MwkMqRJZkQ0WpFE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDE3NzM2LCJleHAiOjE2ODc0NzE3MzZ9.N01N3Z167y-AVrOMQy3aH8wAP_M2YbhndMK3qS75LUY
 
 {
     "name": "Gandji",
@@ -61,7 +71,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
     "email": "numero@bis.eg",
     "description": "Dernière pyramide à gauche",
     "availability": true,
-    "tags": "[ 2, 3, 6 ]"
+    "tags": [ ]
 }
 
 ###
@@ -73,7 +83,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
 
 ###
 
-POST {{baseUrl}}/api/projects
+POST {{baseUrl}}/api/projects/17
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MjQ4NzMwLCJleHAiOjE2ODczMDI3MzB9.65L3LnhFd7q1PzHg3o85YP_kCiSLSVBWQVSqPQVFc2s
 

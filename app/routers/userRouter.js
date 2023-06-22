@@ -17,18 +17,17 @@ module.exports = router;
 // Doc Swagger
 /**
 * @swagger
+* tags:
+*   name: Users
+*   description: API routes for the Users
+*/
+
+/**
+* @swagger
 * components:
 *   schemas:
 *     Users:
 *       type: object
-*       required:
-*         - name
-*         - firstname
-*         - email
-*         - pseudo
-*         - password
-*         - description
-*         - availability
 *       properties:
 *         id:
 *           type: integer
@@ -102,17 +101,8 @@ module.exports = router;
 *     Users PUT:
 *       type: object
 *       required:
-*         - name
-*         - firstname
-*         - email
-*         - pseudo
-*         - password
-*         - description
-*         - availability
+*         - id
 *       properties:
-*         id:
-*           type: integer
-*           description: The auto-generated id of the user
 *         name:
 *           type: string
 *           description: The user name
@@ -137,27 +127,9 @@ module.exports = router;
 *         tags:
 *           type: array
 *           items:
-*             type: object
-*             properties:
-*               id:
-*                 type: integer
-*           description: Array of objects for the ids of the tags of the user
-*         projects:
-*           type: array
-*           items:
-*             type: object
-*             properties:
-*               id:
-*                 type: integer
-*           description: Array of objects for the ids of the projects of the user
-*         created_at: 
-*           type: timestamp
-*           description: The auto-generated time of the user's creation
-*         updated_at: 
-*           type: timestamp
-*           description: The auto-generated time of the user's update
+*             type: integer
+*           description: Array with all tags id of the user
 *       example:
-*         id: 1
 *         name: Captain
 *         firstname: Haddock
 *         email: captain@gmail.com
@@ -166,9 +138,6 @@ module.exports = router;
 *         description: Vieux loup de mer
 *         availability: true
 *         tags: [ 1, 2 ]
-*         projects: [ 2, 3 ]
-*         created_at: "2023-06-06T19:08:42.845Z"
-*         updated_at: "2023-06-07T08:08:42.845Z"
 */
 
 /**
@@ -183,12 +152,7 @@ module.exports = router;
 *         - email
 *         - pseudo
 *         - password
-*         - description
-*         - availability
 *       properties:
-*         id:
-*           type: integer
-*           description: The auto-generated id of the user
 *         name:
 *           type: string
 *           description: The user name
@@ -213,19 +177,9 @@ module.exports = router;
 *         tags:
 *           type: array
 *           items:
-*             type: object
-*             properties:
-*               id:
-*                 type: integer
-*           description: Array of objects for the ids of the tags of the user
-*         created_at: 
-*           type: timestamp
-*           description: The auto-generated time of the user's creation
-*         updated_at: 
-*           type: timestamp
-*           description: The auto-generated time of the user's update
+*             type: integer
+*           description: Array with all tags id of the project
 *       example:
-*         id: 1
 *         name: Captain
 *         firstname: Haddock
 *         email: captain@gmail.com
@@ -234,8 +188,6 @@ module.exports = router;
 *         description: Vieux loup de mer
 *         availability: true
 *         tags: [ 1, 2 ]
-*         created_at: "2023-06-06T19:08:42.845Z"
-*         updated_at: "2023-06-07T08:08:42.845Z"
 */
 
 /**
@@ -248,9 +200,6 @@ module.exports = router;
 *         - email
 *         - password
 *       properties:
-*         id:
-*           type: integer
-*           description: The auto-generated id of the user
 *         email:
 *           type: string
 *           description: The user email
@@ -258,16 +207,8 @@ module.exports = router;
 *           type: string
 *           description: The user password
 *       example:
-*         id: 1
 *         email: captain@gmail.com
 *         password: harengs1234
-*/
-
-/**
-* @swagger
-* tags:
-*   name: Users
-*   description: API routes for the Users
 */
 
 /**

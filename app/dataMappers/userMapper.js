@@ -135,7 +135,7 @@ const updateOneUser = async (userId, userUpdate) => {
     };
 
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
-  const UpdatedTags = JSON.parse(userUpdate.tags); // Convertit la string des updatedTags pour comparer avec les actuels
+  const UpdatedTags = userUpdate.tags; // Convertit la string des updatedTags pour comparer avec les actuels
   const currentUserTags = currentUser.tags.map(tag => tag.id);
   
   // Id des tags au lieu des objets complets
