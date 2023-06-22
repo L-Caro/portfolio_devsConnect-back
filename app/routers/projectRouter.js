@@ -27,14 +27,17 @@ module.exports = router;
 // Doc Swagger
 /**
  * @swagger
+ * tags:
+ *   name: Projects
+ *   description: API routes for the Projects
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Project:
  *       type: object
- *       required:
- *         - title
- *         - description
- *         - user_id
  *       properties:
  *         id:
  *           type: integer
@@ -68,8 +71,10 @@ module.exports = router;
  *             properties:
  *               id:
  *                 type: integer
- *               name:
+ *               pseudo:
  *                 type: string  
+ *               availability:
+ *                 type: boolean
  *           description: Array of objects for the users of the project
  *         created_at:
  *           type: timestamp
@@ -84,16 +89,79 @@ module.exports = router;
  *         availability: TRUE
  *         user_id: 2
  *         tags: [{id: 2, name: Javascript}, {id: 3, name: HTML}, {id: 4, name: CSS}]
- *         users: [{id: 4, name: Caro}, {id: 2, name: Mangeot}, {id: 3, name: Danglot}]
+ *         users: [{id: 4, pseudo: Bipbip, availability: true}, {id: 2, pseudo: Lulu, availability: false}, {id: 3, pseudo: Pilou, availability: true}]
  *         created_at: "2023-06-06T19:08:42.845Z"
  *         updated_at: "2023-06-07T08:08:42.845Z"
  */
 
 /**
  * @swagger
- * tags:
- *   name: Projects
- *   description: API routes for the Projects
+ * components:
+ *   schemas:
+ *     Project PUT:
+ *       type: object
+ *       required:
+ *         - user_id
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: The project title
+ *         description:
+ *           type: string
+ *           description: The project description
+ *         availability:
+ *           type: boolean
+ *           description: The project availability
+ *         user_id:
+ *           type: integer
+ *           description: The auto-generated id of the project's creator
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: integer
+ *           description: Array with all tags id of the project
+ *       example:
+ *         title: Biscoc O
+ *         description: Lorem ipsum blabla
+ *         availability: TRUE
+ *         user_id: 2
+ *         tags: [ 2, 3, 4 ]
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Project POST:
+ *       type: object
+ *       required:
+ *         - title
+ *         - description
+ *         - user_id
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: The project title
+ *         description:
+ *           type: string
+ *           description: The project description
+ *         availability:
+ *           type: boolean
+ *           description: The project availability
+ *         user_id:
+ *           type: integer
+ *           description: The auto-generated id of the project's creator
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: integer
+ *           description: Array with all tags id of the project
+ *       example:
+ *         title: Biscoc O
+ *         description: Lorem ipsum blabla
+ *         availability: TRUE
+ *         user_id: 2
+ *         tags: [ 2, 3, 4 ]
  */
 
 /**
@@ -101,7 +169,7 @@ module.exports = router;
  * /api/projects:
  *   get:
  *     summary: Returns the list of all the projects
- *     tags: [Projects]
+ *     tags: [Projects]   
  *     responses:
  *       200:
  *         description: The list of the projects
@@ -147,8 +215,44 @@ module.exports = router;
  * @swagger
  * /api/projects:
  *  post:
- *    summary: Create a new project
+ *    summary: Create a new project - connected user
  *    tags: [Projects]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Project POST'
+ *    responses:
+ *      200:
+ *        description: The project has been successfully created
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Project POST'
+ *      500:
+ *        description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/projects/:projectId/user/:userId:
+ *  post:
+ *    summary: Add a user to a project
+ *    tags: [Projects]
+ *    parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The project id
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id of the user to add
  *    requestBody:
  *      required: true
  *      content:
@@ -157,11 +261,71 @@ module.exports = router;
  *            $ref: '#/components/schemas/Project'
  *    responses:
  *      200:
- *        description: The project has been successfully created
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Project'
+ *        description: User successfully added to the project
+ *      500:
+ *        description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/projects/:projectId/user/:userId:
+ *  put:
+ *    summary: Update the status of a user in a project
+ *    tags: [Projects]
+ *    parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The project id
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id of the user to update
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Project'
+ *    responses:
+ *      200:
+ *        description: Status of the user successfully updated in the project
+ *      500:
+ *        description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/projects/:projectId/user/:userId:
+ *  delete:
+ *    summary: Delete a user in a project
+ *    tags: [Projects]
+ *    parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The project id
+ *       - in: path
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The id of the user to delete
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Project'
+ *    responses:
+ *      200:
+ *        description: User successfully deleted from the project
  *      500:
  *        description: Internal Server Error
  */
@@ -170,7 +334,7 @@ module.exports = router;
  * @swagger
  * /api/projects/{id}:
  *  put:
- *    summary: Update the project by its id
+ *    summary: Update the project by its id - permission needed
  *    tags: [Projects]
  *    parameters:
  *      - in: path
@@ -184,14 +348,14 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Project'
+ *            $ref: '#/components/schemas/Project PUT'
  *    responses:
  *      200:
  *        description: The project has been updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Project'
+ *              $ref: '#/components/schemas/Project PUT'
  *      204:
  *        description: The project was not found
  *      500:
@@ -202,7 +366,7 @@ module.exports = router;
  * @swagger
  * /api/projects/{id}:
  *  delete:
- *     summary: Update the project by its id
+ *     summary: Delete the project by its id - permission needed
  *     tags: [Projects]
  *     parameters:
  *       - in: path

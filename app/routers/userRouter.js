@@ -17,18 +17,17 @@ module.exports = router;
 // Doc Swagger
 /**
 * @swagger
+* tags:
+*   name: Users
+*   description: API routes for the Users
+*/
+
+/**
+* @swagger
 * components:
 *   schemas:
 *     Users:
 *       type: object
-*       required:
-*         - name
-*         - firstname
-*         - email
-*         - pseudo
-*         - password
-*         - description
-*         - availability
 *       properties:
 *         id:
 *           type: integer
@@ -71,7 +70,7 @@ module.exports = router;
 *             properties:
 *               id:
 *                 type: integer
-*               name:
+*               title:
 *                 type: string  
 *           description: Array of objects for the projects of the user
 *         created_at: 
@@ -90,16 +89,126 @@ module.exports = router;
 *         description: Vieux loup de mer
 *         availability: true
 *         tags: [{id: 1, name: Java}]
-*         projects: [{id: 1, name: DevsConnect}]
+*         projects: [{id: 1, title: DevsConnect}]
 *         created_at: "2023-06-06T19:08:42.845Z"
 *         updated_at: "2023-06-07T08:08:42.845Z"
 */
 
 /**
 * @swagger
-* tags:
-*   name: Users
-*   description: API routes for the Users
+* components:
+*   schemas:
+*     Users PUT:
+*       type: object
+*       required:
+*         - id
+*       properties:
+*         name:
+*           type: string
+*           description: The user name
+*         firstname:
+*           type: string
+*           description: The user firstname
+*         email:
+*           type: string
+*           description: The user email
+*         pseudo:
+*           type: string
+*           description: The user pseudo
+*         password:
+*           type: string
+*           description: The user password
+*         description:
+*           type: string
+*           description: The user pseudo
+*         availability: 
+*           type: boolean
+*           description: The user availability
+*         tags:
+*           type: array
+*           items:
+*             type: integer
+*           description: Array with all tags id of the user
+*       example:
+*         name: Captain
+*         firstname: Haddock
+*         email: captain@gmail.com
+*         pseudo: Moussaillon
+*         password: harengs1234
+*         description: Vieux loup de mer
+*         availability: true
+*         tags: [ 1, 2 ]
+*/
+
+/**
+* @swagger
+* components:
+*   schemas:
+*     Users POST:
+*       type: object
+*       required:
+*         - name
+*         - firstname
+*         - email
+*         - pseudo
+*         - password
+*       properties:
+*         name:
+*           type: string
+*           description: The user name
+*         firstname:
+*           type: string
+*           description: The user firstname
+*         email:
+*           type: string
+*           description: The user email
+*         pseudo:
+*           type: string
+*           description: The user pseudo
+*         password:
+*           type: string
+*           description: The user password
+*         description:
+*           type: string
+*           description: The user pseudo
+*         availability: 
+*           type: boolean
+*           description: The user availability
+*         tags:
+*           type: array
+*           items:
+*             type: integer
+*           description: Array with all tags id of the project
+*       example:
+*         name: Captain
+*         firstname: Haddock
+*         email: captain@gmail.com
+*         pseudo: Moussaillon
+*         password: harengs1234
+*         description: Vieux loup de mer
+*         availability: true
+*         tags: [ 1, 2 ]
+*/
+
+/**
+* @swagger
+* components:
+*   schemas:
+*     Users login:
+*       type: object
+*       required:
+*         - email
+*         - password
+*       properties:
+*         email:
+*           type: string
+*           description: The user email
+*         password:
+*           type: string
+*           description: The user password
+*       example:
+*         email: captain@gmail.com
+*         password: harengs1234
 */
 
 /**
@@ -151,23 +260,46 @@ module.exports = router;
 
 /**
  * @swagger
- * /api/users:
+ * /api/signin:
  *  post:
- *    summary: Create a new User
+ *    summary: Register a new user
  *    tags: [Users]
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Users'
+ *            $ref: '#/components/schemas/Users POST'
  *    responses:
  *      200:
  *        description: The user has been successfully created
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Users'
+ *              $ref: '#/components/schemas/Users POST'
+ *      500:
+ *        description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /api/login:
+ *  post:
+ *    summary: Connexion of a user
+ *    tags: [Users]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Users login'
+ *    responses:
+ *      200:
+ *        description: Successful connection 
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Users login'
  *      500:
  *        description: Internal Server Error
  */
@@ -176,7 +308,7 @@ module.exports = router;
  * @swagger
  * /api/users/{id}:
  *  put:
- *    summary: Update the user
+ *    summary: Update the user - permission needed
  *    tags: [Users]
  *    parameters:
  *      - in: path
@@ -190,14 +322,14 @@ module.exports = router;
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Users'
+ *            $ref: '#/components/schemas/Users PUT'
  *    responses:
  *      200:
  *        description: The user has been updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Users'
+ *              $ref: '#/components/schemas/Users PUT'
  *      204:
  *        description: The user was not found
  *      500:
@@ -208,7 +340,7 @@ module.exports = router;
  * @swagger
  * /api/users/{id}:
  *  delete:
- *     summary: Delete the User by its id
+ *     summary: Delete the User by its id - permission needed
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -219,7 +351,7 @@ module.exports = router;
  *         description: The user id
  *     responses:
  *       200:
- *         description: The user has been updated
+ *         description: The user has been deleted
  *       204:
  *         description: The user was not found
  *       500:
