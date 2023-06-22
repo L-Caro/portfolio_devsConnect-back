@@ -32,10 +32,11 @@ const projectController = {
       const projectId = req.params.id;
       const { title, description, availability, tags } = req.body;
       const project = await projectMapper.updateOneProject(projectId, {title, description, availability, tags});
+      console.log(project);
       res.json({status: 'success', data: project })
     },
 
-    // cets méthodes récupèrent les id des projets et users dans les paramètres de la requête 
+    // ces méthodes récupèrent les id des projets et users dans les paramètres de la requête 
     async addUserToProject(req, res) {
       const { projectId, userId } = req.params;
       const projectHasUser = await projectUserMapper.createProjectHasUser(projectId, userId);

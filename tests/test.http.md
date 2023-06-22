@@ -44,9 +44,7 @@ Authorization: Bearer
   "description": "Lorem ipsum blabla",
   "availability": true,
   "user_id": 1,
-  "tags": "[ 2, 1 ]",
-  "created_at": "2023-06-06T19:08:42.845Z",
-  "updated_at": "2023-06-07T08:08:42.845Z"
+  "tags": "[ 2, 1 ]"
 }
 
 PUT {{baseUrl}}/api/users/3
@@ -57,6 +55,7 @@ Content-Type: application/json
     "firstname": "Clément",
     "pseudo": "Panoramix",
     "email": "pano@ramix.ga",
+    "password": "secret",
     "description": "Grande hutte à la sortie du village",
     "availability": true,
     "projects": [

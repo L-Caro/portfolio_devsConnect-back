@@ -30,8 +30,6 @@ const findAllUsers = async () => {
       "user"."pseudo",
       "user"."description",
       "user"."availability",
-      "user"."created_at",
-      "user"."updated_at",
       (
         SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
         FROM (
@@ -65,8 +63,6 @@ const findOneUser = async(id) => {
     "user"."email",
     "user"."description",
     "user"."availability",
-    "user"."created_at",
-    "user"."updated_at",
     (
       SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability"))
       FROM (
@@ -134,23 +130,26 @@ const createOneUser = async(name, firstname, email, pseudo, password, descriptio
 
 const updateOneUser = async (userId, userUpdate) => { 
   const currentUser = await findOneUser(userId);
-  if (!currentUser) {
-    throw new ApiError('User not found', { statusCode: 204 });
-  };
+    if (!currentUser) {
+      throw new ApiError('User not found', { statusCode: 204 });
+    };
 
-  const parsedUpdatedTags = JSON.parse(userUpdate.tags);
-  const currentUserTags = currentUser.tags;
+  // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
+  const UpdatedTags = userUpdate.tags; // Convertit la string des updatedTags pour comparer avec les actuels
+  const currentUserTags = currentUser.tags.map(tag => tag.id);
   
-    const tagsToDelete = currentUserTags?.filter(currentUserTags => !parsedUpdatedTags?.includes(currentUserTags.tag_id)) || [];
-    for (const tag of tagsToDelete) {
-      await userTagMapper.deleteUserHasTag(userId, tag);
+  // Id des tags au lieu des objets complets
+  const tagsToDelete = currentUserTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];
+    console.log(tagsToDelete);
+    for (const tagId of tagsToDelete) {
+      await userTagMapper.deleteUserHasTag(userId, tagId);
     }
     
-    const tagsToAdd = parsedUpdatedTags?.filter(parsedUpdatedTags => !currentUserTags?.includes(tag => tag.tag_id === parsedUpdatedTags)) || [];
-    for (const tag of tagsToAdd) {
-      await userTagMapper.createUserHasTag(userId, tag);
+  const tagsToAdd = UpdatedTags?.filter(tagId => !currentUserTags?.includes(tagId)) || [];
+    for (const tagId of tagsToAdd) {
+      await userTagMapper.createUserHasTag(userId, tagId);
     }
-
+    
   const preparedQuery = {
     text: `UPDATE "user"
     SET "name" = COALESCE($1, "name"), 
@@ -171,10 +170,9 @@ const updateOneUser = async (userId, userUpdate) => {
       userUpdate.password,
       userUpdate.description,
       userUpdate.availability,
-      userId,
+      userId
     ],
   };
-
 
   const [results] = (await client.query(preparedQuery)).rows;
 
