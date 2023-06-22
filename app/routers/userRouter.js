@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/:id', controllerHandler(userController.getOneUser)); 
 router.get('/', controllerHandler(userController.getAllUsers)); 
 
-// router.put('/:id', authorize('modify', 'user'), controllerHandler(userController.editOneUser));
+router.put('/:id', authorize('modify', 'user'), controllerHandler(userController.editOneUser));
 
 router.delete('/:id', authorize('delete', 'user'), controllerHandler(userController.deleteOneUser)); 
 

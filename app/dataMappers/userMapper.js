@@ -138,7 +138,7 @@ const updateOneUser = async (userId, userUpdate) => {
     throw new ApiError('User not found', { statusCode: 204 });
   };
 
-  const parsedUpdatedTags = JSON.parse(userUpdate.tags);
+  const parsedUpdatedTags = userUpdate.tags;
   const currentUserTags = currentUser.tags;
   
     const tagsToDelete = currentUserTags?.filter(currentUserTags => !parsedUpdatedTags?.includes(currentUserTags.tag_id)) || [];
