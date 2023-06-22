@@ -50,14 +50,14 @@ Authorization: Bearer
 ###
 
 # @name editUser
-PUT {{baseUrl}}/api/users/1
+PUT {{baseUrl}}/api/users/3
 content-type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoicGFub0ByYW1peC5nYSIsImlkIjozfSwiaWF0IjoxNjg3NDM5NTY3LCJleHAiOjE2ODc0OTM1Njd9.cReNS8QCDOI-aPgxj5UDZDmuhu_yg2h_79mdGnpyxuA
 
 {
   "name": "Captain",
   "firstname": "Haddock",
-  "email": "captain@gmail.com",
+  "email": "pano@ramix.ga",
   "pseudo": "Moussaillon",
   "password": "harengs1234",
   "description": "Vieux loup de mer",
