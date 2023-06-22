@@ -51,6 +51,7 @@ const projectController = {
 
     async deleteUserToProject(req, res) {
       const { projectId, userId } = req.params;
+      console.log(req.params);
       const projectHasUser = await projectUserMapper.deleteProjectHasUser(projectId, userId);
       res.json({status: 'success', data: projectHasUser })
     }

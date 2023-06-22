@@ -3,100 +3,160 @@
 @refreshToken = {{login.response.body.$.data.refreshToken}}
 
 
-# @name register
-PUT {{baseUrl}}/api/projects/17
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYmlwb3VAb2xjay5pbyIsImlkIjoxMiwibG9nZ2VkIjp0cnVlLCJwc2V1ZG8iOiJQYXQifSwiaWF0IjoxNjg3MTc1NTQzLCJleHAiOjE2ODcyMjk1NDN9.U3ZH4tpc9GFKNvhFB1cUZpFbY7EtnSjCZQqaVBqplWw
-
-{
-  "title": "Blabla3",
-  "description": "Lor5um blabla",
-  "availability": false,
-  "user_id": 1,
-  "tags": "[ 2, 4, 3 ]"
-}
-
-###
 # @name login
 POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "numero@bis.eg",
+    "email": "pano@ramix.ga",
     "password": "secret"
 }
 
 ###
 
+# @name register
+PUT {{baseUrl}}/api/users/1
+content-type: application/json
+Authorization: Bearer
+
+{
+  "name": "Captain",
+  "firstname": "Haddock",
+  "email": "captain@gmail.com",
+  "pseudo": "Moussaillon",
+  "password": "harengs1234",
+  "description": "Vieux loup de mer",
+  "availability": true,
+  "tags": [
+    1,
+    2
+  ]
+}
+
+###
+
+# @name getUsers
+GET {{baseUrl}}/api/users
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name getOneUser
+GET {{baseUrl}}/api/users/1
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name editUser
+PUT {{baseUrl}}/api/users/1
+content-type: application/json
+Authorization: Bearer 
+
+{
+  "name": "Captain",
+  "firstname": "Haddock",
+  "email": "captain@gmail.com",
+  "pseudo": "Moussaillon",
+  "password": "harengs1234",
+  "description": "Vieux loup de mer",
+  "availability": true,
+  "tags": [
+    1,
+    2
+  ]
+}
+
+###
+
+# @name deleteUser
+PUT {{baseUrl}}/api/users/1
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name getProjects
+GET {{baseUrl}}/api/projects
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name getOneProject
 GET {{baseUrl}}/api/projects/1
 content-type: application/json
 Authorization: Bearer 
 
 ###
 
-PUT {{baseUrl}}/api/projects/17
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDIxNzM2LCJleHAiOjE2ODc0NzU3MzZ9.qFM5clmHouLu6xSbMe2W3PlJE5JDV1d8CXPe3bGNI1s
-
-{
-    "title": "Blabla",
-    "description": "Lor5um blabla",
-    "availability": false,
-    "user_id": 1,
-    "tags": [ 1, 4, 3 ]
-}
-
-###
-
+# @name createProject
 POST {{baseUrl}}/api/projects
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDIxNzM2LCJleHAiOjE2ODc0NzU3MzZ9.qFM5clmHouLu6xSbMe2W3PlJE5JDV1d8CXPe3bGNI1s
-
-{
-  "title": "Bisc3",
-  "description": "Lorem ipsum blabla",
-  "availability": true,
-  "user_id": 1,
-  "tags": [ 2, 1 ]
-}
-
-PUT {{baseUrl}}/api/users/1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDE3NzM2LCJleHAiOjE2ODc0NzE3MzZ9.N01N3Z167y-AVrOMQy3aH8wAP_M2YbhndMK3qS75LUY
-
-{
-    "name": "Gandji",
-    "firstname": "Elyette",
-    "pseudo": "Yetdji",
-    "email": "numero@bis.eg",
-    "description": "Dernière pyramide à gauche",
-    "availability": true,
-    "tags": [ ]
-}
-
-###
-
-DELETE {{baseUrl}}/api/projects/17/user/2
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MjQ4NzMwLCJleHAiOjE2ODczMDI3MzB9.65L3LnhFd7q1PzHg3o85YP_kCiSLSVBWQVSqPQVFc2s
-
-
-###
-
-POST {{baseUrl}}/api/projects/17
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MjQ4NzMwLCJleHAiOjE2ODczMDI3MzB9.65L3LnhFd7q1PzHg3o85YP_kCiSLSVBWQVSqPQVFc2s
+Authorization: Bearer
 
 {
-  "title": "Blabla3",
+  "title": "Biscoc O",
   "description": "Lorem ipsum blabla",
   "availability": true,
-  "user_id": 1,
-  "tags": "[ 2, 1 ]"
+  "user_id": 2,
+  "tags": [
+    2,
+    3,
+    4
+  ]
 }
 
+###
+
+# @name editProject
+POST {{baseUrl}}/api/projects/1
+content-type: application/json
+Authorization: Bearer
+
+{
+  "title": "Biscoc O",
+  "description": "Lorem ipsum blabla",
+  "availability": true,
+  "user_id": 2,
+  "tags": [
+    2,
+    3,
+    4
+  ]
+}
 
 ###
+
+# @name deleteProject
+PUT {{baseUrl}}/api/projects/1
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name applyToProject
+POST {{baseUrl}}/api/projects/1/user/3
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoicGFub0ByYW1peC5nYSIsImlkIjozfSwiaWF0IjoxNjg3NDI4NDYzLCJleHAiOjE2ODc0ODI0NjN9.rZSsmaEGXHmI1z8gcqxoZrSLDGykM_cKgYxUK89nNT8
+
+###
+
+# @name addUserToProject
+PUT {{baseUrl}}/api/projects/1/user/3
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiY2FwdGFpbkBnbWFpbC5jb20iLCJpZCI6Mn0sImlhdCI6MTY4NzQyODEzMiwiZXhwIjoxNjg3NDgyMTMyfQ._XQgPEyfHOAOzBY-uXzYz_gSazIDA1jjbXrcYRL-mCc
+
+###
+
+# @name removeUserToProject
+DELETE {{baseUrl}}/api/projects/1/user/3
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiY2FwdGFpbkBnbWFpbC5jb20iLCJpZCI6Mn0sImlhdCI6MTY4NzQyODEzMiwiZXhwIjoxNjg3NDgyMTMyfQ._XQgPEyfHOAOzBY-uXzYz_gSazIDA1jjbXrcYRL-mCc
+
+###
+
 POST {{baseUrl}}/refresh-token
 content-type: application/json
 Authorization: Bearer {{accessToken}}
