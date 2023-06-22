@@ -134,6 +134,7 @@ const updateOneUser = async (userId, userUpdate) => {
       throw new ApiError('User not found', { statusCode: 204 });
     };
 
+
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
   const UpdatedTags = userUpdate.tags; // Convertit la string des updatedTags pour comparer avec les actuels
   const currentUserTags = currentUser.tags.map(tag => tag.id);
