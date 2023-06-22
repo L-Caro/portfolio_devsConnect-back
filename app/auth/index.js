@@ -4,7 +4,7 @@ const projectMapper = require('../dataMappers/projectMapper');
 const ApiError = require('../errors/apiError.js');
 
 const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env;
-const ACCESS_TOKEN_EXPIRATION = process.env.ACCESS_TOKEN_EXPIRATION ?? '15m';
+const ACCESS_TOKEN_EXPIRATION = process.env.ACCESS_TOKEN_EXPIRATION ?? '1m';
 const REFRESH_TOKEN_EXPIRATION = process.env.REFRESH_TOKEN_EXPIRATION ?? '7d';
 
 const auth = {
@@ -59,7 +59,7 @@ const auth = {
           const decoded = jwt.verify(token, JWT_SECRET); 
           // check ip consistency
           if (decoded.data.ip !== req.ip) {
-            throw new ApiError('Unauthorized', { statusCode: 401 });
+            return next (new ApiError('Unauthorized', { statusCode: 401 }));
           }
 
           // check for create project 
@@ -72,7 +72,7 @@ const auth = {
             const projectId = parseInt(req.params.id);
             const projectOwnerId = await projectMapper.findProjectOwner(projectId);
             if(!projectOwnerId){
-              throw new ApiError('Not found', { statusCode: 404 });
+              return next (new ApiError('Not found', { statusCode: 404 }));
             };
 
             if (decoded.data.id === projectOwnerId){
@@ -99,7 +99,7 @@ const auth = {
             const projectId = parseInt(req.params.projectId);
             const projectOwnerId = await projectMapper.findProjectOwner(projectId);
             if(!projectOwnerId){
-              throw new ApiError('Not found', { statusCode: 404 });
+              return next (new ApiError('Not found', { statusCode: 404 }));
             };
             if (decoded.data.id === projectOwnerId){
               return next();
@@ -107,11 +107,11 @@ const auth = {
           }
 
           // forbidden
-          throw new ApiError('Unauthorized', { statusCode: 401 });
+          return next (new ApiError('Unauthorized', { statusCode: 401 }));
         }
-        new ApiError('Forbidden', { statusCode: 403 });
-      } catch (ApiError) {
-        throw ApiError;
+        return next (new ApiError('Forbidden', { statusCode: 403 }));
+      } catch (err) {
+        return next (new ApiError('Unauthorized', { statusCode: 401 }));
       }
     };
   },
