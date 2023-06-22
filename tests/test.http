@@ -22,7 +22,7 @@ POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "numero@bis.eg",
+    "email": "test@gmail.com",
     "password": "secret"
 }
 
@@ -43,43 +43,41 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
     "description": "Lor5um blabla",
     "availability": false,
     "user_id": 1,
-    "tags": [ 1, 4, 3 ]
+    "tags":[1,4,3]
 }
 
 ###
 
 POST {{baseUrl}}/api/projects
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDIxNzM2LCJleHAiOjE2ODc0NzU3MzZ9.qFM5clmHouLu6xSbMe2W3PlJE5JDV1d8CXPe3bGNI1s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpZCI6OH0sImlhdCI6MTY4NzQzMjI5MiwiZXhwIjoxNjg3NDMyMzUyfQ.af1ZaKykHmGRH-y8T-iwYTu-fwxPI9224MKl09BTiTk
 
 {
-  "title": "Bisc3",
-  "description": "Lorem ipsum blabla",
+  "title": "JWT test",
+  "description": "Accesstoekn casse tout ?",
   "availability": true,
-  "user_id": 1,
-  "tags": [ 2, 1 ]
+  "user_id": 8
 }
 
-PUT {{baseUrl}}/api/users/1
+POST {{baseUrl}}/api/signin
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDE3NzM2LCJleHAiOjE2ODc0NzE3MzZ9.N01N3Z167y-AVrOMQy3aH8wAP_M2YbhndMK3qS75LUY
 
 {
-    "name": "Gandji",
+    "name": "Ganadji",
     "firstname": "Elyette",
-    "pseudo": "Yetdji",
-    "email": "numero@bis.eg",
-    "description": "Dernière pyramide à gauche",
+    "pseudo": "Yefdtdji",
+    "email": "tret@bis.eg",
+    "password": "caca",
+    "description": "Dernièsdre pyramide à gauche",
     "availability": true,
     "tags": [ ]
 }
 
 ###
 
-DELETE {{baseUrl}}/api/projects/17/user/2
+DELETE {{baseUrl}}/api/users/8
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MjQ4NzMwLCJleHAiOjE2ODczMDI3MzB9.65L3LnhFd7q1PzHg3o85YP_kCiSLSVBWQVSqPQVFc2s
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpZCI6OH0sImlhdCI6MTY4NzQzMjI5MiwiZXhwIjoxNjg3NDMyMzUyfQ.af1ZaKykHmGRH-y8T-iwYTu-fwxPI9224MKl09BTiTk
 
 ###
 
