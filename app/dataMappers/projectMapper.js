@@ -107,8 +107,7 @@ const createOneProject = async(title, description, availability, user_id, tags) 
   }
 
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
-  parsedTags = JSON.parse(tags);
-  const addTagsToProject = parsedTags?.map(async (tagId) => {
+  const addTagsToProject = tags?.map(async (tagId) => {
     const preparedTagQuery = {
         text: `INSERT INTO "project_has_tag" ("project_id", "tag_id") VALUES ($1, $2) RETURNING *`,
         values: [project.id, tagId],

@@ -113,9 +113,7 @@ const createOneUser = async(name, firstname, email, pseudo, password, descriptio
   const userResult = await client.query(preparedUserQuery);
   const user = userResult.rows[0];
 
-  const parsedTags = JSON.parse(tags);
-
-  parsedTags.forEach(async (tagId) => {
+  tags.forEach(async (tagId) => {
     const preparedTagQuery = {
       text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
       values: [user.id, tagId],
@@ -136,8 +134,10 @@ const updateOneUser = async (userId, userUpdate) => {
 
 
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
-  const UpdatedTags = userUpdate.tags; // Convertit la string des updatedTags pour comparer avec les actuels
-  const currentUserTags = currentUser.tags.map(tag => tag.id);
+  const UpdatedTags = userUpdate.tags;
+  console.log(UpdatedTags);
+  const currentUserTags = currentUser.tags.map(tag => tag.id); //"Cannot read properties of null (reading 'map')"
+  console.log(currentUserTags);
   
   // Id des tags au lieu des objets complets
   const tagsToDelete = currentUserTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];
@@ -147,6 +147,7 @@ const updateOneUser = async (userId, userUpdate) => {
     }
     
   const tagsToAdd = UpdatedTags?.filter(tagId => !currentUserTags?.includes(tagId)) || [];
+  console.log(tagsToAdd);
     for (const tagId of tagsToAdd) {
       await userTagMapper.createUserHasTag(userId, tagId);
     }
