@@ -10,10 +10,13 @@ const tagRouter = require('./tagRouter');
 // require pour JWT authController pour les routes login et refresh et authorize pour les verifs de validite et regles d'acces
 const userController = require('../controllers/userController');
 
+const { userCreate } = require('../validations/userSchema');
+const validate = require('../validations/validate');
+
 const router = express.Router();
 
 // User registration route
-router.post('/signin', controllerHandler(userController.register));
+router.post('/signin', validate(userCreate, 'body'), controllerHandler(userController.register));
 
 // User login route
 router.post('/login', controllerHandler(userController.login));
