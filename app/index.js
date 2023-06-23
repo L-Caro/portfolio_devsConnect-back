@@ -43,6 +43,12 @@ app.use((req,res,next) => {
       req.body.tags = JSON.parse(req.body.tags);
     }
   }
+  if(req.body.availability){
+    const availability = req.body.availability;
+    if (typeof availability === 'boolean'){
+      req.body.availability = JSON.parse(req.body.availability);
+    }
+  }
 
   next ();
 });

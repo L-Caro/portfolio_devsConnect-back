@@ -12,7 +12,8 @@ const projectCreate = Joi.object({
     .max(500)
     .required(),
   availability: Joi.boolean(),
-  tags: [Joi.number()],
+  tags: Joi.array()
+    .items(Joi.number().integer()),
 });
 
 const projectUpdate = Joi.object({
@@ -25,7 +26,8 @@ const projectUpdate = Joi.object({
     .min(30)
     .max(500),
   availability: Joi.boolean(),
-  tags: [Joi.number()],
+  tags: Joi.array()
+    .items(Joi.number().integer()),
 });
 
 module.exports = { projectCreate, projectUpdate };

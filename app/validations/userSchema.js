@@ -18,7 +18,7 @@ const userCreate = Joi.object({
     .email({minDomainSegments: 2})
     .required(),
   password: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])(?=.*[!~`\-\\_{}[\]:;"<>,.?/]).{8,}$'))
     .required(),
   description: Joi.string(),
   availability: Joi.boolean(),
@@ -40,7 +40,7 @@ const userUpdate = Joi.object({
   email: Joi.string()
     .pattern(new RegExp('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')),
   password: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])(?=.*[!~`\-\\_{}[\]:;"<>,.?/]).{8,}$')),
   description: Joi.string(),
   availability: Joi.boolean(),
   tags: Joi.array()

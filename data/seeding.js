@@ -80,17 +80,30 @@ async function insertProjects(projects) {
   )`);
 
   const queryStr = `
+  WITH inserted_projects AS (
     INSERT INTO "project"
     (
       "title",
       "description",
-      "availibility",
+      "availability",
       "user_id"
     )
     VALUES
     ${projectsValues}
     RETURNING id
-  `;
+  )
+  INSERT INTO "project_has_user"
+  (
+    "project_id",
+    "user_id",
+    "is_active"
+  )
+  SELECT
+    inserted_projects.id,
+    projects.user_id,
+    true
+  FROM inserted_projects, unnest($1::json[]) AS projects(user_id)
+`;
   const result = await db.query(queryStr);
   return result.rows;
 }
