@@ -4,7 +4,7 @@ const projectMapper = require('../dataMappers/projectMapper');
 const ApiError = require('../errors/apiError.js');
 
 const { JWT_SECRET, JWT_REFRESH_SECRET } = process.env;
-const ACCESS_TOKEN_EXPIRATION = process.env.ACCESS_TOKEN_EXPIRATION ?? '1m';
+const ACCESS_TOKEN_EXPIRATION = process.env.ACCESS_TOKEN_EXPIRATION ?? '15m';
 const REFRESH_TOKEN_EXPIRATION = process.env.REFRESH_TOKEN_EXPIRATION ?? '7d';
 
 const auth = {

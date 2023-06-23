@@ -36,6 +36,16 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use((req,res,next) => {
+  if(req.body.tags){
+    const tags = req.body.tags;
+    if (typeof tags === 'string'){
+      req.body.tags = JSON.parse(req.body.tags);
+    }
+  }
+
+  next ();
+});
 
 //lancement du router
 app.use(router);

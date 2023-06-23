@@ -20,17 +20,14 @@ content-type: application/json
 Authorization: Bearer
 
 {
-  "name": "E",
-  "firstname": "Haddock",
-  "email": "eh@gmail.com",
-  "pseudo": "Bloup",
-  "password": "harengs1234",
-  "description": "Vieux loup de mer",
+  "name": "Etgzxcf",
+  "firstname": "Hadcxdodck",
+  "email": "eh@gmfafdl.com",
+  "pseudo": "Blgocxup",
+  "password": "secret",
+  "description": "Vieuxcxz loup de mer",
   "availability": true,
-  "tags": [
-    1,
-    2
-  ]
+  "tags": "[ 1, 2 ]"
 }
 
 ###

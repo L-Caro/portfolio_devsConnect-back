@@ -114,6 +114,7 @@ async function insertTags(tags) {
 //insertUsers(users);
 //const projects = generateProject(NB_PROJECTS);
 //insertProjects(projects);
+//insertTags();
 
 
-console.log(projects);
+//console.log(projects);

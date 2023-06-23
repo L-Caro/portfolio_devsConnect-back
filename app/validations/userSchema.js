@@ -3,12 +3,10 @@ const Joi = require('joi');
 const userCreate = Joi.object({
   name: Joi.string()
     .alphanum()
-    .min(3)
     .max(30)
     .required(),
   firstname: Joi.string()
     .alphanum()
-    .min(3)
     .max(30)
     .required(),
   pseudo: Joi.string()
@@ -24,17 +22,16 @@ const userCreate = Joi.object({
     .required(),
   description: Joi.string(),
   availability: Joi.boolean(),
-  tags: [Joi.number()],
+  tags: Joi.array()
+    .items(Joi.number().integer()),
 });
 
 const userUpdate = Joi.object({
   name: Joi.string()
     .alphanum()
-    .min(3)
     .max(30),
   firstname: Joi.string()
     .alphanum()
-    .min(3)
     .max(30),
   pseudo: Joi.string()
     .alphanum()
@@ -46,7 +43,8 @@ const userUpdate = Joi.object({
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
   description: Joi.string(),
   availability: Joi.boolean(),
-  tags: [Joi.number()],
+  tags: Joi.array()
+    .items(Joi.number().integer()),
 });
 
 module.exports = { userCreate, userUpdate };
