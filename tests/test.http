@@ -3,98 +3,161 @@
 @refreshToken = {{login.response.body.$.data.refreshToken}}
 
 
-# @name register
-PUT {{baseUrl}}/api/projects/17
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiYmlwb3VAb2xjay5pbyIsImlkIjoxMiwibG9nZ2VkIjp0cnVlLCJwc2V1ZG8iOiJQYXQifSwiaWF0IjoxNjg3MTc1NTQzLCJleHAiOjE2ODcyMjk1NDN9.U3ZH4tpc9GFKNvhFB1cUZpFbY7EtnSjCZQqaVBqplWw
-
-{
-  "title": "Blabla3",
-  "description": "Lor5um blabla",
-  "availability": false,
-  "user_id": 1,
-  "tags": "[ 2, 4, 3 ]"
-}
-
-###
 # @name login
 POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "test@gmail.com",
+    "email": "numero@bis.eg",
     "password": "secret"
 }
 
 ###
 
+# @name register
+POST {{baseUrl}}/signin
+content-type: application/json
+Authorization: Bearer
+
+{
+  "name": "E",
+  "firstname": "Haddock",
+  "email": "eh@gmail.com",
+  "pseudo": "Bloup",
+  "password": "harengs1234",
+  "description": "Vieux loup de mer",
+  "availability": true,
+  "tags": [
+    1,
+    2
+  ]
+}
+
+###
+
+# @name getUsers
+GET {{baseUrl}}/api/users
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name getOneUser
+GET {{baseUrl}}/api/users/1
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name editUser
+PUT {{baseUrl}}/api/users/16
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiZWhAZ21haWwuY29tIiwiaWQiOjE2fSwiaWF0IjoxNjg3NDQyMTY3LCJleHAiOjE2ODc0OTYxNjd9.G6FNEZMp809EEZT5ZU_N4jRfKtzDHYurv7PLAdgaEsc
+
+{
+  "name": "E",
+  "firstname": "Haddock",
+  "email": "eh@gmail.com",
+  "pseudo": "Bloup",
+  "password": "harengs1234",
+  "description": "Vieux loup de mer",
+  "availability": false,
+  "tags": [
+    1,
+    3,
+    4
+  ]
+}
+
+###
+
+# @name deleteUser
+DELETE {{baseUrl}}/api/users/1
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name getProjects
+GET {{baseUrl}}/api/projects
+content-type: application/json
+Authorization: Bearer 
+
+###
+
+# @name getOneProject
 GET {{baseUrl}}/api/projects/1
 content-type: application/json
 Authorization: Bearer 
 
 ###
 
-PUT {{baseUrl}}/api/projects/17
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDIxNzM2LCJleHAiOjE2ODc0NzU3MzZ9.qFM5clmHouLu6xSbMe2W3PlJE5JDV1d8CXPe3bGNI1s
-
-{
-    "title": "Blabla",
-    "description": "Lor5um blabla",
-    "availability": false,
-    "user_id": 1,
-    "tags":[1,4,3]
-}
-
-###
-
+# @name createProject
 POST {{baseUrl}}/api/projects
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpZCI6OH0sImlhdCI6MTY4NzQzMjI5MiwiZXhwIjoxNjg3NDMyMzUyfQ.af1ZaKykHmGRH-y8T-iwYTu-fwxPI9224MKl09BTiTk
-
-{
-  "title": "JWT test",
-  "description": "Accesstoekn casse tout ?",
-  "availability": true,
-  "user_id": 8
-}
-
-POST {{baseUrl}}/api/signin
-Content-Type: application/json
-
-{
-    "name": "Ganadji",
-    "firstname": "Elyette",
-    "pseudo": "Yefdtdji",
-    "email": "tret@bis.eg",
-    "password": "caca",
-    "description": "Dernièsdre pyramide à gauche",
-    "availability": true,
-    "tags": [ ]
-}
-
-###
-
-DELETE {{baseUrl}}/api/users/8
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpZCI6OH0sImlhdCI6MTY4NzQzMjI5MiwiZXhwIjoxNjg3NDMyMzUyfQ.af1ZaKykHmGRH-y8T-iwYTu-fwxPI9224MKl09BTiTk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDQxMzU3LCJleHAiOjE2ODc0OTUzNTd9.25kfggQkvBCnQo02IERG6e8WCLZXypZIKXnyLMW84UI
+
+{
+  "title": "Bisco98",
+  "description": "Lorem ipsum blabla",
+  "availability": false,
+  "user_id": 1,
+  "tags": [
+    2,
+    3,
+    4
+  ]
+}
 
 ###
 
-POST {{baseUrl}}/api/projects/17
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3MjQ4NzMwLCJleHAiOjE2ODczMDI3MzB9.65L3LnhFd7q1PzHg3o85YP_kCiSLSVBWQVSqPQVFc2s
+# @name editProject
+PUT {{baseUrl}}/api/projects/18
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDQyMzMyLCJleHAiOjE2ODc0OTYzMzJ9.VTt4NHNY9yi_0YMpVUx5TM-cZLj-LXCllSHyt7uLnC0
 
 {
-  "title": "Blabla3",
+  "title": "Bisco98",
   "description": "Lorem ipsum blabla",
   "availability": true,
   "user_id": 1,
-  "tags": "[ 2, 1 ]"
+  "tags": [
+    1,
+    3,
+    5
+  ]
 }
 
+###
+
+# @name deleteProject
+DELETE {{baseUrl}}/api/projects/1
+content-type: application/json
+Authorization: Bearer 
 
 ###
+
+# @name applyToProject
+POST {{baseUrl}}/api/projects/1/user/3
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoicGFub0ByYW1peC5nYSIsImlkIjozfSwiaWF0IjoxNjg3NDI4NDYzLCJleHAiOjE2ODc0ODI0NjN9.rZSsmaEGXHmI1z8gcqxoZrSLDGykM_cKgYxUK89nNT8
+
+###
+
+# @name addUserToProject
+PUT {{baseUrl}}/api/projects/1/user/3
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiY2FwdGFpbkBnbWFpbC5jb20iLCJpZCI6Mn0sImlhdCI6MTY4NzQyODEzMiwiZXhwIjoxNjg3NDgyMTMyfQ._XQgPEyfHOAOzBY-uXzYz_gSazIDA1jjbXrcYRL-mCc
+
+###
+
+# @name removeUserToProject
+DELETE {{baseUrl}}/api/projects/1/user/3
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiY2FwdGFpbkBnbWFpbC5jb20iLCJpZCI6Mn0sImlhdCI6MTY4NzQyODEzMiwiZXhwIjoxNjg3NDgyMTMyfQ._XQgPEyfHOAOzBY-uXzYz_gSazIDA1jjbXrcYRL-mCc
+
+###
+
 POST {{baseUrl}}/refresh-token
 content-type: application/json
 Authorization: Bearer {{accessToken}}

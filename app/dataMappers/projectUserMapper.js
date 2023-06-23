@@ -28,7 +28,7 @@ const updateProjectHasUser = async(projectId, userId) => {
 
 const deleteProjectHasUser = async(projectId, userId) => {
   const preparedQuery = {
-    text: `DELETE FROM "project_has_user" ("project_id", "user_id") VALUES ($1, $2) RETURNING *`,
+    text: `DELETE FROM "project_has_user" WHERE "project_id" = $1 AND "user_id" = $2 RETURNING *`,
     values: [projectId, userId],
   };
   const result = await client.query(preparedQuery);
