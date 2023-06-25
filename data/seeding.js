@@ -1,13 +1,15 @@
 const { fakerFR } = require('@faker-js/faker');
-const db = require('../app/dataMappers/database');
+const client = require('../app/dataMappers/database');
 
 const NB_USERS = 200;
 const NB_PROJECTS = 40;
 const faker = fakerFR;
-const tags = ['Java', 'Javascript', 'HTML', 'CSS', 'React', 'SQL', 'Python', 'C', 'C#', 'PHP', 'Go', 'Jest', 'Joi', 'React', 'GraphQL', 'Faker', 'TypeScript', 'Bootstrap', 'Angular', 'Rust'];
+const tags = ['Java', 'Javascript', 'HTML', 'CSS', 'React', 'SQL', 'Python', 'C',
+ 'C++', 'PHP', 'Go', 'Jest', 'Joi', 'COBOL', 'GraphQL', 'Faker', 'TypeScript', 'Bootstrap', 'Angular', 'Rust'];
 
 async function restartDB() {
-  await db.query('TRUNCATE "user", "project", "tag", "project_has_tag", "user_has_tag", "project_has_user" RESTART IDENTITY CASCADE;')
+  await client.query('TRUNCATE "user", "project", "tag", "project_has_tag", "user_has_tag", "project_has_user" RESTART IDENTITY CASCADE;');
+  return
 };
 
 function generateUser(nbUsers) {
@@ -53,7 +55,7 @@ async function insertUsers(users) {
     ${usersValues}
     RETURNING id
   `;
-  const result = await db.query(queryStr);
+  const result = await client.query(queryStr);
   return result.rows;
 }
 
@@ -61,7 +63,7 @@ function generateProject(nbProjects) {
   const projects = [];
   for (let i = 0; i < nbProjects; i++) {
     const project = {
-      title: faker.company.name(),
+      title: faker.commerce.productName(),
       description: faker.company.buzzPhrase(),
       availability: faker.datatype.boolean(),
       user_id: faker.number.int({min: 1, max: NB_USERS})
@@ -80,7 +82,6 @@ async function insertProjects(projects) {
   )`);
 
   const queryStr = `
-  WITH inserted_projects AS (
     INSERT INTO "project"
     (
       "title",
@@ -91,20 +92,21 @@ async function insertProjects(projects) {
     VALUES
     ${projectsValues}
     RETURNING id
-  )
-  INSERT INTO "project_has_user"
-  (
-    "project_id",
-    "user_id",
-    "is_active"
-  )
-  SELECT
-    inserted_projects.id,
-    projects.user_id,
-    true
-  FROM inserted_projects, unnest($1::json[]) AS projects(user_id)
-`;
-  const result = await db.query(queryStr);
+    `;
+  const result = await client.query(queryStr);
+  
+  const projects_have_users = []
+    for (i = 0; i< projectsValues.length; i++){
+      const project = projects[i];
+      const project_has_user = {
+        project_id: i + 1,
+        user_id: project.user_id,
+        is_active: true
+      }
+      projects_have_users.push(project_has_user);
+    }
+  insertProject_has_user(projects_have_users);
+
   return result.rows;
 }
 
@@ -118,16 +120,142 @@ async function insertTags(tags) {
       ${tags}
       RETURNING id
     `;
-  const result = await db.query(queryStr);
+  const result = await client.query(queryStr);
   return result.rows;
 }
 
-//restartDB();
-//const users = generateUser(NB_USERS);
-//insertUsers(users);
-//const projects = generateProject(NB_PROJECTS);
-//insertProjects(projects);
-//insertTags();
+function generateProject_has_user() { 
+  const projects_have_users = [];
+  for (let i = 1; i <= NB_PROJECTS; i++) {
+    // value max = peut etre modifie pour le nbr max 'user dans la relation par projet
+    const randomNbUser = faker.number.int({max: 6});
+    for (let y = 0; y < randomNbUser; y++) {
+      const project_has_user = {
+        project_id: i,
+        user_id: faker.number.int({min: 1, max: NB_USERS}),
+        is_active: faker.datatype.boolean()
+      }
+      projects_have_users.push(project_has_user);
+    }
+  }
+  return projects_have_users;
+}
 
+async function insertProject_has_user(project_has_user) {
+  const p_h_uValues = project_has_user.map((p_h_u) => `(
+    '${p_h_u.project_id}',
+    '${p_h_u.user_id}',
+    '${p_h_u.is_active}'  
+  )`);
+  const queryStr = `
+  INSERT INTO "project_has_user"
+    (
+      "project_id",
+      "user_id",
+      "is_active"
+    )
+    VALUES
+    ${p_h_uValues}
+    RETURNING id
+  `;
+  const result = await client.query(queryStr);
+  return result.rows;
+}
 
-//console.log(projects);
+async function insertTags() {
+  const mappedTags = tags.map((tag) => `(
+    '${tag}' 
+  )`);
+  const queryStr = `
+  INSERT INTO "tag"
+    (
+      "name"
+    )
+    VALUES
+    ${mappedTags}
+    RETURNING id
+  `;
+  const result = await client.query(queryStr);
+  return result.rows;
+}
+
+function generate_has_tag(nbrToBeTagged) { 
+  const have_users = [];
+  for (let i = 1; i <= nbrToBeTagged; i++) {
+    // value max = peut etre modifie pour le nbr max 'user dans la relation par projet
+    const randomNbTag = faker.number.int({max: 5});
+    for (let y = 0; y < randomNbTag; y++) {
+      const has_user = {
+        fk_id1: i,
+        fk_id2: faker.number.int({min: 1, max: tags.length})
+      }
+      have_users.push(has_user);
+    }
+  }
+  return have_users;
+}
+
+async function insert_has_tag(has_tag, who) {
+  const hasTagValues = has_tag.map((hasTag) => `(
+    '${hasTag.fk_id1}',
+    '${hasTag.fk_id2}'
+  )`);
+  const queryStr = `
+  INSERT INTO "${who}_has_tag"
+    (
+      "${who}_id",
+      "tag_id"
+    )
+    VALUES
+    ${hasTagValues}
+    RETURNING id
+  `;
+  const result = await client.query(queryStr);
+  return result.rows;
+}
+
+console.log('Erasing previous DB')
+restartDB();
+
+setTimeout(() => {
+  const users = generateUser(NB_USERS);
+  insertUsers(users);
+  console.log('Creating users');
+}, 3000);
+
+setTimeout(() => {
+  const projects = generateProject(NB_PROJECTS);
+  insertProjects(projects);
+  console.log('Creating projects');
+}, 6000);
+
+setTimeout(() => {
+  const projectUser = generateProject_has_user();
+  insertProject_has_user(projectUser);
+  console.log('Creating users - projects relations');
+}, 9000);
+
+setTimeout(() => {
+  insertTags();
+  console.log('Adding Tags');
+}, 12000);
+
+setTimeout(() => {
+  const projects_tags = generate_has_tag(NB_PROJECTS);
+  insert_has_tag(projects_tags, 'project');
+  console.log('Creating tags - projects relations');
+}, 15000);
+
+setTimeout(() => {
+  const users_tags = generate_has_tag(NB_USERS);
+  insert_has_tag(users_tags, 'user');
+  console.log('Creating users - tags relations');
+}, 18000);
+
+setTimeout(() => {
+  console.log('All done');
+}, 20000);
+
+setTimeout(() => {
+  process.exit();
+}, 21000);
