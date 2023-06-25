@@ -143,7 +143,7 @@ Conditions de jointure modifiées pour utiliser directement les colonnes de liai
 
 Suppression de la clause GROUP BY puisqu'elle n'est plus nécessaire avec l'utilisation de la clause DISTINCT ON dans les sous-requêtes.
 
-## Jointures
+## Sous-requêtes
 
 ```js
 SELECT "pseudo" FROM "user" WHERE "id" (
@@ -159,10 +159,11 @@ En renvoie 9 mais il y en a 33 dans la table user_has_tag
 
 ## Fonction SQL 
 
-find_user_by_id
+`find_user_by_id`
+
 ```sql
-CREATE OR REPLACE FUNCTION find_user_by_id(id INT)
-  RETURNS TABLE (
+CREATE OR REPLACE FUNCTION find_user_by_id(id INT) -- paramètre typé
+  RETURNS TABLE ( -- valeurs retournées
     user_id INT,
     name VARCHAR(64),
     firstname VARCHAR(64),
@@ -173,9 +174,12 @@ CREATE OR REPLACE FUNCTION find_user_by_id(id INT)
     projects JSONB,
     tags JSONB
   )
-AS $$
+AS $$ -- instruction de fonction
 BEGIN
-  RETURN QUERY
+  RETURN QUERY 
+  -- les éléments individuels à renvoyer sont spécifiés
+  -- RETURN QUERY ajoute les résultats de la requête à l'ensemble du résultat de la fonction
+  -- ne s'utilise qu'avec le langage plpgsql
   SELECT
     "user"."id" AS "user_id",
     "user"."name",
@@ -196,8 +200,8 @@ BEGIN
         FROM "project"
         INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
         WHERE "project_has_user"."user_id" = "user"."id"
-      ) AS project
-    ) AS projects,
+      ) AS "project"
+    ) AS "projects",
     (
       SELECT jsonb_agg(jsonb_build_object(
         'id', "tag"."id", 
@@ -213,11 +217,12 @@ BEGIN
   FROM "user"
   WHERE "user"."id" = "id";
 
-  IF NOT FOUND THEN
+  IF NOT FOUND THEN -- Gestion de l'erreur
     RAISE EXCEPTION 'User not found';
   END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql STABLE; -- définir le type de langage
+-- STABLE : mise en cache des résultats
 ```
 
 Test
@@ -226,32 +231,8 @@ Test
 SELECT * FROM find_user_by_id(80);
 ```
 
-La fonction SQL `find_user_by_id` prend un identifiant `id` en entrée et retourne une table avec les colonnes correspondant aux informations de l'utilisateur, y compris les projets et les tags associés. **Les résultats sont renvoyés sous la forme de colonnes** nommées `user_id`, `name`, `firstname`, `pseudo`, `email`, `description`, `availability`, `projects` (au format JSONB) et `tags` (également au format JSONB).
-
 ## JSONB
 
-JSONB est un type de données dans PostgreSQL qui permet de stocker des données au format JSON (JavaScript Object Notation) de manière efficace. JSONB est une abréviation de "JSON Binary" ou "JSONB" pour faire la distinction avec le type de données JSON classique.
+L'utilisation de JSONB permet de **stocker, indexer et manipuler efficacement des données au format JSON** : fonctionnalités avancées pour l'agrégation, la recherche et la manipulation de données JSON associées aux utilisateurs
+--> offre une plus grande souplesse et une plus grande facilité d'utilisation dans le traitement des données complexes liées aux projets et aux tags
 
-Le type JSONB **stocke des données JSON sous une forme binaire**, ce qui offre plusieurs avantages par rapport au type JSON :
-
-- **Stockage compact** : Les données JSONB sont stockées de manière binaire, ce qui permet une compression efficace des données et une occupation réduite de l'espace de stockage.
-
-- **Indexation** : PostgreSQL prend en charge l'indexation des colonnes de type JSONB, ce qui permet d'effectuer des recherches rapides et efficaces sur les données JSON.
-
-- **Requêtes et opérations** : Les données JSONB peuvent être requêtées et manipulées directement à l'aide d'opérateurs et de fonctions SQL dédiés pour les types JSONB. PostgreSQL offre une large gamme de fonctions pour travailler avec les données JSONB, y compris l'extraction de valeurs, l'agrégation, la recherche textuelle, la mise à jour, etc.
-
-- **Validation des données** : PostgreSQL vérifie la syntaxe JSON lors de l'insertion ou de la mise à jour des données JSONB, ce qui garantit que seules des données JSON valides sont stockées.
-
-En résumé, JSONB est un type de données dans PostgreSQL qui permet de **stocker, indexer et manipuler efficacement des données au format JSON**. Il offre des fonctionnalités avancées pour travailler avec des données JSON dans une base de données relationnelle.
-
-Dans la fonction `find_user_by_id`, la colonne `projects` et la colonne `tags` sont définies comme des types JSONB. Voici quelques raisons pour lesquelles JSONB est utilisé dans cette fonction :
-
-- **Structure flexible** : Les données JSON sont souvent utilisées lorsque la structure des données peut varier d'un enregistrement à un autre. Dans ce cas, les projets et les tags associés à un utilisateur peuvent avoir des structures différentes. Le type JSONB permet de stocker ces données avec une flexibilité de structure, ce qui facilite l'ajout ou la suppression de propriétés selon les besoins.
-
-- **Agrégation de données** : Le type JSONB offre des fonctions d'agrégation puissantes pour travailler avec des données JSON. Dans cette fonction, les projets et les tags associés à un utilisateur sont agrégés en utilisant les fonctions jsonb_agg et jsonb_build_object. Cela permet de regrouper les données liées à un utilisateur dans un format JSONB facilement exploitable.
-
-- **Stockage efficace** : Le type JSONB stocke les données JSON de manière binaire, ce qui permet une compression efficace des données et une occupation réduite de l'espace de stockage. Cela peut être avantageux lorsque les données JSON sont volumineuses ou lorsque de nombreuses relations existent entre les utilisateurs, les projets et les tags.
-
-- **Requêtes flexibles** : L'utilisation de JSONB permet d'effectuer des requêtes flexibles sur les données JSON. Par exemple, il est possible de filtrer les utilisateurs en fonction de certains tags spécifiques ou de rechercher des projets ayant certaines propriétés. Les opérateurs et les fonctions dédiés aux types JSONB offerts par PostgreSQL facilitent ces opérations.
-
-En résumé, l'utilisation de JSONB dans cette fonction permet de stocker et de manipuler des données flexibles de manière efficace, en offrant des fonctionnalités avancées pour l'agrégation, la recherche et la manipulation de données JSON associées aux utilisateurs. Cela offre une plus grande souplesse et une plus grande facilité d'utilisation dans le traitement des données complexes liées aux projets et aux tags.

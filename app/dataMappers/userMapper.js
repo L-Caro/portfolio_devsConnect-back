@@ -1,6 +1,6 @@
 const client = require('./database');
 const userTagMapper = require('./userTagMapper');
-const projectUserMapper = require('./projectUserMapper');
+//const projectUserMapper = require('./projectUserMapper');
 const ApiError = require('../errors/apiError.js');
 
 const setRefreshToken = async(id, token) => {
@@ -53,6 +53,7 @@ const findAllUsers = async () => {
   return results.rows; 
 }
 
+/*
 const findOneUser = async(id) => {
   const preparedQuery = {
     text: `SELECT
@@ -90,6 +91,12 @@ const findOneUser = async(id) => {
     throw new ApiError('User not found', { statusCode: 204 });
   }
   return results.rows[0]; 
+} */
+
+async function getUserById(id) {
+  const findOneUser = await client.query(`SELECT * FROM find_user_by_id($1)`, [id]);
+  const user = findOneUser.rows[0];
+  return user;
 }
 
 const removeOneUser = async(id) => { 
@@ -123,7 +130,7 @@ const createOneUser = async(name, firstname, email, pseudo, password, descriptio
     return tagResult.rows[0];
   });
 
-  return user;
+  return user; 
 }
 
 const updateOneUser = async (userId, userUpdate) => { 
@@ -196,7 +203,8 @@ module.exports = {
   setRefreshToken,
   getRefreshToken,
   findAllUsers,
-  findOneUser,
+  //findOneUser,
+  getUserById,
   removeOneUser,
   createOneUser,
   updateOneUser,
