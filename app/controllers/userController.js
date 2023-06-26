@@ -58,16 +58,16 @@ const userController = {
   },
 
   async getAllUsers(_, res) {
-    //const users = await userMapper.findAllUsers();
-    const users = await userMapper.getAllUsers();
+    const users = await userMapper.findAllUsers();
+    //const users = await userMapper.getAllUsers();
     res.json({status: 'success', data : users})
   },
 
   //cette méthode récupère l'id dans les paramètres de la requête 
   async getOneUser(req, res) {
     const userId = req.params.id;
-    //const user = await userMapper.findOneUser(userId);
-    const user = await userMapper.getUserById(userId);
+    const user = await userMapper.findOneUser(userId);
+    //const user = await userMapper.getUserById(userId);
     res.json({status: 'success', data : user})
   },
 

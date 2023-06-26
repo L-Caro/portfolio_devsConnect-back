@@ -133,8 +133,9 @@ const updateOneProject = async (projectId, projectUpdate) => {
 
   const UpdatedTags = projectUpdate.tags;
   console.log(UpdatedTags);
-  const currentProjectTags = currentProject.tags.map(tag => tag.id);
-  console.log(currentProjectTags); // undefined
+  console.log(currentProject.tags);
+  const currentProjectTags = currentProject.tags ? currentProject.tags.map(tag => tag.tag_id) : [];
+  console.log(currentProject);
   
   // Id des tags au lieu des objets complets
   const tagsToDelete = currentProjectTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];

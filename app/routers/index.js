@@ -11,12 +11,12 @@ const tagRouter = require('./tagRouter');
 const userController = require('../controllers/userController');
 
 const { userCreate } = require('../validations/userSchema');
-const validate = require('../validations/validate');
+//const validate = require('../validations/validate');
 
 const router = express.Router();
 
 // User registration route
-router.post('/signin', validate(userCreate, 'body'), controllerHandler(userController.register));
+router.post('/signin', /* validate(userCreate, 'body'),  */controllerHandler(userController.register));
 
 // User login route
 router.post('/login', controllerHandler(userController.login));
