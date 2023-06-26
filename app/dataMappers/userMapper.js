@@ -1,6 +1,6 @@
 const client = require('./database');
 const userTagMapper = require('./userTagMapper');
-const projectUserMapper = require('./projectUserMapper');
+//const projectUserMapper = require('./projectUserMapper');
 const ApiError = require('../errors/apiError.js');
 
 const setRefreshToken = async(id, token) => {
@@ -53,6 +53,13 @@ const findAllUsers = async () => {
   return results.rows; 
 }
 
+/* async function getAllUsers() {
+  const findAllUsers = await client.query(`SELECT * FROM find_all_users`);
+  const results = findAllUsers.rows[0];
+  console.log(results);
+  return results;
+} */
+
 const findOneUser = async(id) => {
   const preparedQuery = {
     text: `SELECT
@@ -92,36 +99,38 @@ const findOneUser = async(id) => {
   return results.rows[0]; 
 }
 
+/* async function getUserById(id) {
+  const findOneUser = await client.query(`SELECT * FROM "find_user_by_id"($1)`, [id]);
+  const user = findOneUser.rows[0];
+  return user;
+} */
+
 const removeOneUser = async(id) => { 
   const preparedQuery = {
     text: `DELETE FROM "user" WHERE "id" = $1 RETURNING *`,
     values: [id],
   };
-  const results = await client.query(preparedQuery);
-  if (!results.rows[0]) {
+  const [results] = (await client.query(preparedQuery)).rows;
+  if (!results) {
     throw new ApiError('User already deleted', { statusCode: 204 });
   }
-  return results.rows[0];
+  return results;
 }
 
-const createOneUser = async(name, firstname, email, pseudo, password, description, availability, tags) => {
-  const preparedUserQuery = { 
+const createOneUser = async (name, firstname, email, pseudo, password, description, availability, tags) => {
+  const preparedUserQuery = {
     text: `INSERT INTO "user" ("name", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
     values: [name, firstname, email, pseudo, password, description, availability],
   };
 
-  const userResult = await client.query(preparedUserQuery);
-  const user = userResult.rows[0];
+  const [user] = (await client.query(preparedUserQuery)).rows;
+  if (!user) {
+    throw new ApiError('Nothing to create', { statusCode: 204 });
+  }
 
-  tags.forEach(async (tagId) => {
-    const preparedTagQuery = {
-      text: `INSERT INTO "user_has_tag" ("user_id", "tag_id") VALUES ($1, $2) RETURNING *`,
-      values: [user.id, tagId],
-    };
-
-    const tagResult = await client.query(preparedTagQuery);
-    return tagResult.rows[0];
-  });
+  for (const tagId of tags) {
+    await userTagMapper.createUserHasTag(user.id, tagId);
+  }
 
   return user;
 }
@@ -132,11 +141,10 @@ const updateOneUser = async (userId, userUpdate) => {
       throw new ApiError('User not found', { statusCode: 204 });
     };
 
-
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
   const UpdatedTags = userUpdate.tags;
   console.log(UpdatedTags);
-  const currentUserTags = currentUser.tags.map(tag => tag.id); //"Cannot read properties of null (reading 'map')"
+  const currentUserTags = currentUser.tags.map(tag => tag.id);
   console.log(currentUserTags);
   
   // Id des tags au lieu des objets complets
@@ -188,8 +196,19 @@ const findUserByEmail = async(email) => {
     values: [email],
   };
 
-  const results = await client.query(preparedQuery);
-  return results.rows[0];
+  const [results] = (await client.query(preparedQuery)).rows;
+  return results;
+}
+
+const findUserByPseudo = async(pseudo) => {
+  const preparedQuery = {
+    text: `SELECT * FROM "user"
+           WHERE "pseudo" = $1`,
+    values: [pseudo],
+  };
+
+  const [results] = (await client.query(preparedQuery)).rows;
+  return results;
 }
 
 const findUserByPseudo = async(pseudo) => {
@@ -207,7 +226,9 @@ module.exports = {
   setRefreshToken,
   getRefreshToken,
   findAllUsers,
+  //getAllUsers,
   findOneUser,
+  //getUserById,
   removeOneUser,
   createOneUser,
   updateOneUser,

@@ -8,7 +8,7 @@ POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "Audeline.Blanchard57@gmail.com",
+    "email": "Charline.Prevost@gmail.com",
     "password": "secret"
 }
 
@@ -20,14 +20,14 @@ content-type: application/json
 Authorization: Bearer
 
 {
-  "name": "Etgzxcf",
-  "firstname": "Hadcxdodck",
-  "email": "Elisee33@gmail.com",
-  "pseudo": "Argine15",
+  "name": "G",
+  "firstname": "S",
+  "email": "Eddie33@gmail.com",
+  "pseudo": "Ata5",
   "password": "secret",
-  "description": "Vieuxcxz loup de mer",
+  "description": "Vieux loup de mer",
   "availability": true,
-  "tags": "[ 1, 2 ]"
+  "tags": [ 1, 2 ]
 }
 
 ###
@@ -47,18 +47,18 @@ Authorization: Bearer
 ###
 
 # @name editUser
-PUT {{baseUrl}}/api/users/16
+PUT {{baseUrl}}/api/users/5
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiZWhAZ21haWwuY29tIiwiaWQiOjE2fSwiaWF0IjoxNjg3NDQyMTY3LCJleHAiOjE2ODc0OTYxNjd9.G6FNEZMp809EEZT5ZU_N4jRfKtzDHYurv7PLAdgaEsc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiQ2hhcmxpbmUuUHJldm9zdEBnbWFpbC5jb20iLCJpZCI6NX0sImlhdCI6MTY4Nzc4MDczMCwiZXhwIjoxNjg3ODM0NzMwfQ._XQPL8YCwAiTZcpkl8NmrQUTxbdfkQoPSDsfnlnOniw
 
 {
   "name": "E",
   "firstname": "Haddock",
-  "email": "eh@gmail.com",
-  "pseudo": "Bloup",
-  "password": "harengs1234",
-  "description": "Vieux loup de mer",
-  "availability": false,
+  "email": "Charline.Prevost@gmail.com",
+  "pseudo": "Boup",
+  "password": "secret",
+  "description": "Vieille louve de mer",
+  "availability": true,
   "tags": [
     1,
     3,
@@ -109,19 +109,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiO
 ###
 
 # @name editProject
-PUT {{baseUrl}}/api/projects/18
+PUT {{baseUrl}}/api/projects/43
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDQyMzMyLCJleHAiOjE2ODc0OTYzMzJ9.VTt4NHNY9yi_0YMpVUx5TM-cZLj-LXCllSHyt7uLnC0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiQXVkZWxpbmUuQmxhbmNoYXJkNTdAZ21haWwuY29tIiwiaWQiOjJ9LCJpYXQiOjE2ODc3NzM4OTcsImV4cCI6MTY4NzgyNzg5N30.lLo17I7Ym1AW5BvzvEDaMEEyOaNeztQffC5x-1q381o
 
 {
-  "title": "Bisco98",
-  "description": "Lorem ipsum blabla",
+  "title": "Bisco97",
   "availability": true,
-  "user_id": 1,
+  "description": "Lorem ipsum blabla",
+  "user_id": 2,
   "tags": [
-    1,
-    3,
-    5
+    2,
+    6,
+    4
   ]
 }
 

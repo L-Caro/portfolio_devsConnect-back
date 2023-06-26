@@ -59,6 +59,7 @@ const userController = {
 
   async getAllUsers(_, res) {
     const users = await userMapper.findAllUsers();
+    //const users = await userMapper.getAllUsers();
     res.json({status: 'success', data : users})
   },
 
@@ -66,6 +67,7 @@ const userController = {
   async getOneUser(req, res) {
     const userId = req.params.id;
     const user = await userMapper.findOneUser(userId);
+    //const user = await userMapper.getUserById(userId);
     res.json({status: 'success', data : user})
   },
 

@@ -3,3 +3,5 @@
 
 init 2023-06-06T11:24:49Z Pierre Mangeot <pierre.mangeot@gmail.com> # mise en place des tables
 JWT 2023-06-14T19:14:39Z Pierre Mangeot <pierre.mangeot@gmail.com> # Modificationd e la table user pour JWT
+find_user_by_id 2023-06-26T08:52:12Z Etudiant O'clock <student@teleporter> # récupérer un user par son id
+find_all_users 2023-06-26T08:52:29Z Etudiant O'clock <student@teleporter> # récupérer tous les users

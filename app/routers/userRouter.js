@@ -2,14 +2,14 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const controllerHandler = require('../helpers/controllerHandler');
 const { userUpdate } = require('../validations/userSchema');
-const validate = require('../validations/validate');
+//const validate = require('../validations/validate');
 const { authorize } = require('../auth');
 const router = express.Router();
 
 router.get('/:id', controllerHandler(userController.getOneUser)); 
 router.get('/', controllerHandler(userController.getAllUsers)); 
 
-router.put('/:id', validate(userUpdate, 'body'), authorize('modify', 'user'), controllerHandler(userController.editOneUser));
+router.put('/:id', /* validate(userUpdate, 'body'),  */authorize('modify', 'user'), controllerHandler(userController.editOneUser));
 
 router.delete('/:id', authorize('delete', 'user'), controllerHandler(userController.deleteOneUser)); 
 

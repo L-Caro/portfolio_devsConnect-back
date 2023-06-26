@@ -2,8 +2,8 @@ const express = require("express");
 const projectController = require("../controllers/projectController");
 const controllerHandler = require("../helpers/controllerHandler");
 const { authorize } = require('../auth');
-const { projectCreate, projectUpdate } = require('../validations/projectSchema');
-const validate = require('../validations/validate');
+//const { projectCreate, projectUpdate } = require('../validations/projectSchema');
+//const validate = require('../validations/validate');
 const router = express.Router();
 
 router.get("/", controllerHandler(projectController.getAllProjects));

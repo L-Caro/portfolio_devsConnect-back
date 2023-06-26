@@ -30,4 +30,5 @@ const projectUpdate = Joi.object({
     .items(Joi.number().integer()),
 });
 
-module.exports = { projectCreate, projectUpdate }; */
+module.exports = { projectCreate, projectUpdate };
+ */
