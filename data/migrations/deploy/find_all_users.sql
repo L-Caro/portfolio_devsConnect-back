@@ -3,7 +3,6 @@
 
 BEGIN;
 
-DROP FUNCTION find_all_users();
 CREATE OR REPLACE FUNCTION find_all_users()
   RETURNS TABLE (
     user_id INT,
@@ -19,14 +18,17 @@ CREATE OR REPLACE FUNCTION find_all_users()
 AS $$
 BEGIN
   RETURN QUERY
-  SELECT
-    "user"."id" AS "user_id",
+  SELECT *
+  FROM (
+    SELECT
+      "user"."id" AS user_id,
       "user"."name",
       "user"."firstname",
       "user"."pseudo",
+      "user"."email",
       "user"."description",
       "user"."availability",
-    (
+      (
         SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
         FROM (
           SELECT DISTINCT "project"."id", "project"."title"
@@ -44,7 +46,8 @@ BEGIN
           WHERE "user_has_tag"."user_id" = "user"."id"
         ) AS "tag"
       ) AS "tags"
-    FROM "user";
+    FROM "user"
+  ) AS "users";
 
 END;
 $$ LANGUAGE plpgsql STABLE;

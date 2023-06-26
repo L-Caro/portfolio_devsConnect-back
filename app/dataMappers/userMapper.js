@@ -56,17 +56,21 @@ const getRefreshToken = async (id) => {
 async function getAllUsers() {
   const findAllUsers = await client.query(`
   SELECT 
-    "user"."id" AS "user_id",
-    "user"."name",
-    "user"."firstname",
-    "user"."pseudo",
-    "user"."description",
-    "user"."availability"
-  FROM "user"`);
+    "user_id",
+    "name",
+    "firstname",
+    "pseudo",
+    "email",
+    "description",
+    "availability",
+    "projects",
+    "tags"
+  FROM find_all_users()
+  `);
   const results = findAllUsers.rows;
   console.log(results);
   return results;
-} 
+}
 
 /* const findOneUser = async(id) => {
   const preparedQuery = {
@@ -110,14 +114,16 @@ async function getAllUsers() {
 async function getUserById(id) {
   const findOneUser = await client.query(`
   SELECT 
-    "user"."id" AS "user_id",
-    "user"."name",
-    "user"."firstname",
-    "user"."pseudo",
-    "user"."email",
-    "user"."description",
-    "user"."availability"
-  FROM "user"`, [id]);
+    "user_id",
+    "name",
+    "firstname",
+    "pseudo",
+    "email",
+    "description",
+    "availability",
+    "projects",
+    "tags"
+  FROM find_user_by_id($1)`, [id]);
   const user = findOneUser.rows[0];
   return user;
 } 
@@ -226,17 +232,6 @@ const findUserByPseudo = async(pseudo) => {
 
   const [results] = (await client.query(preparedQuery)).rows;
   return results;
-}
-
-const findUserByPseudo = async(pseudo) => {
-  const preparedQuery = {
-    text: `SELECT * FROM "user"
-            WHERE "pseudo" = $1`,
-    values: [pseudo],
-  };
-
-  const results = await client.query(preparedQuery);
-  return results.rows[0];
 }
 
 module.exports = {
