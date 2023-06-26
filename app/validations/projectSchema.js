@@ -8,7 +8,7 @@ const projectCreate = Joi.object({
     .required(),
   description: Joi.string()
     .alphanum()
-    .min(30)
+    .min(3)
     .max(500)
     .required(),
   availability: Joi.boolean(),
@@ -23,7 +23,7 @@ const projectUpdate = Joi.object({
     .max(30),
   description: Joi.string()
     .alphanum()
-    .min(30)
+    .min(3)
     .max(500),
   availability: Joi.boolean(),
   tags: Joi.array()

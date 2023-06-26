@@ -22,8 +22,8 @@ Authorization: Bearer
 {
   "name": "Etgzxcf",
   "firstname": "Hadcxdodck",
-  "email": "eh@gmfafdl.com",
-  "pseudo": "Blgocxup",
+  "email": "Elisee33@gmail.com",
+  "pseudo": "Argine15",
   "password": "secret",
   "description": "Vieuxcxz loup de mer",
   "availability": true,
@@ -40,7 +40,7 @@ Authorization: Bearer
 ###
 
 # @name getOneUser
-GET {{baseUrl}}/api/users/1
+GET {{baseUrl}}/api/users/12
 content-type: application/json
 Authorization: Bearer 
 

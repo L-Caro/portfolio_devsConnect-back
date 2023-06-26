@@ -192,6 +192,17 @@ const findUserByEmail = async(email) => {
   return results.rows[0];
 }
 
+const findUserByPseudo = async(pseudo) => {
+  const preparedQuery = {
+    text: `SELECT * FROM "user"
+            WHERE "pseudo" = $1`,
+    values: [pseudo],
+  };
+
+  const results = await client.query(preparedQuery);
+  return results.rows[0];
+}
+
 module.exports = {
   setRefreshToken,
   getRefreshToken,
@@ -200,5 +211,6 @@ module.exports = {
   removeOneUser,
   createOneUser,
   updateOneUser,
-  findUserByEmail
+  findUserByEmail,
+  findUserByPseudo
 };
