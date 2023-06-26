@@ -1,7 +1,9 @@
+-- SQLBook: Code
 -- Deploy devsconnect:find_all_users to pg
 
 BEGIN;
 
+DROP FUNCTION find_all_users();
 CREATE OR REPLACE FUNCTION find_all_users()
   RETURNS TABLE (
     user_id INT,
@@ -10,7 +12,9 @@ CREATE OR REPLACE FUNCTION find_all_users()
     pseudo VARCHAR(64),
     email VARCHAR(64),
     description TEXT,
-    availability BOOLEAN
+    availability BOOLEAN,
+    projects JSON,
+    tags JSON
   )
 AS $$
 BEGIN
@@ -46,3 +50,4 @@ END;
 $$ LANGUAGE plpgsql STABLE;
 
 COMMIT;
+

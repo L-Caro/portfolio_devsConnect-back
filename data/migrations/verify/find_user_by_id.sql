@@ -1,4 +1,4 @@
--- Verify devsconnect:findUserById-function on pg
+-- Verify devsconnect:find_user_by_id on pg
 
 BEGIN;
 

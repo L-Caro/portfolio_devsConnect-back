@@ -101,10 +101,16 @@ const findOneUser = async(id) => {
 } */
 
 async function getUserById(id) {
-  console.log('ID:', id); // ID: 12
-  const findOneUser = await client.query(`SELECT * FROM find_user_by_id($1)`, [id]);
+  const findOneUser = await client.query(`SELECT * FROM "find_user_by_id"($1) AS (useid,
+  name,
+  firstname,
+  pseudo,
+  email,
+  description,
+  availability,
+  projects,
+  tags)`, [id]);
   const user = findOneUser.rows[0];
-  console.log(user); // rien
   return user;
 }
 

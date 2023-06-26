@@ -66,7 +66,6 @@ const userController = {
   //cette méthode récupère l'id dans les paramètres de la requête 
   async getOneUser(req, res) {
     const userId = req.params.id;
-    console.log(userId); // 12
     //const user = await userMapper.findOneUser(userId);
     const user = await userMapper.getUserById(userId);
     res.json({status: 'success', data : user})

@@ -1,5 +1,4 @@
--- Deploy devsconnect:findUserById-function to pg
-
+-- Deploy devsconnect:find_user_by_id to pg
 BEGIN;
 
 CREATE OR REPLACE FUNCTION find_user_by_id(id INT)
@@ -11,8 +10,8 @@ CREATE OR REPLACE FUNCTION find_user_by_id(id INT)
     email VARCHAR(64),
     description TEXT,
     availability BOOLEAN,
-    projects JSONB,
-    tags JSONB 
+    projects JSON,
+    tags JSON 
   )
 AS $$
 BEGIN
@@ -54,13 +53,12 @@ BEGIN
       ) AS "tag"
     ) AS "tags"
   FROM "user"
-  WHERE "user"."id" = "user_id";
+  WHERE "user"."id" = id;
 
   IF NOT FOUND THEN
     RAISE EXCEPTION 'User not found';
   END IF;
 END;
 $$ LANGUAGE plpgsql STABLE;
-
 
 COMMIT;
