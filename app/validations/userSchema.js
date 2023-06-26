@@ -1,12 +1,10 @@
-/* const Joi = require('joi');
+const Joi = require('joi');
 
 const userCreate = Joi.object({
   name: Joi.string()
-    .alphanum()
     .max(30)
     .required(),
   firstname: Joi.string()
-    .alphanum()
     .max(30)
     .required(),
   pseudo: Joi.string()
@@ -18,6 +16,7 @@ const userCreate = Joi.object({
     .email({minDomainSegments: 2})
     .required(),
   password: Joi.string()
+  // regex exemple not implemented for demo "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
     .pattern(new RegExp())
     .required(),
   description: Joi.string(),
@@ -28,18 +27,17 @@ const userCreate = Joi.object({
 
 const userUpdate = Joi.object({
   name: Joi.string()
-    .alphanum()
     .max(30),
   firstname: Joi.string()
-    .alphanum()
     .max(30),
   pseudo: Joi.string()
     .alphanum()
     .min(3)
     .max(30),
   email: Joi.string()
-    .pattern(new RegExp('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')),
+    .email({minDomainSegments: 2}),
   password: Joi.string()
+    // regex exemple not implemented for demo "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
     .pattern(new RegExp()),
   description: Joi.string(),
   availability: Joi.boolean(),
@@ -48,4 +46,4 @@ const userUpdate = Joi.object({
 });
 
 module.exports = { userCreate, userUpdate };
- */
+
