@@ -228,6 +228,17 @@ const findUserByPseudo = async(pseudo) => {
   return results;
 }
 
+const findUserByPseudo = async(pseudo) => {
+  const preparedQuery = {
+    text: `SELECT * FROM "user"
+            WHERE "pseudo" = $1`,
+    values: [pseudo],
+  };
+
+  const results = await client.query(preparedQuery);
+  return results.rows[0];
+}
+
 module.exports = {
   setRefreshToken,
   getRefreshToken,

@@ -242,4 +242,3 @@ SELECT * FROM find_user_by_id(80);
 
 L'utilisation de JSONB permet de **stocker, indexer et manipuler efficacement des données au format JSON** : fonctionnalités avancées pour l'agrégation, la recherche et la manipulation de données JSON associées aux utilisateurs
 --> offre une plus grande souplesse et une plus grande facilité d'utilisation dans le traitement des données complexes liées aux projets et aux tags
-
