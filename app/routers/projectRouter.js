@@ -9,9 +9,9 @@ const router = express.Router();
 router.get("/", controllerHandler(projectController.getAllProjects));
 router.get("/:id", controllerHandler(projectController.getOneProject));
 
-router.post("/", validate(projectCreate, 'body'), authorize('create', 'project'), controllerHandler(projectController.addOneProject));
+router.post("/", /* validate(projectCreate, 'body'), */authorize('create', 'project'), controllerHandler(projectController.addOneProject));
 
-router.put("/:id", validate(projectUpdate, 'body'), authorize('modify', 'project'), controllerHandler(projectController.editOneProject));
+router.put("/:id", /* validate(projectUpdate, 'body'),  */authorize('modify', 'project'), controllerHandler(projectController.editOneProject));
 
 router.delete("/:id", authorize('delete', 'project'), controllerHandler(projectController.deleteOneProject));
 

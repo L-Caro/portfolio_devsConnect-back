@@ -133,8 +133,17 @@ const updateOneProject = async (projectId, projectUpdate) => {
 
   const UpdatedTags = projectUpdate.tags;
   console.log(UpdatedTags);
-  const currentProjectTags = currentProject.tags.map(tag => tag.id);
-  console.log(currentProjectTags); // undefined
+  console.log(currentProject.tags);
+  const currentProjectTags = currentProject.tags ? currentProject.tags.map(tag => tag.tag_id) : [];
+  console.log(currentProject);
+
+  /* D'après la structure de l'objet currentProject que vous avez fournie, il semble que les tags du projet sont inclus dans la propriété tags de currentProject. Cependant, les tags sont représentés sous la forme d'un tableau d'objets avec les propriétés tag_id et tag_name, plutôt que id et name.
+
+Pour obtenir les identifiants des tags à partir de currentProject.tags, vous devriez modifier la ligne const currentProjectTags = currentProject.tags ? currentProject.tags.map(tag => tag.id) : []; comme suit :
+
+const currentProjectTags = currentProject.tags ? currentProject.tags.map(tag => tag.tag_id) : [];
+
+En utilisant tag.tag_id au lieu de tag.id, vous devriez pouvoir récupérer les identifiants des tags correctement. Assurez-vous de placer cette modification dans votre code avant la ligne console.log(currentProjectTags). */
   
   // Id des tags au lieu des objets complets
   const tagsToDelete = currentProjectTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];

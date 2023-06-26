@@ -8,7 +8,7 @@ POST {{baseUrl}}/login
 content-type: application/json
 
 {
-    "email": "numero@bis.eg",
+    "email": "Audeline.Blanchard57@gmail.com",
     "password": "secret"
 }
 
@@ -92,13 +92,13 @@ Authorization: Bearer
 # @name createProject
 POST {{baseUrl}}/api/projects
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoibnVtZXJvQGJpcy5lZyIsImlkIjoxfSwiaWF0IjoxNjg3NDQxMzU3LCJleHAiOjE2ODc0OTUzNTd9.25kfggQkvBCnQo02IERG6e8WCLZXypZIKXnyLMW84UI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlwIjoiOjpmZmZmOjEyNy4wLjAuMSIsImVtYWlsIjoiQXVkZWxpbmUuQmxhbmNoYXJkNTdAZ21haWwuY29tIiwiaWQiOjJ9LCJpYXQiOjE2ODc3NzMyNjAsImV4cCI6MTY4NzgyNzI2MH0.ZAhIGfcJ3SvsqFwLulXkquNamcIJERt9cBNd2axxIDE
 
 {
   "title": "Bisco98",
-  "description": "Lorem ipsum blabla",
   "availability": false,
-  "user_id": 1,
+  "description": "Loremipsumblabla",
+  "user_id": 2,
   "tags": [
     2,
     3,

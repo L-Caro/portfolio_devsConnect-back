@@ -1,4 +1,4 @@
-const Joi = require('joi');
+/* const Joi = require('joi');
 
 const projectCreate = Joi.object({
   title: Joi.string()
@@ -30,4 +30,4 @@ const projectUpdate = Joi.object({
     .items(Joi.number().integer()),
 });
 
-module.exports = { projectCreate, projectUpdate };
+module.exports = { projectCreate, projectUpdate }; */
