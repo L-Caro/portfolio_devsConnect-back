@@ -87,16 +87,16 @@ const userController = {
       throw new ApiError('Missing information', { statusCode: 400 });
     }
 
-    const existingEmailUser = await userMapper.findUserByEmail(email);
-    if (existingEmailUser) {
-    throw new ApiError('Email already exists', { statusCode: 400 });
-  }
+    const existingEmail = await userMapper.findUserByEmail(email);
+    if (existingEmail){
+      throw new ApiError('Email already used', { statusCode: 400 });
+    }
 
-  const existingPseudoUser = await userMapper.findUserByPseudo(pseudo);
-  if (existingPseudoUser) {
-    throw new ApiError('Pseudo already exists', { statusCode: 400 });
-  }
-  
+    const existingPseudo = await userMapper.findUserByPseudo(pseudo);
+    if (existingPseudo){
+      throw new ApiError('Pseudo already used', { statusCode: 400 });
+    }
+
     await userMapper.createOneUser(name, firstname, email, pseudo, hashedPWD, description, availability, tags);
     res.json({status: 'success' });
   },
