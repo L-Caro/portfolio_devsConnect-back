@@ -231,6 +231,13 @@ Test
 SELECT * FROM find_user_by_id(80);
 ```
 
+**Erreur :**
+{
+  "status": "error",
+  "statusCode": 500,
+  "message": "column reference \"id\" is ambiguous"
+}
+
 ## JSONB
 
 L'utilisation de JSONB permet de **stocker, indexer et manipuler efficacement des données au format JSON** : fonctionnalités avancées pour l'agrégation, la recherche et la manipulation de données JSON associées aux utilisateurs

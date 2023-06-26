@@ -58,13 +58,15 @@ const userController = {
   },
 
   async getAllUsers(_, res) {
-    const users = await userMapper.findAllUsers();
+    //const users = await userMapper.findAllUsers();
+    const users = await userMapper.getAllUsers();
     res.json({status: 'success', data : users})
   },
 
   //cette méthode récupère l'id dans les paramètres de la requête 
   async getOneUser(req, res) {
     const userId = req.params.id;
+    console.log(userId); // 12
     //const user = await userMapper.findOneUser(userId);
     const user = await userMapper.getUserById(userId);
     res.json({status: 'success', data : user})
@@ -85,6 +87,17 @@ const userController = {
     if (!name || !firstname || !email || !pseudo || !password) {
       throw new ApiError('Missing information', { statusCode: 400 });
     }
+
+    const existingEmailUser = await userMapper.findUserByEmail(email);
+    if (existingEmailUser) {
+    throw new ApiError('Email already exists', { statusCode: 400 });
+  }
+
+  const existingPseudoUser = await userMapper.findUserByPseudo(pseudo);
+  if (existingPseudoUser) {
+    throw new ApiError('Pseudo already exists', { statusCode: 400 });
+  }
+  
     await userMapper.createOneUser(name, firstname, email, pseudo, hashedPWD, description, availability, tags);
     res.json({status: 'success' });
   },

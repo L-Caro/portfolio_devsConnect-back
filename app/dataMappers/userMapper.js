@@ -21,7 +21,7 @@ const getRefreshToken = async (id) => {
   return results.rows[0].refresh_token;
 }
 
-const findAllUsers = async () => {
+/* const findAllUsers = async () => {
   const preparedQuery ={
     text: `SELECT
       "user"."id",
@@ -51,6 +51,13 @@ const findAllUsers = async () => {
     FROM "user"`};
   const results = await client.query(preparedQuery);
   return results.rows; 
+} */
+
+async function getAllUsers() {
+  const findAllUsers = await client.query(`SELECT * FROM find_all_users`);
+  const results = findAllUsers.rows[0];
+  console.log(results);
+  return results;
 }
 
 /*
@@ -94,8 +101,10 @@ const findOneUser = async(id) => {
 } */
 
 async function getUserById(id) {
+  console.log('ID:', id); // ID: 12
   const findOneUser = await client.query(`SELECT * FROM find_user_by_id($1)`, [id]);
   const user = findOneUser.rows[0];
+  console.log(user); // rien
   return user;
 }
 
@@ -199,14 +208,27 @@ const findUserByEmail = async(email) => {
   return results.rows[0];
 }
 
+const findUserByPseudo = async(pseudo) => {
+  const preparedQuery = {
+    text: `SELECT * FROM "user"
+           WHERE "pseudo" = $1`,
+    values: [pseudo],
+  };
+
+  const results = await client.query(preparedQuery);
+  return results.rows[0];
+}
+
 module.exports = {
   setRefreshToken,
   getRefreshToken,
-  findAllUsers,
+  //findAllUsers,
+  getAllUsers,
   //findOneUser,
   getUserById,
   removeOneUser,
   createOneUser,
   updateOneUser,
-  findUserByEmail
+  findUserByEmail,
+  findUserByPseudo
 };
