@@ -36,7 +36,7 @@ const userUpdate = Joi.object({
     .max(30),
   email: Joi.string()
     .email({minDomainSegments: 2}),
-  password: Joi.string()
+  password: Joi.string().allow('')
     // regex exemple not implemented for demo "^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
     .pattern(new RegExp()),
   description: Joi.string(),

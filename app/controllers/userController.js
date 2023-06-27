@@ -105,10 +105,15 @@ const userController = {
     const userId = req.params.id;
     const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
     const update = {name, firstname, email, pseudo, password, description, availability, tags};
-    if (password) {
+    console.log(update.password);
+
+    if (password === "") {
+      delete update.password;
+    } else {
       const hashed = await bcrypt.hash(password, 10);
       update.password = hashed;
     };
+
     const user = await userMapper.updateOneUser(userId, update);
     res.json({status: 'success', data: user })
   }

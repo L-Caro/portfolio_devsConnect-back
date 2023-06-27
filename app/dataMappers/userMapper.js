@@ -143,19 +143,15 @@ const updateOneUser = async (userId, userUpdate) => {
 
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
   const UpdatedTags = userUpdate.tags;
-  console.log(UpdatedTags);
   const currentUserTags = currentUser.tags.map(tag => tag.id);
-  console.log(currentUserTags);
   
   // Id des tags au lieu des objets complets
   const tagsToDelete = currentUserTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];
-    console.log(tagsToDelete);
     for (const tagId of tagsToDelete) {
       await userTagMapper.deleteUserHasTag(userId, tagId);
     }
     
   const tagsToAdd = UpdatedTags?.filter(tagId => !currentUserTags?.includes(tagId)) || [];
-  console.log(tagsToAdd);
     for (const tagId of tagsToAdd) {
       await userTagMapper.createUserHasTag(userId, tagId);
     }

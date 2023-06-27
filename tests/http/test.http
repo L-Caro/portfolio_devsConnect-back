@@ -40,7 +40,7 @@ Authorization: Bearer
 ###
 
 # @name getOneUser
-GET {{baseUrl}}/api/users/12
+GET {{baseUrl}}/api/users/80
 content-type: application/json
 Authorization: Bearer 
 
