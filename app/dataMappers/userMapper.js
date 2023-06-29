@@ -21,7 +21,7 @@ const getRefreshToken = async (id) => {
   return results.rows[0].refresh_token;
 }
 
-const findAllUsers = async () => {
+/* const findAllUsers = async () => {
   const preparedQuery ={
     text: `SELECT
       "user"."id",
@@ -51,16 +51,28 @@ const findAllUsers = async () => {
     FROM "user"`};
   const results = await client.query(preparedQuery);
   return results.rows; 
-}
-
-/* async function getAllUsers() {
-  const findAllUsers = await client.query(`SELECT * FROM find_all_users`);
-  const results = findAllUsers.rows[0];
-  console.log(results);
-  return results;
 } */
 
-const findOneUser = async(id) => {
+async function getAllUsers() {
+  const findAllUsers = await client.query(`
+  SELECT 
+    "user_id",
+    "name",
+    "firstname",
+    "pseudo",
+    "email",
+    "description",
+    "availability",
+    "projects",
+    "tags"
+  FROM find_all_users()
+  `);
+  const results = findAllUsers.rows;
+  console.log(results);
+  return results;
+}
+
+/* const findOneUser = async(id) => {
   const preparedQuery = {
     text: `SELECT
     "user"."id",
@@ -97,13 +109,24 @@ const findOneUser = async(id) => {
     throw new ApiError('User not found', { statusCode: 204 });
   }
   return results.rows[0]; 
-}
+} */
 
-/* async function getUserById(id) {
-  const findOneUser = await client.query(`SELECT * FROM "find_user_by_id"($1)`, [id]);
+async function getUserById(id) {
+  const findOneUser = await client.query(`
+  SELECT 
+    "user_id",
+    "name",
+    "firstname",
+    "pseudo",
+    "email",
+    "description",
+    "availability",
+    "projects",
+    "tags"
+  FROM find_user_by_id($1)`, [id]);
   const user = findOneUser.rows[0];
   return user;
-} */
+} 
 
 const removeOneUser = async(id) => { 
   const preparedQuery = {
@@ -210,10 +233,10 @@ const findUserByPseudo = async(pseudo) => {
 module.exports = {
   setRefreshToken,
   getRefreshToken,
-  findAllUsers,
-  //getAllUsers,
-  findOneUser,
-  //getUserById,
+  //findAllUsers,
+  getAllUsers,
+  //findOneUser,
+  getUserById,
   removeOneUser,
   createOneUser,
   updateOneUser,
