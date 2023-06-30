@@ -1,6 +1,6 @@
+const bcrypt = require('bcrypt');
 const userMapper = require('../dataMappers/userMapper');
 const auth = require('../auth');
-const bcrypt = require('bcrypt');
 const ApiError = require('../errors/apiError.js');
 
 const userController = {
@@ -58,29 +58,31 @@ const userController = {
   },
 
   async getAllUsers(_, res) {
-    //const users = await userMapper.findAllUsers();
-    const users = await userMapper.getAllUsers();
-    res.json({status: 'success', data : users})
+    const users = await userMapper.findAllUsers();
+    // const users = await userMapper.getAllUsers();
+    res.json({ status: 'success', data: users });
   },
 
-  //cette méthode récupère l'id dans les paramètres de la requête 
+  // cette méthode récupère l'id dans les paramètres de la requête
   async getOneUser(req, res) {
     const userId = req.params.id;
-    //const user = await userMapper.findOneUser(userId);
-    const user = await userMapper.getUserById(userId);
-    res.json({status: 'success', data : user})
+    const user = await userMapper.findOneUser(userId);
+    // const user = await userMapper.getUserById(userId);
+    res.json({ status: 'success', data: user });
   },
 
   async deleteOneUser(req, res) {
     const userId = req.params.id;
     const user = await userMapper.removeOneUser(userId);
-    res.json({status: 'success', data: user })
+    res.json({ status: 'success', data: user });
   },
 
   // méthode pour s'enregistrer / création d'un nouvel utilisateur
   // cette méthode récupère les données dans le body de la requête
   async register(req, res) {
-    const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
+    const {
+      name, firstname, email, pseudo, password, description, availability, tags,
+    } = req.body;
     const hashedPWD = await bcrypt.hash(password, 10);
 
     if (!name || !firstname || !email || !pseudo || !password) {
@@ -88,35 +90,36 @@ const userController = {
     }
 
     const existingEmail = await userMapper.findUserByEmail(email);
-    if (existingEmail){
+    if (existingEmail) {
       throw new ApiError('Email already used', { statusCode: 400 });
     }
 
     const existingPseudo = await userMapper.findUserByPseudo(pseudo);
-    if (existingPseudo){
+    if (existingPseudo) {
       throw new ApiError('Pseudo already used', { statusCode: 400 });
     }
 
     await userMapper.createOneUser(name, firstname, email, pseudo, hashedPWD, description, availability, tags);
-    res.json({status: 'success' });
+    res.json({ status: 'success' });
   },
 
   async editOneUser(req, res) {
     const userId = req.params.id;
-    const { name, firstname, email, pseudo, password, description, availability, tags } = req.body;
-    const update = {name, firstname, email, pseudo, password, description, availability, tags};
-    console.log(update.password);
-
-    if (password === "") {
-      delete update.password;
-    } else {
-      const hashed = await bcrypt.hash(password, 10);
-      update.password = hashed;
+    const {
+      name, firstname, email, pseudo, password, description, availability, tags,
+    } = req.body;
+    const update = {
+      name, firstname, email, pseudo, description, availability, tags,
     };
 
+    if (password) {
+      const hashed = await bcrypt.hash(password, 10);
+      update.password = hashed;
+    }
+
     const user = await userMapper.updateOneUser(userId, update);
-    res.json({status: 'success', data: user })
-  }
+    res.json({ status: 'success', data: user });
+  },
 };
 
 module.exports = userController;

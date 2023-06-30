@@ -1,16 +1,16 @@
 const client = require('./database');
 const userTagMapper = require('./userTagMapper');
-//const projectUserMapper = require('./projectUserMapper');
+// const projectUserMapper = require('./projectUserMapper');
 const ApiError = require('../errors/apiError.js');
 
-const setRefreshToken = async(id, token) => {
+const setRefreshToken = async (id, token) => {
   const preparedQuery = {
     text: 'UPDATE "user" set "refresh_token" = $2 WHERE "id" = $1 RETURNING *',
     values: [id, token],
   };
   const results = await client.query(preparedQuery);
   return results.rows;
-}
+};
 
 const getRefreshToken = async (id) => {
   const preparedQuery = {
@@ -19,10 +19,10 @@ const getRefreshToken = async (id) => {
   };
   const results = await client.query(preparedQuery);
   return results.rows[0].refresh_token;
-}
+};
 
-/* const findAllUsers = async () => {
-  const preparedQuery ={
+const findAllUsers = async () => {
+  const preparedQuery = {
     text: `SELECT
       "user"."id",
       "user"."name",
@@ -48,31 +48,20 @@ const getRefreshToken = async (id) => {
           WHERE "user_has_tag"."user_id" = "user"."id"
         ) AS "tag"
       )AS "tags"
-    FROM "user"`};
+    FROM "user"`,
+  };
   const results = await client.query(preparedQuery);
-  return results.rows; 
-} */
+  return results.rows;
+};
 
-async function getAllUsers() {
-  const findAllUsers = await client.query(`
-  SELECT 
-    "user_id",
-    "name",
-    "firstname",
-    "pseudo",
-    "email",
-    "description",
-    "availability",
-    "projects",
-    "tags"
-  FROM find_all_users()
-  `);
-  const results = findAllUsers.rows;
+/* async function getAllUsers() {
+  const findAllUsers = await client.query(`SELECT * FROM find_all_users`);
+  const results = findAllUsers.rows[0];
   console.log(results);
   return results;
-}
+} */
 
-/* const findOneUser = async(id) => {
+const findOneUser = async (id) => {
   const preparedQuery = {
     text: `SELECT
     "user"."id",
@@ -108,29 +97,18 @@ async function getAllUsers() {
   if (!results.rows[0]) {
     throw new ApiError('User not found', { statusCode: 204 });
   }
-  return results.rows[0]; 
-} */
+  return results.rows[0];
+};
 
-async function getUserById(id) {
-  const findOneUser = await client.query(`
-  SELECT 
-    "user_id",
-    "name",
-    "firstname",
-    "pseudo",
-    "email",
-    "description",
-    "availability",
-    "projects",
-    "tags"
-  FROM find_user_by_id($1)`, [id]);
+/* async function getUserById(id) {
+  const findOneUser = await client.query(`SELECT * FROM "find_user_by_id"($1)`, [id]);
   const user = findOneUser.rows[0];
   return user;
-} 
+} */
 
-const removeOneUser = async(id) => { 
+const removeOneUser = async (id) => {
   const preparedQuery = {
-    text: `DELETE FROM "user" WHERE "id" = $1 RETURNING *`,
+    text: 'DELETE FROM "user" WHERE "id" = $1 RETURNING *',
     values: [id],
   };
   const [results] = (await client.query(preparedQuery)).rows;
@@ -138,11 +116,11 @@ const removeOneUser = async(id) => {
     throw new ApiError('User already deleted', { statusCode: 204 });
   }
   return results;
-}
+};
 
 const createOneUser = async (name, firstname, email, pseudo, password, description, availability, tags) => {
   const preparedUserQuery = {
-    text: `INSERT INTO "user" ("name", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    text: 'INSERT INTO "user" ("name", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
     values: [name, firstname, email, pseudo, password, description, availability],
   };
 
@@ -156,29 +134,29 @@ const createOneUser = async (name, firstname, email, pseudo, password, descripti
   }
 
   return user;
-}
+};
 
-const updateOneUser = async (userId, userUpdate) => { 
+const updateOneUser = async (userId, userUpdate) => {
   const currentUser = await findOneUser(userId);
-    if (!currentUser) {
-      throw new ApiError('User not found', { statusCode: 204 });
-    };
+  if (!currentUser) {
+    throw new ApiError('User not found', { statusCode: 204 });
+  }
 
   // opérateur d'accès conditionnel (?.) remplace if pour gérer les cas où currentProject.tags ou projectUpdate.tags sont null ou undefined
   const UpdatedTags = userUpdate.tags;
-  const currentUserTags = currentUser.tags.map(tag => tag.id);
-  
+  const currentUserTags = currentUser.tags.map((tag) => tag.id);
+
   // Id des tags au lieu des objets complets
-  const tagsToDelete = currentUserTags?.filter(tagId => !UpdatedTags?.includes(tagId)) || [];
-    for (const tagId of tagsToDelete) {
-      await userTagMapper.deleteUserHasTag(userId, tagId);
-    }
-    
-  const tagsToAdd = UpdatedTags?.filter(tagId => !currentUserTags?.includes(tagId)) || [];
-    for (const tagId of tagsToAdd) {
-      await userTagMapper.createUserHasTag(userId, tagId);
-    }
-    
+  const tagsToDelete = currentUserTags?.filter((tagId) => !UpdatedTags?.includes(tagId)) || [];
+  for (const tagId of tagsToDelete) {
+    await userTagMapper.deleteUserHasTag(userId, tagId);
+  }
+
+  const tagsToAdd = UpdatedTags?.filter((tagId) => !currentUserTags?.includes(tagId)) || [];
+  for (const tagId of tagsToAdd) {
+    await userTagMapper.createUserHasTag(userId, tagId);
+  }
+
   const preparedQuery = {
     text: `UPDATE "user"
     SET "name" = COALESCE($1, "name"), 
@@ -199,7 +177,7 @@ const updateOneUser = async (userId, userUpdate) => {
       userUpdate.password,
       userUpdate.description,
       userUpdate.availability,
-      userId
+      userId,
     ],
   };
 
@@ -208,7 +186,7 @@ const updateOneUser = async (userId, userUpdate) => {
   return results;
 };
 
-const findUserByEmail = async(email) => {
+const findUserByEmail = async (email) => {
   const preparedQuery = {
     text: `SELECT * FROM "user"
            WHERE "email" = $1`,
@@ -217,9 +195,9 @@ const findUserByEmail = async(email) => {
 
   const [results] = (await client.query(preparedQuery)).rows;
   return results;
-}
+};
 
-const findUserByPseudo = async(pseudo) => {
+const findUserByPseudo = async (pseudo) => {
   const preparedQuery = {
     text: `SELECT * FROM "user"
            WHERE "pseudo" = $1`,
@@ -228,18 +206,18 @@ const findUserByPseudo = async(pseudo) => {
 
   const [results] = (await client.query(preparedQuery)).rows;
   return results;
-}
+};
 
 module.exports = {
   setRefreshToken,
   getRefreshToken,
-  //findAllUsers,
-  getAllUsers,
-  //findOneUser,
-  getUserById,
+  findAllUsers,
+  // getAllUsers,
+  findOneUser,
+  // getUserById,
   removeOneUser,
   createOneUser,
   updateOneUser,
   findUserByEmail,
-  findUserByPseudo
+  findUserByPseudo,
 };
