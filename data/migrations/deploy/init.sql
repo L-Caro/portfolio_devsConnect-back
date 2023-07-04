@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS "user", "project", "tag", "project_has_tag", "user_has_tag"
 
 CREATE TABLE "user" (
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "name" VARCHAR(64) NOT NULL,
+    "lastname" VARCHAR(64) NOT NULL,
     "firstname" VARCHAR(64) NOT NULL, 
     "email" VARCHAR(64) NOT NULL UNIQUE,
     "pseudo" VARCHAR(64) NOT NULL UNIQUE,

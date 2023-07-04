@@ -4,14 +4,17 @@ const controllerHandler = require('../helpers/controllerHandler');
 const { userUpdate } = require('../validations/userSchema');
 const validate = require('../validations/validate');
 const { authorize } = require('../auth');
+
 const router = express.Router();
 
-router.get('/:id', controllerHandler(userController.getOneUser)); 
-router.get('/', controllerHandler(userController.getAllUsers)); 
+router.get('/:id', controllerHandler(userController.getOneUser));
+router.get('/', controllerHandler(userController.getAllUsers));
 
-router.put('/:id', validate(userUpdate, 'body'),  authorize('modify', 'user'), controllerHandler(userController.editOneUser));
+router.put('/:id', validate(userUpdate, 'body'), authorize('modify', 'user'), controllerHandler(userController.editOneUser));
 
-router.delete('/:id', authorize('delete', 'user'), controllerHandler(userController.deleteOneUser)); 
+router.delete('/:id', authorize('delete', 'user'), controllerHandler(userController.deleteOneUser));
+
+router.post('/checkPassword', controllerHandler(userController.checkPassword));
 
 module.exports = router;
 
@@ -33,9 +36,9 @@ module.exports = router;
 *         id:
 *           type: integer
 *           description: The auto-generated id of the user
-*         name:
+*         lastname:
 *           type: string
-*           description: The user name
+*           description: The user lastname
 *         firstname:
 *           type: string
 *           description: The user firstname
@@ -51,7 +54,7 @@ module.exports = router;
 *         description:
 *           type: string
 *           description: The user pseudo
-*         availability: 
+*         availability:
 *           type: boolean
 *           description: The user availability
 *         tags:
@@ -62,7 +65,7 @@ module.exports = router;
 *               id:
 *                 type: integer
 *               name:
-*                 type: string  
+*                 type: string
 *           description: Array with all tags of the user
 *         projects:
 *           type: array
@@ -72,17 +75,17 @@ module.exports = router;
 *               id:
 *                 type: integer
 *               title:
-*                 type: string  
+*                 type: string
 *           description: Array of objects for the projects of the user
-*         created_at: 
+*         created_at:
 *           type: timestamp
 *           description: The auto-generated time of the user's creation
-*         updated_at: 
+*         updated_at:
 *           type: timestamp
 *           description: The auto-generated time of the user's update
 *       example:
 *         id: 1
-*         name: Captain
+*         lastname: Captain
 *         firstname: Haddock
 *         email: captain@gmail.com
 *         pseudo: Moussaillon
@@ -104,9 +107,9 @@ module.exports = router;
 *       required:
 *         - id
 *       properties:
-*         name:
+*         lastname:
 *           type: string
-*           description: The user name
+*           description: The user lastname
 *         firstname:
 *           type: string
 *           description: The user firstname
@@ -122,7 +125,7 @@ module.exports = router;
 *         description:
 *           type: string
 *           description: The user pseudo
-*         availability: 
+*         availability:
 *           type: boolean
 *           description: The user availability
 *         tags:
@@ -131,7 +134,7 @@ module.exports = router;
 *             type: integer
 *           description: Array with all tags id of the user
 *       example:
-*         name: Captain
+*         lastname: Captain
 *         firstname: Haddock
 *         email: captain@gmail.com
 *         pseudo: Moussaillon
@@ -148,15 +151,15 @@ module.exports = router;
 *     Users POST:
 *       type: object
 *       required:
-*         - name
+*         - lastname
 *         - firstname
 *         - email
 *         - pseudo
 *         - password
 *       properties:
-*         name:
+*         lastname:
 *           type: string
-*           description: The user name
+*           description: The user lastname
 *         firstname:
 *           type: string
 *           description: The user firstname
@@ -172,7 +175,7 @@ module.exports = router;
 *         description:
 *           type: string
 *           description: The user pseudo
-*         availability: 
+*         availability:
 *           type: boolean
 *           description: The user availability
 *         tags:
@@ -181,7 +184,7 @@ module.exports = router;
 *             type: integer
 *           description: Array with all tags id of the project
 *       example:
-*         name: Captain
+*         lastname: Captain
 *         firstname: Haddock
 *         email: captain@gmail.com
 *         pseudo: Moussaillon
@@ -296,7 +299,7 @@ module.exports = router;
  *            $ref: '#/components/schemas/Users login'
  *    responses:
  *      200:
- *        description: Successful connection 
+ *        description: Successful connection
  *        content:
  *          application/json:
  *            schema:

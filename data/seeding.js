@@ -1,11 +1,10 @@
 const { fakerFR } = require('@faker-js/faker');
 const client = require('../app/dataMappers/database');
 
-const NB_USERS = 200;
-const NB_PROJECTS = 40;
+const NB_USERS = 250;
+const NB_PROJECTS = 60;
 const faker = fakerFR;
-const tags = ['Java', 'Javascript', 'HTML', 'CSS', 'React', 'SQL', 'Python', 'C',
- 'C++', 'PHP', 'Go', 'Jest', 'Joi', 'COBOL', 'GraphQL', 'Faker', 'TypeScript', 'Bootstrap', 'Angular', 'Rust'];
+const tags = ['Java', 'Javascript', 'HTML', 'CSS', 'React', 'SQL', 'Python', 'C', 'PHP', 'GraphQL', 'TypeScript', 'Bootstrap', 'Angular', 'Vuejs', 'Vite', 'Strapi', 'Sequelize', 'Redux', 'Postgresql', 'Nodejs', 'Insomnia', 'Github'];
 
 async function restartDB() {
   await client.query('TRUNCATE "user", "project", "tag", "project_has_tag", "user_has_tag", "project_has_user" RESTART IDENTITY CASCADE;');
@@ -21,7 +20,8 @@ function generateUser(nbUsers) {
       pseudo: faker.internet.userName(),
       email: faker.internet.email(),
       password: '$2b$10$3i3kHi8MZDpmLW1icHax5u69KOvYOgIWkFkz1dKgKOlE64sRQCRZ.',
-      description: faker.person.bio(),
+      // description: faker.person.bio(),
+      description: faker.lorem.sentences(6),
       availability: faker.datatype.boolean(),
     };
     users.push(user);
@@ -43,7 +43,7 @@ async function insertUsers(users) {
   const queryStr = `
     INSERT INTO "user"
     (
-      "name",
+      "lastname",
       "firstname",
       "email",
       "pseudo",
@@ -64,7 +64,8 @@ function generateProject(nbProjects) {
   for (let i = 0; i < nbProjects; i++) {
     const project = {
       title: faker.commerce.productName(),
-      description: faker.company.buzzPhrase(),
+      // description: faker.company.buzzPhrase(),
+      description: faker.lorem.paragraphs(2),
       availability: faker.datatype.boolean(),
       user_id: faker.number.int({min: 1, max: NB_USERS})
     };
@@ -183,7 +184,7 @@ function generate_has_tag(nbrToBeTagged) {
   const have_users = [];
   for (let i = 1; i <= nbrToBeTagged; i++) {
     // value max = peut etre modifie pour le nbr max 'user dans la relation par projet
-    const randomNbTag = faker.number.int({max: 5});
+    const randomNbTag = faker.number.int({max: 12});
     for (let y = 0; y < randomNbTag; y++) {
       const has_user = {
         fk_id1: i,

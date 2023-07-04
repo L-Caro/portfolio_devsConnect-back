@@ -81,11 +81,11 @@ const userController = {
   // cette méthode récupère les données dans le body de la requête
   async register(req, res) {
     const {
-      name, firstname, email, pseudo, password, description, availability, tags,
+      lastname, firstname, email, pseudo, password, description, availability, tags,
     } = req.body;
     const hashedPWD = await bcrypt.hash(password, 10);
 
-    if (!name || !firstname || !email || !pseudo || !password) {
+    if (!lastname || !firstname || !email || !pseudo || !password) {
       throw new ApiError('Missing information', { statusCode: 400 });
     }
 
@@ -99,17 +99,17 @@ const userController = {
       throw new ApiError('Pseudo already used', { statusCode: 400 });
     }
 
-    await userMapper.createOneUser(name, firstname, email, pseudo, hashedPWD, description, availability, tags);
+    await userMapper.createOneUser(lastname, firstname, email, pseudo, hashedPWD, description, availability, tags);
     res.json({ status: 'success' });
   },
 
   async editOneUser(req, res) {
     const userId = req.params.id;
     const {
-      name, firstname, email, pseudo, password, description, availability, tags,
+      lastname, firstname, email, pseudo, password, description, availability, tags,
     } = req.body;
     const update = {
-      name, firstname, email, pseudo, description, availability, tags,
+      lastname, firstname, email, pseudo, description, availability, tags,
     };
 
     if (password) {
@@ -119,6 +119,24 @@ const userController = {
 
     const user = await userMapper.updateOneUser(userId, update);
     res.json({ status: 'success', data: user });
+  },
+
+  async checkPassword(req, res) {
+    // console.log(req.body);
+    const { oldPassword, id } = req.body;
+
+    const user = await userMapper.findOneUserX(id);
+
+    bcrypt.compare(oldPassword, user.password, (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Erreur lors de la vérification du mot de passe' });
+      }
+
+      if (!result) {
+        return res.json({ message: 'L\'ancien mot de passe est incorrect', status: 'error' });
+      }
+      return res.json({ message: 'L\'ancien mot de passe est correct', status: 'success' });
+    });
   },
 };
 

@@ -50,68 +50,67 @@ const auth = {
    */
   authorize(permission, section) { // section = project or user
     // eslint-disable-next-line consistent-return
-    return async (req, _, next) => { 
+    return async (req, _, next) => {
       try {
-        const authHeader = req.headers.authorization; 
+        const authHeader = req.headers.authorization;
         if (authHeader) {
-          const token = authHeader.split('Bearer ')[1]; 
+          const token = authHeader.split('Bearer ')[1];
           // retrieve token
-          const decoded = jwt.verify(token, JWT_SECRET); 
+          const decoded = jwt.verify(token, JWT_SECRET);
           // check ip consistency
           if (decoded.data.ip !== req.ip) {
-            return next (new ApiError('Unauthorized', { statusCode: 401 }));
+            return next(new ApiError('Unauthorized', { statusCode: 401 }));
           }
 
-          // check for create project 
-          if (permission === "create" && section === "project") {
+          // check for create project
+          if (permission === 'create' && section === 'project') {
             return next();
           }
 
-          // check for modify or delete project 
-          if (permission === "modify" && section === "project" || permission === "delete" && section === "project") {
+          // check for modify or delete project
+          if ((permission === 'modify' && section === 'project') || (permission === 'delete' && section === 'project')) {
             const projectId = parseInt(req.params.id);
             const projectOwnerId = await projectMapper.findProjectOwner(projectId);
-            if(!projectOwnerId){
-              return next (new ApiError('Not found', { statusCode: 404 }));
-            };
+            if (!projectOwnerId) {
+              return next(new ApiError('Not found', { statusCode: 404 }));
+            }
 
-            if (decoded.data.id === projectOwnerId){
+            if (decoded.data.id === projectOwnerId) {
               return next();
-            };
+            }
           }
 
-          if (permission === "modify" && section === "user" || permission === "delete" && section === "user") {
+          if ((permission === 'modify' && section === 'user') || (permission === 'delete' && section === 'user')) {
             const routeId = parseInt(req.params.id);
-            if (decoded.data.id === routeId){
+            if (decoded.data.id === routeId) {
               return next();
-            };
+            }
           }
 
-          if (permission === "add" && section === "projectHasUser" || permission === "remove" && section === "projectHasUser") {
+          if ((permission === 'add' && section === 'projectHasUser') || (permission === 'remove' && section === 'projectHasUser')) {
             const userId = parseInt(req.params.userId);
-            if (decoded.data.id === userId){
+            if (decoded.data.id === userId) {
               return next();
-            };
+            }
           }
 
-
-          if (permission === "accept" && section === "projectHasUser" || permission === "remove" && section === "projectHasUser") {
+          if ((permission === 'accept' && section === 'projectHasUser') || permission === ('remove' && section === 'projectHasUser')) {
             const projectId = parseInt(req.params.projectId);
             const projectOwnerId = await projectMapper.findProjectOwner(projectId);
-            if(!projectOwnerId){
-              return next (new ApiError('Not found', { statusCode: 404 }));
-            };
-            if (decoded.data.id === projectOwnerId){
+            if (!projectOwnerId) {
+              return next(new ApiError('Not found', { statusCode: 404 }));
+            }
+            if (decoded.data.id === projectOwnerId) {
               return next();
-            };
+            }
           }
 
           // forbidden
-          return next (new ApiError('Unauthorized', { statusCode: 401 }));
+          return next(new ApiError('Unauthorized', { statusCode: 401 }));
         }
-        return next (new ApiError('Forbidden', { statusCode: 403 }));
+        return next(new ApiError('Forbidden', { statusCode: 403 }));
       } catch (err) {
-        return next (new ApiError('Unauthorized', { statusCode: 401 }));
+        return next(new ApiError('Unauthorized', { statusCode: 401 }));
       }
     };
   },
@@ -123,7 +122,7 @@ const auth = {
    * @returns {boolean}
    */
   async isValidRefreshToken(token) {
-    const decodedToken = jwt.verify(token, JWT_REFRESH_SECRET); 
+    const decodedToken = jwt.verify(token, JWT_REFRESH_SECRET);
     const storedToken = await userMapper.getRefreshToken(decodedToken.id);
     return token === storedToken;
   },
