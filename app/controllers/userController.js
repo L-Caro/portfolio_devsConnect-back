@@ -1,7 +1,9 @@
+/* eslint-disable max-len */
 const bcrypt = require('bcrypt');
 const userMapper = require('../dataMappers/userMapper');
 const auth = require('../auth');
-const ApiError = require('../errors/apiError.js');
+const ApiError = require('../errors/apiError');
+const uploadPicture = require('../middleware/uploadPicture');
 
 const userController = {
   async login(request, response, next) {
@@ -99,6 +101,10 @@ const userController = {
       throw new ApiError('Pseudo already used', { statusCode: 400 });
     }
 
+    // Si un fichier a été téléchargé, appelez uploadPicture pour traiter la photo de profil
+    if (req.file) {
+      await uploadPicture(req, res);
+    }
     await userMapper.createOneUser(lastname, firstname, email, pseudo, hashedPWD, description, availability, tags);
     res.json({ status: 'success' });
   },
