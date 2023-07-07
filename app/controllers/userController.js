@@ -138,6 +138,27 @@ const userController = {
       return res.json({ message: 'L\'ancien mot de passe est correct', status: 'success' });
     });
   },
+  async checkPseudo(req, res) {
+    const { oldPseudo } = req.body;
+
+    const users = await userMapper.findAllUsers();
+    // console.log('users', users);
+    const foundUser = users.find((user) => user.pseudo === oldPseudo);
+
+    if (foundUser) {
+      return res.json({ message: 'Le pseudo n\'est pas disponible', status: 'error' });
+    }
+    return res.json({ message: 'Le pseudo est disponible', status: 'success' });
+  },
+  async checkEmail(req, res) {
+    const { oldEmail } = req.body;
+    const users = await userMapper.findAllUsers();
+    const foundUser = users.find((user) => user.email === oldEmail);
+    if (foundUser) {
+      return res.json({ message: 'L\'email n\'est pas disponible', status: 'error' });
+    }
+    return res.json({ message: 'L\'email est disponible', status: 'success' });
+  },
 };
 
 module.exports = userController;

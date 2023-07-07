@@ -15,6 +15,8 @@ router.put('/:id', validate(userUpdate, 'body'), authorize('modify', 'user'), co
 router.delete('/:id', authorize('delete', 'user'), controllerHandler(userController.deleteOneUser));
 
 router.post('/checkPassword', controllerHandler(userController.checkPassword));
+router.post('/checkEmail', controllerHandler(userController.checkEmail));
+router.post('/checkPseudo', controllerHandler(userController.checkPseudo));
 
 module.exports = router;
 

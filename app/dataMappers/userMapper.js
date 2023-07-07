@@ -28,6 +28,7 @@ const findAllUsers = async () => {
       "user"."lastname",
       "user"."firstname",
       "user"."pseudo",
+      "user"."email",
       "user"."description",
       "user"."availability",
       (
