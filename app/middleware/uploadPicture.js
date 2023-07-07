@@ -2,7 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const uploadPicture = async (req, res) => {
+const uploadPicture = async (req, res, pseudo) => {
   if (!req.file) {
     return res.status(400).json({ message: 'Aucun fichier sélectionné' });
   }
@@ -12,7 +12,7 @@ const uploadPicture = async (req, res) => {
   const filePath = file.path;
 
   // Générez un nom de fichier unique
-  const uniqueFileName = `${Date.now()}-${file.originalname}`;
+  const uniqueFileName = `${pseudo}-${file.originalname}`;
 
   // Construisez le chemin d'accès complet pour le fichier de destination permanent
   const destinationPath = path.join(__dirname, '../../data/profilPictures', uniqueFileName);

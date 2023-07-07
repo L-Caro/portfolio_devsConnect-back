@@ -103,7 +103,7 @@ const userController = {
 
     // Si un fichier a été téléchargé, appelez uploadPicture pour traiter la photo de profil
     if (req.file) {
-      await uploadPicture(req, res);
+      await uploadPicture(req, res, pseudo);
     }
     await userMapper.createOneUser(lastname, firstname, email, pseudo, hashedPWD, description, availability, tags);
     res.json({ status: 'success' });
