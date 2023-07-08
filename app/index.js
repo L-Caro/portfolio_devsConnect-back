@@ -33,6 +33,7 @@ app.use(cors());
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 
 // mise en place des methodes json et URL encoded dans l'app de l'api
+app.use('/public', express.static('public')); // fichiers statique
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
