@@ -21,11 +21,10 @@ const uploadPicture = async (req, res, pseudo) => {
     // Déplacez le fichier vers le dossier de destination permanent de manière synchrone
     fs.renameSync(filePath, destinationPath);
 
-    // Obtenez l'URL du fichier
-    // const fileUrl = `/data/profilPictures/${uniqueFileName}`;
+    //  Obtenez l'URL du fichier
+    const fileUrl = `/data/profilPictures/${uniqueFileName}`;
 
-    // todo Enregistrez l'URL du fichier dans la base de données, en relation avec l'utilisateur
-    // todo Utilisez la méthode appropriée pour mettre à jour l'enregistrement de l'utilisateur avec le champ de photo de profil, en utilisant l'URL du fichier
+    return fileUrl;
   } catch (error) {
     console.error('Error while moving the uploaded file:', error);
   }

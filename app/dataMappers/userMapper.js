@@ -134,10 +134,10 @@ const removeOneUser = async (id) => {
   return results;
 };
 
-const createOneUser = async (lastname, firstname, email, pseudo, password, description, availability, tags) => {
+const createOneUser = async (lastname, firstname, email, pseudo, password, description, availability, tags, picture) => {
   const preparedUserQuery = {
-    text: 'INSERT INTO "user" ("lastname", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-    values: [lastname, firstname, email, pseudo, password, description, availability],
+    text: 'INSERT INTO "user" ("lastname", "firstname", "email", "pseudo", "password", "description", "availability", "picture") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+    values: [lastname, firstname, email, pseudo, password, description, availability, picture],
   };
 
   const [user] = (await client.query(preparedUserQuery)).rows;

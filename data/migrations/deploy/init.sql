@@ -14,6 +14,7 @@ CREATE TABLE "user" (
     "password" VARCHAR(64) NOT NULL,
     "description" TEXT,
     "availability" BOOLEAN DEFAULT FALSE,
+    "picture" VARCHAR(255) NOT NULL DEFAULT 'profil.svg',
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
     "updated_at" TIMESTAMPTZ,
     CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')

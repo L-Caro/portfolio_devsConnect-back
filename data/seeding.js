@@ -1,3 +1,7 @@
+// ! Il peut arriver que parfois la génération aléatoire de faker redonne un nom déjà pris
+// ! Cela provoque une erreur de clé unique dans la base de données
+// ! En relançant le seeding, cela devrait passer
+
 const { fakerFR } = require('@faker-js/faker');
 const client = require('../app/dataMappers/database');
 
@@ -23,6 +27,8 @@ function generateUser(nbUsers) {
       // description: faker.person.bio(),
       description: faker.lorem.sentences(6),
       availability: faker.datatype.boolean(),
+      // picture: faker.image.avatar()
+      picture: "/data/profilPictures/profil.svg"
     };
     users.push(user);
   }
@@ -37,7 +43,8 @@ async function insertUsers(users) {
     '${user.pseudo}',
     '${user.password}',
     '${user.description}',
-    '${user.availability}'    
+    '${user.availability}',
+    '${user.picture}'
   )`);
 
   const queryStr = `
@@ -49,7 +56,8 @@ async function insertUsers(users) {
       "pseudo",
       "password",
       "description",
-      "availability"
+      "availability",
+      "picture"
     )
     VALUES
     ${usersValues}

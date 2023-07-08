@@ -91,6 +91,8 @@ const userController = {
       throw new ApiError('Missing information', { statusCode: 400 });
     }
 
+    let picture; // On déclare picture pour pouvoir l'utiliser dans le if/else suivant
+
     const existingEmail = await userMapper.findUserByEmail(email);
     if (existingEmail) {
       throw new ApiError('Email already used', { statusCode: 400 });
@@ -103,9 +105,12 @@ const userController = {
 
     // Si un fichier a été téléchargé, appelez uploadPicture pour traiter la photo de profil
     if (req.file) {
-      await uploadPicture(req, res, pseudo);
+      picture = await uploadPicture(req, res, pseudo);
+    } else {
+      picture = 'data/profilPicture/profil.svg';
     }
-    await userMapper.createOneUser(lastname, firstname, email, pseudo, hashedPWD, description, availability, tags);
+
+    await userMapper.createOneUser(lastname, firstname, email, pseudo, hashedPWD, description, availability, tags, picture);
     res.json({ status: 'success' });
   },
 
