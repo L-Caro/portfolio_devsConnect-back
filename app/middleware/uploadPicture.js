@@ -12,17 +12,17 @@ const uploadPicture = async (req, res, pseudo) => {
   const filePath = file.path;
 
   // Générez un nom de fichier unique
-  const uniqueFileName = `${pseudo}-${file.originalname}`;
+  const uniqueFileName = `${pseudo}-${Date.now()}-${file.originalname}`;
 
   // Construisez le chemin d'accès complet pour le fichier de destination permanent
-  const destinationPath = path.join(__dirname, '../../data/profilPictures', uniqueFileName);
+  const destinationPath = path.join(__dirname, '../../public/profilPictures', uniqueFileName);
 
   try {
     // Déplacez le fichier vers le dossier de destination permanent de manière synchrone
     fs.renameSync(filePath, destinationPath);
 
     //  Obtenez l'URL du fichier
-    const fileUrl = `/data/profilPictures/${uniqueFileName}`;
+    const fileUrl = `/public/profilPictures/${uniqueFileName}`;
 
     return fileUrl;
   } catch (error) {

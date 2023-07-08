@@ -31,6 +31,7 @@ const findAllUsers = async () => {
       "user"."email",
       "user"."description",
       "user"."availability",
+      "user"."picture",
       (
         SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
         FROM (
@@ -72,6 +73,7 @@ const findOneUser = async (id) => {
     "user"."email",
     "user"."description",
     "user"."availability",
+    "user"."picture",
     (
       SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability"))
       FROM (
