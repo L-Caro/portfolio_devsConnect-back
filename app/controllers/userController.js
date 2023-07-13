@@ -128,6 +128,13 @@ const userController = {
       update.password = hashed;
     }
 
+    let picture; // On déclare picture pour pouvoir l'utiliser dans le if/else suivant
+    // Si un fichier a été téléchargé, appelez uploadPicture pour traiter la photo de profil
+    if (req.file) {
+      picture = await uploadPicture(req, res, pseudo);
+      update.picture = picture;
+    }
+
     const user = await userMapper.updateOneUser(userId, update);
     res.json({ status: 'success', data: user });
   },

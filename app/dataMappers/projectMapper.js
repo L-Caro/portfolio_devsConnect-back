@@ -11,6 +11,11 @@ const findAllProjects = async () => {
     "project"."description",
     "project"."availability",
     "project"."user_id",
+    (  
+      SELECT "user"."pseudo"
+      FROM "user"
+      WHERE "user"."id" = "project"."user_id"
+  ) AS user_pseudo,
     (
       SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
       FROM (

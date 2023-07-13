@@ -184,9 +184,10 @@ const updateOneUser = async (userId, userUpdate) => {
         "password" = COALESCE($5, "password"), 
         "description" = COALESCE($6, "description"), 
         "availability" = COALESCE($7, "availability"),
+        "picture" = COALESCE($8, "picture"),
         "updated_at"= NOW()
-    WHERE "id"=$8 
-    RETURNING "lastname", "firstname", "email", "pseudo", "description", "availability", "updated_at"`,
+    WHERE "id"=$9
+    RETURNING "lastname", "firstname", "email", "pseudo", "description", "availability", "picture", "updated_at"`,
     values: [
       userUpdate.lastname,
       userUpdate.firstname,
@@ -195,6 +196,7 @@ const updateOneUser = async (userId, userUpdate) => {
       userUpdate.password,
       userUpdate.description,
       userUpdate.availability,
+      userUpdate.picture,
       userId,
     ],
   };

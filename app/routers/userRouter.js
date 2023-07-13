@@ -5,12 +5,14 @@ const { userUpdate } = require('../validations/userSchema');
 const validate = require('../validations/validate');
 const { authorize } = require('../auth');
 
+const upload = require('../middleware/multer');
+
 const router = express.Router();
 
 router.get('/:id', controllerHandler(userController.getOneUser));
 router.get('/', controllerHandler(userController.getAllUsers));
 
-router.put('/:id', validate(userUpdate, 'body'), authorize('modify', 'user'), controllerHandler(userController.editOneUser));
+router.put('/:id', upload.single('picture'), validate(userUpdate, 'body'), authorize('modify', 'user'), controllerHandler(userController.editOneUser));
 
 router.delete('/:id', authorize('delete', 'user'), controllerHandler(userController.deleteOneUser));
 
