@@ -66,38 +66,50 @@ const findAllUsers = async () => {
 const findOneUser = async (id) => {
   const preparedQuery = {
     text: `SELECT
-  "user"."id",
-  "user"."lastname",
-  "user"."firstname",
-  "user"."pseudo",
-  "user"."email",
-  "user"."description",
-  "user"."availability",
-  "user"."picture",
-  (
-    SELECT json_agg(json_build_object('id', "project"."id", 'user_id', "project"."user_id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability", 'user_pseudo', (
-      SELECT "user"."pseudo"
-      FROM "user"
-      WHERE "user"."id" = "project"."user_id"
-    )))
-    FROM (
-      SELECT DISTINCT "project"."id", "project"."user_id", "project"."title", "project"."description", "project"."availability"
-      FROM "project"
-      INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
-      WHERE "project_has_user"."user_id" = "user"."id"
-    ) AS "project"
+    "user"."id",
+    "user"."lastname",
+    "user"."firstname",
+    "user"."pseudo",
+    "user"."email",
+    "user"."description",
+    "user"."availability",
+    "user"."picture",
+    (
+      SELECT json_agg(json_build_object('id', "project"."id", 'user_id', "project"."user_id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability", 'user_pseudo', (
+        SELECT "user"."pseudo"
+        FROM "user"
+        WHERE "user"."id" = "project"."user_id"
+      ), 'users', (
+        SELECT json_agg(json_build_object('id', "participant_user"."id", 'firstname', "participant_user"."firstname", 'lastname', "participant_user"."lastname", 'pseudo', "participant_user"."pseudo"))
+        FROM "user" AS "participant_user"
+        INNER JOIN "project_has_user" ON "participant_user"."id" = "project_has_user"."user_id"
+        WHERE "project_has_user"."project_id" = "project"."id"
+      ), 'tags', (
+        SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
+        FROM "tag"
+        INNER JOIN "project_has_tag" ON "tag"."id" = "project_has_tag"."tag_id"
+        WHERE "project_has_tag"."project_id" = "project"."id"
+      )))
+      FROM (
+        SELECT DISTINCT "project"."id", "project"."user_id", "project"."title", "project"."description", "project"."availability"
+        FROM "project"
+        INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
+        WHERE "project_has_user"."user_id" = "user"."id"
+      ) AS "project"
     ) AS "projects",
-  (
-    SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
-    FROM (
-      SELECT DISTINCT "tag"."id", "tag"."name"
-      FROM "tag"
-      INNER JOIN "user_has_tag" ON "tag"."id" = "user_has_tag"."tag_id"
-      WHERE "user_has_tag"."user_id" = "user"."id"
-    ) AS "tag"
-  ) AS "tags"
+    (
+      SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
+      FROM (
+        SELECT DISTINCT "tag"."id", "tag"."name"
+        FROM "tag"
+        INNER JOIN "user_has_tag" ON "tag"."id" = "user_has_tag"."tag_id"
+        WHERE "user_has_tag"."user_id" = "user"."id"
+      ) AS "tag"
+    ) AS "tags"
   FROM "user"
-  WHERE "id" = $1`,
+  WHERE "id" = $1
+  
+  `,
     values: [id],
   };
 
