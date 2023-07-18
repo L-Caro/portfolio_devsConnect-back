@@ -65,7 +65,7 @@ const findOneProject = async (id) => {
         ) AS "tag"
     ) AS "tags",
     (
-        SELECT json_agg(json_build_object('user_id', "user"."id", 'pseudo', "user"."pseudo", 'is_active', "user"."is_active", 'firstname', "user"."firstname", 'lastname', "user"."lastname", 'email', "user"."email", 'description', "user"."description", 'availability', "user"."availability", 
+        SELECT json_agg(json_build_object('user_id', "user"."id", 'id', "user"."id", 'pseudo', "user"."pseudo", 'is_active', "user"."is_active", 'firstname', "user"."firstname", 'lastname', "user"."lastname", 'email', "user"."email", 'description', "user"."description", 'picture', "user"."picture", 'availability', "user"."availability", 
           'tags', (
             SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
             FROM "tag"
@@ -78,7 +78,7 @@ const findOneProject = async (id) => {
             WHERE "project_has_user"."user_id" = "user"."id"
           )))
           FROM (
-            SELECT DISTINCT ON ("user"."id") "user"."id", "user"."pseudo", "project_has_user"."is_active", "user"."firstname", "user"."lastname", "user"."email", "user"."description", "user"."availability"
+            SELECT DISTINCT ON ("user"."id") "user"."id", "user"."pseudo", "project_has_user"."is_active", "user"."firstname", "user"."lastname", "user"."email", "user"."description", "user"."picture", "user"."availability"
             FROM "user"
             INNER JOIN "project_has_user" ON "project_has_user"."user_id" = "user"."id"
             WHERE "project_has_user"."project_id" = "project"."id"

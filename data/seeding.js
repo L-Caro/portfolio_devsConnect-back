@@ -28,7 +28,7 @@ function generateUser(nbUsers) {
       description: faker.lorem.sentences(6),
       availability: faker.datatype.boolean(),
       // picture: faker.image.avatar()
-      picture: "/public/profilPictures/profil.svg"
+      picture: "/public/profilPictures/profil.webp"
     };
     users.push(user);
   }
