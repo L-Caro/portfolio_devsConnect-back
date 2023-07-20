@@ -130,14 +130,37 @@ const createOneProject = async (title, description, availability, user_id, tags)
     };
     // destructuration de tableau pour récupérer le premier élément
     const [tagResults] = (await client.query(preparedTagQuery)).rows;
+    console.log(tagResults);
     return tagResults;
   });
 
-  await Promise.all(addTagsToProject);
+  const tagsResults = await Promise.all(addTagsToProject);
+
+  // Récupérez les ID des tags associés au projet
+  const tagIds = tagsResults.map((tagResult) => tagResult.tag_id);
+
+  // Effectuez une requête pour récupérer les informations complètes des tags correspondant aux ID
+  const preparedTagsQuery = {
+    text: 'SELECT * FROM "tag" WHERE "id" = ANY($1)',
+    values: [tagIds],
+  };
+  const tagsData = (await client.query(preparedTagsQuery)).rows;
+
+  // Renommez les clés 'id' en 'tag_id' et 'name' en 'tag_name'
+  const modifiedTagsData = tagsData.map((tag) => ({
+    tag_id: tag.id,
+    tag_name: tag.name,
+    created_at: tag.created_at,
+    updated_at: tag.updated_at,
+  }));
+
+  // Ajoutez les informations complètes des tags au projet
+  project.tags = modifiedTagsData;
 
   // ajout du titulaire du projet dans projectHasUser
   await projectUserMapper.createProjectHasUser(project.id, project.user_id);
 
+  console.log(project);
   return project;
 };
 

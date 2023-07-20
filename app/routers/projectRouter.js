@@ -23,6 +23,8 @@ router.put('/:projectId/user/:userId', authorize('accept', 'projectHasUser'), co
 
 router.delete('/:projectId/user/:userId', authorize('remove', 'projectHasUser'), controllerHandler(projectController.deleteUserToProject));
 
+router.post('/checkTitle', controllerHandler(projectController.checkTitle));
+
 module.exports = router;
 
 // Doc Swagger

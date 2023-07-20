@@ -27,6 +27,7 @@ const projectController = {
       title, description, availability, user_id, tags,
     } = req.body;
     const project = await projectMapper.createOneProject(title, description, availability, user_id, tags);
+    console.log(project);
     res.json({ status: 'success', data: project });
   },
 
@@ -59,6 +60,15 @@ const projectController = {
     const { projectId, userId } = req.params;
     const projectHasUser = await projectUserMapper.deleteProjectHasUser(projectId, userId);
     res.json({ status: 'success', data: projectHasUser });
+  },
+  async checkTitle(req, res) {
+    const { oldTitle } = req.body;
+    const projects = await projectMapper.findAllProjects();
+    const foundProject = projects.find((project) => project.title === oldTitle);
+    if (foundProject) {
+      return res.json({ message: 'Le titre du projet n\'est pas disponible', status: 'error' });
+    }
+    return res.json({ message: 'Le titre du projet est disponible', status: 'success' });
   },
 };
 
