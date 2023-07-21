@@ -56,13 +56,6 @@ const findAllUsers = async () => {
   return results.rows;
 };
 
-/* async function getAllUsers() {
-  const findAllUsers = await client.query(`SELECT * FROM find_all_users`);
-  const results = findAllUsers.rows[0];
-  console.log(results);
-  return results;
-} */
-
 const findOneUser = async (id) => {
   const preparedQuery = {
     text: `SELECT

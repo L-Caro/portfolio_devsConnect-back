@@ -140,7 +140,6 @@ const userController = {
   },
 
   async checkPassword(req, res) {
-    // console.log(req.body);
     const { oldPassword, id } = req.body;
 
     const user = await userMapper.findOneUserX(id);
@@ -160,7 +159,6 @@ const userController = {
     const { oldPseudo } = req.body;
 
     const users = await userMapper.findAllUsers();
-    // console.log('users', users);
     const foundUser = users.find((user) => user.pseudo === oldPseudo);
 
     if (foundUser) {

@@ -27,7 +27,6 @@ const projectController = {
       title, description, availability, user_id, tags,
     } = req.body;
     const project = await projectMapper.createOneProject(title, description, availability, user_id, tags);
-    console.log(project);
     res.json({ status: 'success', data: project });
   },
 
@@ -57,7 +56,6 @@ const projectController = {
 
   async deleteUserToProject(req, res) {
     const { projectId, userId } = req.params;
-    console.log(projectId, userId);
     const projectHasUser = await projectUserMapper.deleteProjectHasUser(projectId, userId);
     res.json({ status: 'success', data: projectHasUser });
   },

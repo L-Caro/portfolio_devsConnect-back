@@ -130,7 +130,6 @@ const createOneProject = async (title, description, availability, user_id, tags)
     };
     // destructuration de tableau pour récupérer le premier élément
     const [tagResults] = (await client.query(preparedTagQuery)).rows;
-    console.log(tagResults);
     return tagResults;
   });
 
@@ -152,7 +151,6 @@ const createOneProject = async (title, description, availability, user_id, tags)
   // ajout du titulaire du projet dans projectHasUser
   await projectUserMapper.createProjectHasUser(project.id, project.user_id);
 
-  console.log(project);
   return project;
 };
 
