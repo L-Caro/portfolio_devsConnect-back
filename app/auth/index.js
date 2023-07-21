@@ -89,7 +89,8 @@ const auth = {
 
           if ((permission === 'add' && section === 'projectHasUser') || (permission === 'remove' && section === 'projectHasUser')) {
             const userId = parseInt(req.params.userId);
-            if (decoded.data.id === userId) {
+            const projectOwnerId = await projectMapper.findProjectOwner(req.params.projectId);
+            if (decoded.data.id === userId || decoded.data.id === projectOwnerId) {
               return next();
             }
           }

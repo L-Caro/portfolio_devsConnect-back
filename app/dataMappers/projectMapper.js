@@ -55,7 +55,7 @@ const findOneProject = async (id) => {
         WHERE "user"."id" = "project"."user_id"
     ) AS user_pseudo,
     (
-        SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
+        SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
         FROM (
             SELECT DISTINCT ON ("tag"."id") "tag"."id", "tag"."name"
             FROM "tag"
@@ -146,16 +146,8 @@ const createOneProject = async (title, description, availability, user_id, tags)
   };
   const tagsData = (await client.query(preparedTagsQuery)).rows;
 
-  // Renommez les clés 'id' en 'tag_id' et 'name' en 'tag_name'
-  const modifiedTagsData = tagsData.map((tag) => ({
-    tag_id: tag.id,
-    tag_name: tag.name,
-    created_at: tag.created_at,
-    updated_at: tag.updated_at,
-  }));
-
   // Ajoutez les informations complètes des tags au projet
-  project.tags = modifiedTagsData;
+  project.tags = tagsData;
 
   // ajout du titulaire du projet dans projectHasUser
   await projectUserMapper.createProjectHasUser(project.id, project.user_id);
@@ -171,11 +163,7 @@ const updateOneProject = async (projectId, projectUpdate) => {
   }
 
   const UpdatedTags = projectUpdate.tags;
-  console.log(UpdatedTags);
-  console.log(currentProject.tags);
-  const currentProjectTags = currentProject.tags ? currentProject.tags.map((tag) => tag.tag_id) : [];
-  console.log(currentProject);
-
+  const currentProjectTags = currentProject.tags ? currentProject.tags.map((tag) => tag.id) : [];
   // Id des tags au lieu des objets complets
   const tagsToDelete = currentProjectTags?.filter((tagId) => !UpdatedTags?.includes(tagId)) || [];
   for (const tagId of tagsToDelete) {
@@ -186,7 +174,6 @@ const updateOneProject = async (projectId, projectUpdate) => {
   for (const tagId of tagsToAdd) {
     await projectTagMapper.createProjectHasTag(projectId, tagId);
   }
-
   const preparedQuery = {
     text: `UPDATE "project" 
       SET title = COALESCE($1, title), 
@@ -198,7 +185,6 @@ const updateOneProject = async (projectId, projectUpdate) => {
   };
   // destructuration de tableau pour récupérer le premier élément
   const [results] = (await client.query(preparedQuery)).rows;
-
   return results;
 };
 
