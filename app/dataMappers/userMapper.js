@@ -73,7 +73,7 @@ const findOneUser = async (id) => {
         FROM "user"
         WHERE "user"."id" = "project"."user_id"
       ), 'users', (
-        SELECT json_agg(json_build_object('id', "participant_user"."id", 'firstname', "participant_user"."firstname", 'lastname', "participant_user"."lastname", 'pseudo', "participant_user"."pseudo"))
+        SELECT json_agg(json_build_object('id', "participant_user"."id", 'firstname', "participant_user"."firstname", 'lastname', "participant_user"."lastname", 'pseudo', "participant_user"."pseudo", 'is_active', "project_has_user"."is_active"))
         FROM "user" AS "participant_user"
         INNER JOIN "project_has_user" ON "participant_user"."id" = "project_has_user"."user_id"
         WHERE "project_has_user"."project_id" = "project"."id"
