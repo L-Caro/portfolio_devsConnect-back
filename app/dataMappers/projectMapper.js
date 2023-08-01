@@ -11,6 +11,11 @@ const findAllProjects = async () => {
     "project"."description",
     "project"."availability",
     "project"."user_id",
+    (  
+      SELECT "user"."pseudo"
+      FROM "user"
+      WHERE "user"."id" = "project"."user_id"
+  ) AS user_pseudo,
     (
       SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
       FROM (
@@ -50,7 +55,7 @@ const findOneProject = async (id) => {
         WHERE "user"."id" = "project"."user_id"
     ) AS user_pseudo,
     (
-        SELECT json_agg(json_build_object('tag_id', "tag"."id", 'tag_name', "tag"."name"))
+        SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
         FROM (
             SELECT DISTINCT ON ("tag"."id") "tag"."id", "tag"."name"
             FROM "tag"
@@ -60,9 +65,20 @@ const findOneProject = async (id) => {
         ) AS "tag"
     ) AS "tags",
     (
-        SELECT json_agg(json_build_object('user_id', "user"."id", 'pseudo', "user"."pseudo", 'is_active', "user"."is_active"))
-        FROM (
-            SELECT DISTINCT ON ("user"."id") "user"."id", "user"."pseudo", "project_has_user"."is_active"
+        SELECT json_agg(json_build_object('user_id', "user"."id", 'id', "user"."id", 'pseudo', "user"."pseudo", 'is_active', "user"."is_active", 'firstname', "user"."firstname", 'lastname', "user"."lastname", 'email', "user"."email", 'description', "user"."description", 'picture', "user"."picture", 'availability', "user"."availability", 
+          'tags', (
+            SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
+            FROM "tag"
+            INNER JOIN "user_has_tag" ON "user_has_tag"."tag_id" = "tag"."id"
+            WHERE "user_has_tag"."user_id" = "user"."id"
+          ), 'projects', (
+            SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
+            FROM "project"
+            INNER JOIN "project_has_user" ON "project_has_user"."project_id" = "project"."id"
+            WHERE "project_has_user"."user_id" = "user"."id"
+          )))
+          FROM (
+            SELECT DISTINCT ON ("user"."id") "user"."id", "user"."pseudo", "project_has_user"."is_active", "user"."firstname", "user"."lastname", "user"."email", "user"."description", "user"."picture", "user"."availability"
             FROM "user"
             INNER JOIN "project_has_user" ON "project_has_user"."user_id" = "user"."id"
             WHERE "project_has_user"."project_id" = "project"."id"
@@ -117,7 +133,20 @@ const createOneProject = async (title, description, availability, user_id, tags)
     return tagResults;
   });
 
-  await Promise.all(addTagsToProject);
+  const tagsResults = await Promise.all(addTagsToProject);
+
+  // Récupérez les ID des tags associés au projet
+  const tagIds = tagsResults.map((tagResult) => tagResult.tag_id);
+
+  // Effectuez une requête pour récupérer les informations complètes des tags correspondant aux ID
+  const preparedTagsQuery = {
+    text: 'SELECT * FROM "tag" WHERE "id" = ANY($1)',
+    values: [tagIds],
+  };
+  const tagsData = (await client.query(preparedTagsQuery)).rows;
+
+  // Ajoutez les informations complètes des tags au projet
+  project.tags = tagsData;
 
   // ajout du titulaire du projet dans projectHasUser
   await projectUserMapper.createProjectHasUser(project.id, project.user_id);
@@ -132,11 +161,7 @@ const updateOneProject = async (projectId, projectUpdate) => {
   }
 
   const UpdatedTags = projectUpdate.tags;
-  console.log(UpdatedTags);
-  console.log(currentProject.tags);
-  const currentProjectTags = currentProject.tags ? currentProject.tags.map((tag) => tag.tag_id) : [];
-  console.log(currentProject);
-
+  const currentProjectTags = currentProject.tags ? currentProject.tags.map((tag) => tag.id) : [];
   // Id des tags au lieu des objets complets
   const tagsToDelete = currentProjectTags?.filter((tagId) => !UpdatedTags?.includes(tagId)) || [];
   for (const tagId of tagsToDelete) {
@@ -147,7 +172,6 @@ const updateOneProject = async (projectId, projectUpdate) => {
   for (const tagId of tagsToAdd) {
     await projectTagMapper.createProjectHasTag(projectId, tagId);
   }
-
   const preparedQuery = {
     text: `UPDATE "project" 
       SET title = COALESCE($1, title), 
@@ -159,7 +183,6 @@ const updateOneProject = async (projectId, projectUpdate) => {
   };
   // destructuration de tableau pour récupérer le premier élément
   const [results] = (await client.query(preparedQuery)).rows;
-
   return results;
 };
 

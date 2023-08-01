@@ -1,4 +1,4 @@
-//creation d'un pool au lieu d'un unique client afin de pouvoir traiter plusieurs requetes simultanement
+// creation d'un pool au lieu d'un unique client afin de pouvoir traiter plusieurs requetes simultanement
 const { Pool } = require('pg');
 
 const pool = new Pool({

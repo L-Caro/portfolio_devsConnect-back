@@ -31,6 +31,7 @@ const findAllUsers = async () => {
       "user"."email",
       "user"."description",
       "user"."availability",
+      "user"."picture",
       (
         SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title"))
         FROM (
@@ -55,13 +56,6 @@ const findAllUsers = async () => {
   return results.rows;
 };
 
-/* async function getAllUsers() {
-  const findAllUsers = await client.query(`SELECT * FROM find_all_users`);
-  const results = findAllUsers.rows[0];
-  console.log(results);
-  return results;
-} */
-
 const findOneUser = async (id) => {
   const preparedQuery = {
     text: `SELECT
@@ -72,14 +66,29 @@ const findOneUser = async (id) => {
     "user"."email",
     "user"."description",
     "user"."availability",
+    "user"."picture",
     (
-      SELECT json_agg(json_build_object('id', "project"."id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability"))
+      SELECT json_agg(json_build_object('id', "project"."id", 'user_id', "project"."user_id", 'title', "project"."title", 'description', "project"."description", 'availability', "project"."availability", 'user_pseudo', (
+        SELECT "user"."pseudo"
+        FROM "user"
+        WHERE "user"."id" = "project"."user_id"
+      ), 'users', (
+        SELECT json_agg(json_build_object('id', "participant_user"."id", 'firstname', "participant_user"."firstname", 'lastname', "participant_user"."lastname", 'pseudo', "participant_user"."pseudo", 'is_active', "project_has_user"."is_active"))
+        FROM "user" AS "participant_user"
+        INNER JOIN "project_has_user" ON "participant_user"."id" = "project_has_user"."user_id"
+        WHERE "project_has_user"."project_id" = "project"."id"
+      ), 'tags', (
+        SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
+        FROM "tag"
+        INNER JOIN "project_has_tag" ON "tag"."id" = "project_has_tag"."tag_id"
+        WHERE "project_has_tag"."project_id" = "project"."id"
+      )))
       FROM (
-        SELECT DISTINCT "project"."id", "project"."title", "project"."description", "project"."availability"
+        SELECT DISTINCT "project"."id", "project"."user_id", "project"."title", "project"."description", "project"."availability"
         FROM "project"
         INNER JOIN "project_has_user" ON "project"."id" = "project_has_user"."project_id"
         WHERE "project_has_user"."user_id" = "user"."id"
-      )AS "project"
+      ) AS "project"
     ) AS "projects",
     (
       SELECT json_agg(json_build_object('id', "tag"."id", 'name', "tag"."name"))
@@ -90,10 +99,13 @@ const findOneUser = async (id) => {
         WHERE "user_has_tag"."user_id" = "user"."id"
       ) AS "tag"
     ) AS "tags"
-    FROM "user"
-    WHERE "id" = $1`,
+  FROM "user"
+  WHERE "id" = $1
+  
+  `,
     values: [id],
   };
+
   const results = await client.query(preparedQuery);
   if (!results.rows[0]) {
     throw new ApiError('User not found', { statusCode: 204 });
@@ -134,10 +146,10 @@ const removeOneUser = async (id) => {
   return results;
 };
 
-const createOneUser = async (lastname, firstname, email, pseudo, password, description, availability, tags) => {
+const createOneUser = async (lastname, firstname, email, pseudo, password, description, availability, tags, picture) => {
   const preparedUserQuery = {
-    text: 'INSERT INTO "user" ("lastname", "firstname", "email", "pseudo", "password", "description", "availability") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-    values: [lastname, firstname, email, pseudo, password, description, availability],
+    text: 'INSERT INTO "user" ("lastname", "firstname", "email", "pseudo", "password", "description", "availability", "picture") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+    values: [lastname, firstname, email, pseudo, password, description, availability, picture],
   };
 
   const [user] = (await client.query(preparedUserQuery)).rows;
@@ -182,9 +194,10 @@ const updateOneUser = async (userId, userUpdate) => {
         "password" = COALESCE($5, "password"), 
         "description" = COALESCE($6, "description"), 
         "availability" = COALESCE($7, "availability"),
+        "picture" = COALESCE($8, "picture"),
         "updated_at"= NOW()
-    WHERE "id"=$8 
-    RETURNING "lastname", "firstname", "email", "pseudo", "description", "availability", "updated_at"`,
+    WHERE "id"=$9
+    RETURNING "lastname", "firstname", "email", "pseudo", "description", "availability", "picture", "updated_at"`,
     values: [
       userUpdate.lastname,
       userUpdate.firstname,
@@ -193,6 +206,7 @@ const updateOneUser = async (userId, userUpdate) => {
       userUpdate.password,
       userUpdate.description,
       userUpdate.availability,
+      userUpdate.picture,
       userId,
     ],
   };

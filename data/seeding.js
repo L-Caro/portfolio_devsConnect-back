@@ -1,3 +1,7 @@
+// ! Il peut arriver que parfois la génération aléatoire de faker redonne un nom déjà pris
+// ! Cela provoque une erreur de clé unique dans la base de données
+// ! En relançant le seeding, cela devrait passer
+
 const { fakerFR } = require('@faker-js/faker');
 const client = require('../app/dataMappers/database');
 
@@ -21,8 +25,10 @@ function generateUser(nbUsers) {
       email: faker.internet.email(),
       password: '$2b$10$3i3kHi8MZDpmLW1icHax5u69KOvYOgIWkFkz1dKgKOlE64sRQCRZ.',
       // description: faker.person.bio(),
-      description: faker.lorem.sentences(6),
+      description: faker.lorem.sentences(7),
       availability: faker.datatype.boolean(),
+      // picture: faker.image.avatar()
+      picture: "/public/profilPictures/profil.webp"
     };
     users.push(user);
   }
@@ -37,7 +43,8 @@ async function insertUsers(users) {
     '${user.pseudo}',
     '${user.password}',
     '${user.description}',
-    '${user.availability}'    
+    '${user.availability}',
+    '${user.picture}'
   )`);
 
   const queryStr = `
@@ -49,7 +56,8 @@ async function insertUsers(users) {
       "pseudo",
       "password",
       "description",
-      "availability"
+      "availability",
+      "picture"
     )
     VALUES
     ${usersValues}
@@ -129,7 +137,7 @@ function generateProject_has_user() {
   const projects_have_users = [];
   for (let i = 1; i <= NB_PROJECTS; i++) {
     // value max = peut etre modifie pour le nbr max 'user dans la relation par projet
-    const randomNbUser = faker.number.int({max: 6});
+    const randomNbUser = faker.number.int({min: 3, max: 9});
     for (let y = 0; y < randomNbUser; y++) {
       const project_has_user = {
         project_id: i,
@@ -184,7 +192,7 @@ function generate_has_tag(nbrToBeTagged) {
   const have_users = [];
   for (let i = 1; i <= nbrToBeTagged; i++) {
     // value max = peut etre modifie pour le nbr max 'user dans la relation par projet
-    const randomNbTag = faker.number.int({max: 12});
+    const randomNbTag = faker.number.int({min: 3, max: 12});
     for (let y = 0; y < randomNbTag; y++) {
       const has_user = {
         fk_id1: i,

@@ -3,13 +3,16 @@
   "packageManager": "yarn@3.6.0",
   "scripts": {
     "dev": "NODE_ENV=development DEBUG=app:* npx nodemon",
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=production node index.js",
+    "faker": "node ./data/seeding.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "faker": "^6.6.6",
+    "multer": "^1.4.5-lts.1",
     "pg": "^8.11.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
@@ -22,7 +25,6 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
-    "bcrypt": "^5.1.0",
     "bunyan": "^1.8.15",
     "cors": "^2.8.5",
     "debug": "^4.3.4",

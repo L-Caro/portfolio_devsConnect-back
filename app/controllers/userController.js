@@ -1,7 +1,9 @@
+/* eslint-disable max-len */
 const bcrypt = require('bcrypt');
 const userMapper = require('../dataMappers/userMapper');
 const auth = require('../auth');
-const ApiError = require('../errors/apiError.js');
+const ApiError = require('../errors/apiError');
+const uploadPicture = require('../middleware/uploadPicture');
 
 const userController = {
   async login(request, response, next) {
@@ -89,6 +91,8 @@ const userController = {
       throw new ApiError('Missing information', { statusCode: 400 });
     }
 
+    let picture; // On déclare picture pour pouvoir l'utiliser dans le if/else suivant
+
     const existingEmail = await userMapper.findUserByEmail(email);
     if (existingEmail) {
       throw new ApiError('Email already used', { statusCode: 400 });
@@ -99,7 +103,14 @@ const userController = {
       throw new ApiError('Pseudo already used', { statusCode: 400 });
     }
 
-    await userMapper.createOneUser(lastname, firstname, email, pseudo, hashedPWD, description, availability, tags);
+    // Si un fichier a été téléchargé, appelez uploadPicture pour traiter la photo de profil
+    if (req.file) {
+      picture = await uploadPicture(req, res, pseudo);
+    } else {
+      picture = '/public/profilPictures/profil.webp';
+    }
+
+    await userMapper.createOneUser(lastname, firstname, email, pseudo, hashedPWD, description, availability, tags, picture);
     res.json({ status: 'success' });
   },
 
@@ -117,12 +128,18 @@ const userController = {
       update.password = hashed;
     }
 
+    let picture; // On déclare picture pour pouvoir l'utiliser dans le if/else suivant
+    // Si un fichier a été téléchargé, appelez uploadPicture pour traiter la photo de profil
+    if (req.file) {
+      picture = await uploadPicture(req, res, pseudo);
+      update.picture = picture;
+    }
+
     const user = await userMapper.updateOneUser(userId, update);
     res.json({ status: 'success', data: user });
   },
 
   async checkPassword(req, res) {
-    // console.log(req.body);
     const { oldPassword, id } = req.body;
 
     const user = await userMapper.findOneUserX(id);
@@ -142,7 +159,6 @@ const userController = {
     const { oldPseudo } = req.body;
 
     const users = await userMapper.findAllUsers();
-    // console.log('users', users);
     const foundUser = users.find((user) => user.pseudo === oldPseudo);
 
     if (foundUser) {
