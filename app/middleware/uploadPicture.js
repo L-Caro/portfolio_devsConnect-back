@@ -22,7 +22,8 @@ const uploadPicture = async (req, res, pseudo) => {
     fs.renameSync(filePath, destinationPath);
 
     //  Obtenez l'URL du fichier
-    const fileUrl = `/public/profilPictures/${uniqueFileName}`;
+    const fileUrl2 = `/public/profilPictures/${uniqueFileName}`;
+    const fileUrl = `https://backdevsconnect.lionelcaro-book.fr/public/profilPictures/${uniqueFileName}`;
 
     return fileUrl;
   } catch (error) {

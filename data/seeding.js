@@ -27,8 +27,8 @@ function generateUser(nbUsers) {
       // description: faker.person.bio(),
       description: faker.lorem.sentences(7),
       availability: faker.datatype.boolean(),
-      // picture: faker.image.avatar()
-      picture: "/public/profilPictures/profil.webp"
+      picture: faker.image.avatar()
+      // picture: "/public/profilPictures/profil.webp"
     };
     users.push(user);
   }
