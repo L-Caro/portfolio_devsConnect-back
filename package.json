@@ -3,7 +3,8 @@
   "packageManager": "yarn@3.6.0",
   "scripts": {
     "dev": "NODE_ENV=development DEBUG=app:* npx nodemon",
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=production node index.js",
+    "faker": "node ./data/seeding.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
