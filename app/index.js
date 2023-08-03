@@ -28,7 +28,11 @@ const options = {
 
 const specs = swaggerJsDoc(options);
 
-app.use(cors('*'));
+app.use(cors(
+  {
+    origin: 'https://devsconnect.lionelcaro-book.fr',
+  },
+));
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 

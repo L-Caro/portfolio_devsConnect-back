@@ -23,12 +23,10 @@ function generateUser(nbUsers) {
       firstname: faker.person.firstName(),
       pseudo: faker.internet.userName(),
       email: faker.internet.email(),
-      password: '$2b$10$3i3kHi8MZDpmLW1icHax5u69KOvYOgIWkFkz1dKgKOlE64sRQCRZ.',
-      // description: faker.person.bio(),
+      password: '$2b$10$3i3kHi8MZDpmLW1icHax5u69KOvYOgIWkFkz1dKgKOlE64sRQCRZ.', // password = secret
       description: faker.lorem.sentences(7),
       availability: faker.datatype.boolean(),
       picture: faker.image.avatar()
-      // picture: "/public/profilPictures/profil.webp"
     };
     users.push(user);
   }
